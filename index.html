@@ -717,9 +717,9 @@
     <button class="miniclose" id="closeUploadModal">&times;</button>
     <h2>Upload your timetable PDF / PNG here</h2>
     <div class="sub" style="color:var(--ink-soft);font-size:13px;margin-bottom:10px;">
-      Claude reads each file (using the same double-period-CCP / single-period-Elective rule this dashboard
+      Each file is read by AI (using the same double-period-CCP / single-period-Elective rule this dashboard
       was built on), then shows you exactly what it found so you can check it before anything is saved.
-      This only works while this page is open inside Claude.
+      Tip: check the teacher's name is clearly visible at the top of each screenshot.
     </div>
     <div class="uploadmodebar">
       <button type="button" class="uploadmodebtn active" data-uploadmode="one">One teacher</button>
@@ -1576,7 +1576,7 @@ document.getElementById("sgNextBtn").onclick = ()=>{ if(sgPageIdx<SG_PAGES.lengt
 // web app deployed alongside this file. GETs are used to read a key, and
 // POSTs (sent as text/plain to dodge CORS preflight — Apps Script has no
 // doOptions handler) are used to write one.
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwdLCvcpwiRvCQQgy2B_Uu3E2QgwkRtzaW8LSAo_4MPEfEj31HeOMFCbs4VEilceWI/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxXVdTuL4Qrlrw9TX-ubhqFlQBDJdS4EZ4TO85C4ewZGCseMPu0qgwVQwjyuQqKvEEn2Q/exec";
 
 const APP_TOKEN = "ccp-7a5ce62b03d7"; // must match SHARED_TOKEN in Code.gs
 function esc(v){ return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
