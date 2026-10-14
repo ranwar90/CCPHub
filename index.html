@@ -1642,6 +1642,17 @@ async function fetchAllFromSheet(){
     const data = await res.json();
     if(data.error) throw new Error(data.error);
     return data.values || {};
+  } catch(bulkErr){
+    // Older script version without the bulk read (or a slow first call): fall back to one request per key, in parallel.
+    console.warn("bulk read failed, falling back to per-key reads", bulkErr);
+    const out = {};
+    await Promise.all(DATA_KEYS.map(async k=>{
+      const r = await fetch(APPS_SCRIPT_URL + "?key=" + encodeURIComponent(k) + "&token=" + encodeURIComponent(APP_TOKEN));
+      const d = await r.json();
+      if(d.error) throw new Error(d.error);
+      if(d.value) out[k] = d.value;
+    }));
+    return out;
   } finally { clearTimeout(t); }
 }
 async function loadJSON(key, fallback){ // single key (kept for compatibility)
