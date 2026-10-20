@@ -48,14 +48,41 @@
   .gear:hover{background:var(--bg);color:var(--ink);}
 
   .homegrid{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:76px;gap:14px;}
-  .g-practice{grid-column:1/7;grid-row:1/3;}
-  .g-tasks{grid-column:1/4;grid-row:3/8;}
-  .g-attendance{grid-column:4/7;grid-row:3/5;}
-  .g-minutes{grid-column:4/7;grid-row:5/6;}
-  .g-meeting{grid-column:4/7;grid-row:6/8;}
+  .homegrid{grid-auto-flow:dense;}
+  .homegrid .navcard{min-width:0;min-height:0;overflow:hidden;position:relative;user-select:none;}
+  .homegrid .navcard.g-meeting{overflow:visible;}
+  .homegrid .navcard.hw-sel{outline:3px solid #1B3A6B;outline-offset:2px;border-color:#1B3A6B;overflow:visible;z-index:3;}
+  .ws-share{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);}
+  .st-done{margin-top:10px;padding:9px 11px;background:#E8F4EA;border-radius:9px;font-size:13px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .hw-bar{position:absolute;top:-17px;right:10px;display:flex;gap:3px;align-items:center;background:#1B3A6B;color:#fff;border-radius:9px;padding:4px 6px;z-index:9;font-size:11.5px;font-weight:600;box-shadow:0 4px 14px rgba(10,20,50,.3);cursor:default;white-space:nowrap;}
+  .hw-bar span{opacity:.8;margin:0 2px 0 6px;}
+  .hw-bar button{background:#fff;color:#1B3A6B;border:0;border-radius:6px;min-width:24px;height:24px;font-weight:800;font-size:13px;cursor:pointer;padding:0 6px;}
+  .hw-bar button:hover{background:#DDE6F5;}
+  .hw-bar button.rm{background:#C8372D;color:#fff;font-size:11.5px;}
+  .hw-add{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px;font-size:12px;color:var(--ink-soft);}
+  .hw-add button{background:#fff;border:1.5px solid #1B3A6B;color:#1B3A6B;border-radius:8px;padding:4px 10px;font-weight:700;font-size:12px;cursor:pointer;}
+  .hw-add button.reset{border-color:var(--line);color:var(--ink-soft);}
+  .hw-wsgrid{display:flex;gap:10px;overflow:hidden;flex:1;min-height:0;align-items:flex-start;flex-wrap:wrap;}
+  .hw-ws{width:76px;flex:none;}
+  .hw-ws .th{width:76px;height:107px;border-radius:5px;border:1px solid var(--line);overflow:hidden;position:relative;background:#eee;}
+  .hw-ws .th img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;}
+  .hw-ws .t{font-size:10.5px;line-height:1.25;margin-top:4px;max-height:2.5em;overflow:hidden;color:var(--ink);}
+  .hw-vid{position:relative;flex:1;min-height:0;display:flex;align-items:center;gap:4px;}
+  .hw-vtrack{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;flex:1;min-width:0;scroll-behavior:smooth;}
+  .hw-vtrack::-webkit-scrollbar{display:none;}
+  .hw-vitem{flex:0 0 calc(40% - 6px);scroll-snap-align:start;min-width:0;}
+  .hw-vth{aspect-ratio:16/9;border-radius:7px;overflow:hidden;position:relative;background:#222;}
+  .hw-vth img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;}
+  .hw-vt{font-size:11px;line-height:1.25;margin-top:4px;max-height:2.5em;overflow:hidden;}
+  .hw-arr{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid #1B3A6B;background:#fff;color:#1B3A6B;font-weight:800;font-size:15px;line-height:1;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;}
+  .hw-arr:hover{background:#1B3A6B;color:#fff;}
+  .hw-ind{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px;}
+  .hw-ind .genderbtn{width:auto;min-width:26px;padding:0 4px;height:22px;font-size:10.5px;}
+  .hw-ind .genderbtn.on{color:#fff;}
   @media(max-width:680px){
     .homegrid{grid-template-columns:1fr;grid-auto-rows:auto;}
-    .g-practice,.g-tasks,.g-attendance,.g-minutes,.g-meeting{grid-column:1/2;grid-row:auto;}
+    .homegrid .navcard{grid-column:1/2!important;grid-row:auto!important;}
+    .hw-bar{display:none;}
   }
   .navcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
     padding:16px;text-align:left;display:flex;flex-direction:column;gap:8px;
@@ -2469,7 +2496,8 @@ function meetingActiveTeacherList(){
 function toggleIndividualTeacher(t){
   individualActive[t] = !individualActive[t];
   if(individualActive[t]){ genderActive.M = false; genderActive.W = false; }
-  renderMeeting();
+  else if(!TEACHERS.some(x=>individualActive[x])){ genderActive.M = true; genderActive.W = true; }
+  renderMeeting(); renderNavGrid();
 }
 function toggleMeetingGender(g){
   genderActive[g] = !genderActive[g];
@@ -2482,7 +2510,7 @@ function toggleMeetingGender(g){
 // Only returns results if the best count clears a 75% threshold (6/8, 3/4) —
 // otherwise it's reported as "not optimal" so a human picks manually.
 function bestSlotsForDayFiltered(day){
-  const active = activeTeacherList();
+  const active = meetingActiveTeacherList();
   if(active.length===0) return {active, results:[], threshold:0, maxFree:0};
   const threshold = Math.ceil(active.length * 0.75);
   const rows = PERIODS.map(p=>{
@@ -2506,6 +2534,8 @@ const ICONS = {
   up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>',
   backlog:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m4 7 1.5 1.5L8 6"/><path d="M11 7h9"/><path d="m4 13 1.5 1.5L8 12"/><path d="M11 13h9"/><path d="m4 19 1.5 1.5L8 18"/><path d="M11 19h9"/></svg>',
   copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
+  worksheet:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h9l4 4V20.5H6z"/><path d="M14.5 3.5v4.5H19"/><path d="M9 12h7M9 15.5h7M9 9h3"/></svg>',
+  video:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M10.5 9.5v5l4.2-2.5z"/></svg>',
   check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
 };
 
@@ -2515,6 +2545,69 @@ function dayIndexForRotation(){
   return Math.floor((now-start)/86400000);
 }
 function toBullets(text){ return (text||"").split("\n").map(s=>s.trim()).filter(Boolean); }
+
+/* ---------------- home widgets: order / size / remove ---------------- */
+const HOME_DEF = {practice:{w:6,h:2}, worksheets:{w:3,h:7}, videos:{w:3,h:3}, minutes:{w:3,h:1}, meeting:{w:3,h:3}, tasks:{w:3,h:5}, attendance:{w:3,h:2}};
+const HOME_ORDER = ["practice","worksheets","videos","minutes","meeting","tasks","attendance"];
+const HOME_NAMES = {practice:"Practice of the Week", worksheets:"Worksheet Generator", videos:"Video Archive", minutes:"Last Meeting Minutes", meeting:"Best Meeting Period", tasks:"Team Task Bars", attendance:"Attendance"};
+const HOME_LAY_KEY = "ccp_home_layout_v2";
+let homeLay = null, homeSel = null;
+function homeLoad(){
+  if(homeLay) return homeLay;
+  let l = null; try{ l = JSON.parse(localStorage.getItem(HOME_LAY_KEY)||"null"); }catch(e){}
+  homeLay = {size:{}, removed:["tasks","attendance"]};
+  if(l && typeof l==="object"){ if(l.size && typeof l.size==="object") homeLay.size = l.size; if(Array.isArray(l.removed)) homeLay.removed = l.removed.filter(k=>HOME_DEF[k]); }
+  return homeLay;
+}
+function homeSave(){ try{ localStorage.setItem(HOME_LAY_KEY, JSON.stringify(homeLay)); }catch(e){} }
+function homeSize(id){ const s = homeLoad().size[id] || {}, d = HOME_DEF[id]; return {w:Math.max(2,Math.min(6,s.w||d.w)), h:Math.max(1,Math.min(10,s.h||d.h))}; }
+function homeStyle(c, id){ const s = homeSize(id); c.style.gridColumn = "span "+s.w; c.style.gridRow = "span "+s.h; }
+function homeApplyLayout(){
+  const g = document.getElementById("homeGrid"); if(!g) return;
+  const L = homeLoad(), cards = {};
+  g.querySelectorAll("[data-hw]").forEach(c=> cards[c.dataset.hw] = c);
+  HOME_ORDER.forEach(id=>{
+    const c = cards[id]; if(!c) return;
+    if(L.removed.includes(id)){ c.remove(); return; }
+    homeStyle(c, id); g.appendChild(c);
+    c.classList.toggle("hw-sel", homeSel===id);
+    if(homeSel===id) homeBar(c, id);
+    c.onclick = e=>{
+      if(e.target.closest("a,button,select,input,textarea,.hw-bar")) return;
+      if(homeSel!==id){ homeSel = id; homeApplyLayout(); }
+    };
+    c.ondblclick = e=>{
+      if(e.target.closest("a,button,select,input,textarea,.hw-bar")) return;
+      homeSel = null; showView(c.dataset.nav);
+    };
+  });
+  g.querySelectorAll("[data-varr]").forEach(b=> b.onclick = e=>{ e.stopPropagation(); const tr = document.getElementById("hwVTrack"); if(tr) tr.scrollBy({left:(+b.dataset.varr)*Math.max(120, tr.clientWidth/2), behavior:"smooth"}); });
+  // add bar
+  let bar = document.getElementById("homeAddBar");
+  if(!bar){ bar = document.createElement("div"); bar.id = "homeAddBar"; bar.className = "hw-add"; g.parentNode.insertBefore(bar, g.nextSibling); }
+  bar.innerHTML = `<span>Click a widget once to resize or remove it. Double-click to open its page.</span>` +
+    L.removed.map(id=>`<button type="button" data-hadd="${id}">+ ${esc(HOME_NAMES[id])}</button>`).join("") +
+    `<button type="button" class="reset" data-hreset>Reset layout</button>`;
+  bar.querySelectorAll("[data-hadd]").forEach(b=> b.onclick = ()=>{ L.removed = L.removed.filter(x=>x!==b.dataset.hadd); homeSave(); renderNavGrid(); });
+  bar.querySelector("[data-hreset]").onclick = ()=>{ homeLay = {size:{}, removed:["tasks","attendance"]}; homeSel = null; homeSave(); renderNavGrid(); };
+}
+function homeBar(c, id){
+  c.querySelectorAll(".hw-bar").forEach(x=>x.remove());
+  const bar = document.createElement("div"); bar.className = "hw-bar";
+  bar.innerHTML = `<span>Width</span><button type="button" data-d="w-">−</button><button type="button" data-d="w+">+</button><span>Height</span><button type="button" data-d="h-">−</button><button type="button" data-d="h+">+</button><button type="button" data-d="open">Open</button><button type="button" class="rm" data-d="rm">Remove</button><button type="button" data-d="done">Done</button>`;
+  bar.onclick = e=>{
+    e.stopPropagation(); const b = e.target.closest("button"); if(!b) return;
+    const d = b.dataset.d, L = homeLoad(), s = homeSize(id);
+    if(d==="w-") L.size[id] = {w:s.w-1, h:s.h}; else if(d==="w+") L.size[id] = {w:s.w+1, h:s.h};
+    else if(d==="h-") L.size[id] = {w:s.w, h:s.h-1}; else if(d==="h+") L.size[id] = {w:s.w, h:s.h+1};
+    else if(d==="open"){ homeSel = null; return showView(c.dataset.nav); }
+    else if(d==="rm"){ if(!L.removed.includes(id)) L.removed.push(id); homeSel = null; homeSave(); return renderNavGrid(); }
+    else if(d==="done"){ homeSel = null; return homeApplyLayout(); }
+    homeSave(); homeStyle(c, id);
+  };
+  c.appendChild(bar);
+}
+document.addEventListener("click", e=>{ if(homeSel && !e.target.closest("#homeGrid")){ homeSel = null; if(document.getElementById("homeGrid")) homeApplyLayout(); } });
 
 function renderNavGrid(){
   const asOf = document.getElementById("asOfInput").value || todayStr();
@@ -2534,7 +2627,7 @@ function renderNavGrid(){
   const {active, results, threshold, maxFree} = bestSlotsForDayFiltered(homeMeetingDay);
 
   document.getElementById("homeGrid").innerHTML = `
-    <div class="navcard g-practice" data-nav="practice">
+    <div class="navcard g-practice" data-nav="practice" data-hw="practice">
       <div class="icnrow"><div class="icn">${ICONS.practice}</div><div class="ttl">Practice of the Week</div></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;">
         <div><ul class="bullets">${goodB.length? goodB.map(b=>`<li><span class="m">${ICONS.star}</span>${b}</li>`).join(""):'<li style="color:var(--ink-soft);">Nothing logged yet</li>'}</ul></div>
@@ -2542,20 +2635,31 @@ function renderNavGrid(){
       </div>
     </div>
 
-    <div class="navcard g-tasks" data-nav="backlog">
+    <div class="navcard g-tasks" data-nav="backlog" data-hw="tasks">
       <div class="icnrow"><div class="icn">${ICONS.backlog}</div><div class="ttl">Team Task Bars</div></div>
       <div class="summarybarwrap" id="summaryBarHome"></div>
       <div class="checklist" id="backlogListHome"></div>
       <div class="initialslegend">${ASSIGNABLE_PEOPLE.map(t=>`<span>${INITIALS[t]}=${t.split(" ")[0]}</span>`).join("")}</div>
     </div>
 
-    <div class="navcard g-attendance" data-nav="attendance">
+    <div class="navcard g-attendance" data-nav="attendance" data-hw="attendance">
       <div class="icnrow"><div class="icn">${ICONS.attendance}</div><div class="ttl">Attendance</div></div>
       <div class="prev">${q.label} average: <b>${(dAvg*100).toFixed(0)}%</b> · This week ${thisWeek?thisWeek.at100:TEACHERS.length}/${TEACHERS.length} at 100%</div>
       <div class="chartwrap"><div class="chart mini">${weekBarsHTML(wStats, 36, true)}</div></div>
     </div>
 
-    <div class="navcard g-minutes" data-nav="minutes" style="justify-content:center;">
+    <div class="navcard g-worksheets" data-nav="worksheets" data-hw="worksheets">
+      <div class="icnrow"><div class="icn">${ICONS.worksheet}</div><div class="ttl">Worksheet Generator</div><a class="biglink small" style="margin-left:auto;" href="?studio=1" target="_blank" rel="noopener" onclick="event.stopPropagation();">+ Create with AI</a></div>
+      <div class="prev">${worksheets.length} worksheet${worksheets.length===1?"":"s"} in the archive</div>
+      <div class="hw-wsgrid">${worksheets.slice().sort((a,b)=>(b.added||0)-(a.added||0)).slice(0,8).map(w=>{ const th = w.thumbUrl || (w.fileId ? wsDriveThumb(w.fileId) : ""); const h = vaHue(w.id||w.title); return `<div class="hw-ws"><div class="th" style="background:linear-gradient(135deg,hsl(${h} 50% 34%),hsl(${(h+50)%360} 55% 22%))">${th?`<img src="${esc(th)}" alt="" loading="lazy" onerror="this.remove()">`:""}</div><div class="t">${esc(w.title)}</div></div>`; }).join("")}</div>
+    </div>
+
+    <div class="navcard g-videos" data-nav="videos" data-hw="videos">
+      <div class="icnrow"><div class="icn">${ICONS.video}</div><div class="ttl">Video Archive</div><span class="prev" style="margin-left:auto;">Latest ${Math.min(3,videos.length)}</span></div>
+      <div class="hw-vid"><button type="button" class="hw-arr" data-varr="-1" aria-label="Scroll left">\u2039</button><div class="hw-vtrack" id="hwVTrack">${videos.slice().sort((a,b)=>(b.added||0)-(a.added||0)).slice(0,3).map(v=>{ const pp = vaParse(v.url) || {src:"link"}; const th = vaThumb(pp); const h = vaHue(v.id||v.title); return `<div class="hw-vitem"><div class="hw-vth" style="background:linear-gradient(135deg,hsl(${h} 55% 32%),hsl(${(h+50)%360} 60% 20%))">${th?`<img src="${esc(th)}" alt="" loading="lazy" onerror="this.remove()">`:""}</div><div class="hw-vt">${esc(v.title)}</div></div>`; }).join("") || '<div class="prev">No videos yet</div>'}</div><button type="button" class="hw-arr" data-varr="1" aria-label="Scroll right">\u203A</button></div>
+    </div>
+
+    <div class="navcard g-minutes" data-nav="minutes" data-hw="minutes" style="justify-content:center;">
       <div class="icnrow" style="justify-content:space-between;">
         <div style="display:flex;align-items:center;gap:8px;">
           <div class="icn">${ICONS.minutes}</div><div class="ttl">Last Meeting Minutes</div>
@@ -2568,7 +2672,7 @@ function renderNavGrid(){
       ${!latestMinutes ? `<div class="prev">Nothing logged yet</div>` : ""}
     </div>
 
-    <div class="navcard g-meeting" data-nav="meeting">
+    <div class="navcard g-meeting" data-nav="meeting" data-hw="meeting">
       <div class="icnrow"><div class="icn">${ICONS.meeting}</div><div class="ttl">Best Meeting Period</div></div>
       <div style="display:flex;align-items:center;gap:8px;">
         <select id="homeMeetingDaySelect" style="font-size:12.5px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);width:max-content;">
@@ -2577,7 +2681,8 @@ function renderNavGrid(){
         <button class="genderbtn m ${genderActive.M?'on':''}" id="toggleMBtn" title="Include male teachers">M</button>
         <button class="genderbtn w ${genderActive.W?'on':''}" id="toggleWBtn" title="Include female teachers">W</button>
       </div>
-      ${active.length===0 ? `<div class="prev" style="color:var(--brick);">Turn on M or W to search</div>` :
+      <div class="hw-ind" title="Pick individual teachers to meet">${TEACHERS.map(n=>`<button type="button" class="genderbtn ${individualActive[n]?'on':''}" data-hind="${esc(n)}" title="${esc(n)}" ${individualActive[n]?`style="background:${TEACHER_COLORS[n]||'#1B3A6B'};border-color:${TEACHER_COLORS[n]||'#1B3A6B'}"`:""}>${INITIALS[n]}</button>`).join("")}</div>
+      ${active.length===0 ? `<div class="prev" style="color:var(--brick);">Turn on M, W or a teacher to search</div>` :
         results.length ? `
           <div class="prev" style="margin-top:2px;"><b style="color:var(--teal);">${maxFree}/${active.length} free</b></div>
           ${results.map(r=>`<div class="prev" style="line-height:1.5;"><b>P${r.period}</b> <span style="color:var(--ink-soft);">(${PERIOD_TIMES[r.period]})</span> — ${r.busy.length?busyHtml(r.busy,r.day,r.period):`<span style="color:var(--green);">all free</span>`}</div>`).join("")}
@@ -2585,7 +2690,6 @@ function renderNavGrid(){
       }
     </div>`;
 
-  document.querySelectorAll("[data-nav]").forEach(b=> b.onclick = ()=> showView(b.dataset.nav));
   const daySel = document.getElementById("homeMeetingDaySelect");
   if(daySel){
     daySel.onclick = (e)=> e.stopPropagation();
@@ -2593,11 +2697,13 @@ function renderNavGrid(){
   }
   const mBtn = document.getElementById("toggleMBtn");
   const wBtn = document.getElementById("toggleWBtn");
-  if(mBtn) mBtn.onclick = (e)=>{ e.stopPropagation(); genderActive.M = !genderActive.M; renderNavGrid(); };
-  if(wBtn) wBtn.onclick = (e)=>{ e.stopPropagation(); genderActive.W = !genderActive.W; renderNavGrid(); };
+  if(mBtn) mBtn.onclick = (e)=>{ e.stopPropagation(); toggleMeetingGender("M"); };
+  if(wBtn) wBtn.onclick = (e)=>{ e.stopPropagation(); toggleMeetingGender("W"); };
+  document.querySelectorAll("[data-hind]").forEach(b=> b.onclick = (e)=>{ e.stopPropagation(); toggleIndividualTeacher(b.dataset.hind); });
   document.querySelectorAll("[data-copy]").forEach(b=> b.onclick = (e)=>{ e.stopPropagation(); copyLink(b.dataset.copy, b); });
   renderBacklogList("backlogListHome", true);
   renderSummaryBar("summaryBarHome");
+  homeApplyLayout();
 }
 
 /* ---------------- copy-to-clipboard (with legacy fallback for sandboxed views) ---------------- */
@@ -3462,7 +3568,7 @@ const DEFAULT_WORKSHEETS = [
   {id:"seed-w5", title:"Week 5: Level Up Your 3D Design! (Cover Lesson)", grade:"Grade 6", sprint:"AR World", tags:["Grade 6","AR World"], by:"Raiyan Anwar", added:1760900000000,
    kind:"upload", ext:"pdf", fileUrl:"worksheets/Week5_3D_Design_Cover_Worksheet.pdf", viewUrl:"worksheets/Week5_3D_Design_Cover_Worksheet.pdf", thumbUrl:"worksheets/Week5_3D_Design_Cover_Worksheet.jpg"}
 ];
-const wsState = {q:"", tags:[], editing:null, confirmDel:null};
+const wsState = {q:"", tags:[], editing:null, confirmDel:null, share:null};
 let wsQueued = null, wsBusy = false;
 
 function wsSave(){ clearTimeout(wsQueued); wsQueued = setTimeout(()=>{ saveJSON("ccp_worksheets", worksheets); }, 300); }
@@ -3521,9 +3627,12 @@ function wsCardHTML(w){
       <div class="ws-tags">${tags.length?tags.map(t=>`<button type="button" class="va-tag ${vaTagCls(t)}" data-ft="${esc(t)}" title="Show worksheets tagged ${esc(t)}">${esc(t)}</button>`).join(""):'<span class="va-msg">No tags</span>'}</div>
       <div class="ws-actions">
         <a class="va-btn primary" href="${esc(w.fileUrl||open)}" download="${esc(fname)}" target="_blank" rel="noopener noreferrer">Download</a>
+        <a class="va-btn" href="${esc(open)}" target="_blank" rel="noopener noreferrer">View</a>
+        <button type="button" class="va-btn" data-wshare="${esc(w.id)}">Share</button>
         <button type="button" class="va-btn" data-wedit="${esc(w.id)}">${wsState.editing===w.id?"Close":"Tags"}</button>
         <button type="button" class="va-btn ghost" data-wdel="${esc(w.id)}" aria-label="Delete worksheet">${wsState.confirmDel===w.id?"Sure?":"Delete"}</button>
       </div>
+      ${wsState.share===w.id?(()=>{ const link = w.viewUrl||w.fileUrl||""; const sub = encodeURIComponent("Worksheet: "+w.title), msg = encodeURIComponent(w.title+"\n"+link); return `<div class="ws-share"><a class="va-btn" href="mailto:?subject=${sub}&body=${msg}">Email</a><a class="va-btn" href="https://wa.me/?text=${msg}" target="_blank" rel="noopener noreferrer">WhatsApp</a><button type="button" class="va-btn" data-wcopy="${esc(link)}">Copy link</button></div>`; })():""}
       ${wsState.editing===w.id?`<div class="va-edit" data-weditbox="${esc(w.id)}"></div>`:""}
     </div></article>`;
 }
@@ -3538,6 +3647,8 @@ function renderWorksheets(){
   if(!list.length){ g.innerHTML = `<div class="va-empty" style="grid-column:1/-1"><b>No worksheets match</b>${worksheets.length?"Try fewer tags or a different word.":"Add the first one with the red button at the top."}</div>`; wsWire(); return; }
   g.innerHTML = list.map(wsCardHTML).join("");
   g.querySelectorAll("[data-ft]").forEach(b=> b.onclick = ()=>{ const t=b.dataset.ft; if(!wsState.tags.some(x=>x.toLowerCase()===t.toLowerCase())) wsState.tags.push(t); window.scrollTo({top:0,behavior:"smooth"}); renderWorksheets(); });
+  g.querySelectorAll("[data-wshare]").forEach(b=> b.onclick = ()=>{ wsState.share = wsState.share===b.dataset.wshare ? null : b.dataset.wshare; renderWorksheets(); });
+  g.querySelectorAll("[data-wcopy]").forEach(b=> b.onclick = ()=>copyLink(b.dataset.wcopy, b));
   g.querySelectorAll("[data-wedit]").forEach(b=> b.onclick = ()=>{ wsState.editing = wsState.editing===b.dataset.wedit ? null : b.dataset.wedit; renderWorksheets(); });
   g.querySelectorAll("[data-wdel]").forEach(b=> b.onclick = ()=>{
     const id = b.dataset.wdel;
@@ -3844,7 +3955,7 @@ const WSX_CSS = `
 .wsx-info{display:flex;gap:18px;margin-top:10px;font-size:13px;font-weight:700}
 .wsx-info span{flex:1;display:flex;align-items:flex-end;gap:6px;white-space:nowrap}
 .wsx-info span i{flex:1;border-bottom:1.5px dotted var(--pri);height:13px;display:block}
-.wsx-body{flex:1;min-height:0;overflow:hidden;margin-top:9px;font-size:calc(14px * var(--s,1));display:flex;flex-direction:column;gap:.75em}
+.wsx-body{flex:1;min-height:0;overflow:hidden;margin-top:9px;font-size:calc(14px * var(--s,1));display:flex;flex-direction:column;gap:calc(.75em * var(--gsec,1))}
 .wsx-intro{background:var(--soft);border-left:4px solid var(--pri);border-radius:.5em;padding:.55em .9em;display:flex;gap:.6em;align-items:flex-start}
 .wsx-intro .wsx-ic{flex:none;color:var(--pri);margin-top:.1em}
 .wsx-ah{display:flex;align-items:center;gap:.6em;background:var(--bar);color:var(--on);border-radius:.7em;padding:.42em .9em;font-weight:800;font-size:1.06em;font-family:var(--head)}
@@ -3853,18 +3964,18 @@ const WSX_CSS = `
 .wsx-ah .wsx-ic{flex:none}
 .wsx-ah .sc{background:var(--scbg);color:var(--scfg);border-radius:99px;padding:.05em .75em;font-size:.82em;font-family:var(--font);font-weight:700}
 .wsx-ins{font-style:italic;color:#4b5263;margin:.35em 0 .1em;font-size:.95em}
-.wsx-q{display:flex;gap:.6em;margin-top:.55em}
+.wsx-q{display:flex;gap:.6em;margin-top:calc(.55em * var(--gsec,1))}
 .wsx-n{flex:none;width:1.7em;height:1.7em;border-radius:50%;background:var(--bar);color:var(--on);font-weight:800;text-align:center;line-height:1.7em;font-size:.9em}
 .wsx-k-code .wsx-n{border-radius:.25em}
 .wsx-qt{flex:1}
-.wsx-opt{margin:.2em 0 0 0}
+.wsx-opt{margin:calc(.2em * var(--gln,1)) 0 0 0}
 .wsx-opt b{color:var(--bar)}
 .wsx-ok{display:none}
 .wsx-bank{display:flex;flex-wrap:wrap;gap:.5em;margin:.4em 0 .2em}
 .wsx-bank span{border:1.5px solid var(--bar);color:var(--ink);background:var(--soft);border-radius:99px;padding:.1em .8em;font-weight:700}
 .wsx-k-code .wsx-bank span{border-radius:0}
 .wsx-gap{display:inline-block;min-width:6em;border-bottom:1.5px solid var(--ink);height:1em;vertical-align:baseline}
-.wsx-line{height:1.9em;border-bottom:1.2px solid #8a90a0}
+.wsx-line{height:calc(1.9em * var(--gln,1));border-bottom:1.2px solid #8a90a0}
 .wsx-box{position:relative;border:2px dashed var(--bar);border-radius:.8em;margin-top:.5em;background:var(--soft)}
 .wsx-k-code .wsx-box{border-radius:0}
 .wsx-box .hint{position:absolute;right:.7em;bottom:.4em;font-size:.8em;color:#8a90a0}
@@ -3898,7 +4009,8 @@ function wsxActivity(a, letter, t, idx, edit, base){
   if(a.t==="mcq"){
     body = a.questions.map((q,i)=>`<div class="wsx-q"><div class="wsx-n">${i+1}</div><div class="wsx-qt"><div${wsxEd(edit,`${P}.questions.${i}.q`)}>${wsx(q.q)}</div>${q.options.map((o,j)=>`<div class="wsx-opt"><b>${"ABCDE"[j]}.</b> <span${wsxEd(edit,`${P}.questions.${i}.options.${j}`)}>${wsx(o)}</span>${edit&&j===q.answer?'<span class="wsx-ok" contenteditable="false">✓</span>':""}</div>`).join("")}</div></div>`).join("");
   } else if(a.t==="gap"){
-    body = `<div class="wsx-bank">${a.bank.map((w,k)=>`<span${wsxEd(edit,`${P}.bank.${k}`)}>${wsx(w)}</span>`).join("")}</div>` + a.sentences.map((s,i)=>`<div class="wsx-q"><div class="wsx-n">${i+1}</div><div class="wsx-qt" style="line-height:1.9"><span${wsxEd(edit,`${P}.sentences.${i}.text`)}>${edit ? wsx(s.text) : wsx(s.text).replace(/_{2,}/g,'<span class="wsx-gap"></span>')}</span></div></div>`).join("");
+    const gm = Math.max(6, ...a.bank.map(w=>String(w).length), ...a.sentences.flatMap(s=>(s.answers||[]).map(x=>String(x).length))), gL = Math.ceil(gm*1.5)+3, gW = (gm*0.72+1.5).toFixed(1);
+    body = `<div class="wsx-bank">${a.bank.map((w,k)=>`<span${wsxEd(edit,`${P}.bank.${k}`)}>${wsx(w)}</span>`).join("")}</div>` + a.sentences.map((s,i)=>`<div class="wsx-q"><div class="wsx-n">${i+1}</div><div class="wsx-qt" style="line-height:calc(1.9 * var(--gln,1))"><span${wsxEd(edit,`${P}.sentences.${i}.text`)}>${edit ? wsx(s.text).replace(/_{2,}/g,"_".repeat(gL)) : wsx(s.text).replace(/_{2,}/g,`<span class="wsx-gap" style="min-width:${gW}em"></span>`)}</span></div></div>`).join("");
   } else if(a.t==="short"){
     body = a.questions.map((q,i)=>`<div class="wsx-q"><div class="wsx-n">${i+1}</div><div class="wsx-qt"><div${wsxEd(edit,`${P}.questions.${i}.q`)}>${wsx(q.q)}</div>${Array.from({length:a.l},()=>'<div class="wsx-line"></div>').join("")}</div></div>`).join("");
   } else if(a.t==="sketch"){
@@ -3923,7 +4035,7 @@ function wsxPageHTML(M, pi, logos, edit){
   const r = M.results[pi];
   const acts = r.acts.map((a,ai)=>wsxActivity(a, String.fromCharCode(65+before+ai), t, before+ai, edit, `r.${pi}.acts.${ai}`)).join("");
   const intro = pi===0 && (r.intro || edit) ? `<div class="wsx-intro">${wsIcon("info")}<span${wsxEd(edit,`r.0.intro`)}>${wsx(r.intro)}</span></div>` : "";
-  return `<div class="wsx-page wsx-k-${t.kind}" data-pi="${pi}" style="${wsThemeVars(t)}">${wsxHeader(M.spec,t,logos,edit)}<div class="wsx-body">${intro}${acts}</div><div class="wsx-foot"><span>Cross Curricular Programme · Al-Rowad International Schools</span><span>Page ${pi+1} of ${N}</span></div></div>`;
+  return `<div class="wsx-page wsx-k-${t.kind}" data-pi="${pi}" style="${wsThemeVars(t)}--gsec:${M.gsec||1};--gln:${M.gln||1};">${wsxHeader(M.spec,t,logos,edit)}<div class="wsx-body">${intro}${acts}</div><div class="wsx-foot"><span>Cross Curricular Programme · Al-Rowad International Schools</span><span>Page ${pi+1} of ${N}</span></div></div>`;
 }
 function wsxKeyHTML(M, logos){
   const t = WS_THEMES[M.theme] || WS_THEMES.ais; let li = 0;
@@ -3969,7 +4081,7 @@ Worksheet title: "${spec.name}". Class: ${spec.grade} (students about ${age} yea
 ${digest ? "Teacher's source material. Base the questions on it:\n"+digest : "No source material was given. Write about the title and sprint theme using accurate, widely known facts."}
 Style: clear, mature, encouraging English that a ${spec.grade} student can read alone. Short sentences. No trick questions. Every fact must be correct. Never mention AI.
 ${spec.allowEmoji ? "The teacher has asked for emojis, so use them where it suits their request." : "Do NOT use emojis, emoticons or decorative symbols anywhere in the text."}
-${spec.extra ? "Teacher's additional instructions (follow these closely):\n"+spec.extra+"\n" : ""}This page must contain exactly these activities, in this order:
+${spec.extra ? "Teacher's additional instructions (follow these closely):\n"+spec.extra+"\n" : ""}${spec.current && spec.current[pi] ? "Current version of this page. The teacher wants it revised: apply the final instructions above to it and keep everything else that is good:\n"+spec.current[pi]+"\n" : ""}This page must contain exactly these activities, in this order:
 ${spec.pages[pi].map((a,i)=>wsActSpecText(a,i+1)).join("\n")}
 
 Reply with ONLY valid JSON, no markdown fences, in this shape:
@@ -4020,7 +4132,7 @@ async function wsGeneratePage(spec, pi, digest){
 
 /* ---------- Studio: setup form ---------- */
 const wa = {pages:1, acts:[[{t:"mcq", ...WS_ACT_DEFAULT.mcq}]], files:[], links:[], theme:"ais"};
-const S = {spec:null, results:null, theme:"ais", ver:0, savedVer:-1, saving:false, recordId:null, fileId:"", thumbId:"", build:null, timer:null, page:0, digest:"", again:false, err:""};
+const S = {gsec:1, gln:1, spec:null, results:null, theme:"ais", ver:0, savedVer:-1, saving:false, recordId:null, fileId:"", thumbId:"", build:null, timer:null, page:0, digest:"", again:false, err:""};
 const WS_STUDIO = new URLSearchParams(location.search).get("studio")==="1";
 
 function wsSelOpts(min,max,val){ let s=""; for(let i=min;i<=max;i++) s+=`<option${i===val?" selected":""}>${i}</option>`; return s; }
@@ -4167,13 +4279,12 @@ async function stGenerate(root){
     let done = 0; const N = spec.pages.length;
     const results = await Promise.all(spec.pages.map((_,pi)=>wsGeneratePage(spec,pi,digest).then(r=>{ done++; P.to(25+47*done/N, "Writing the questions… ("+done+" of "+N+" pages)"); return r; })));
     P.stop(); P.to(74,"Laying out the pages…");
-    Object.assign(S, {spec, results, theme:wa.theme, digest, ver:0, savedVer:-1, recordId:null, fileId:"", thumbId:"", build:null, page:0, err:""});
+    Object.assign(S, {gsec:1, gln:1, spec, results, theme:wa.theme, digest, ver:0, savedVer:-1, recordId:null, fileId:"", thumbId:"", build:null, page:0, err:""});
     P.creep(92,"Laying out the pages…");
     S.build = await stBuild(0);
-    P.stop(); P.to(96,"Saving to the archive…");
+    P.stop(); P.to(100,"Ready");
     wsBusy = false;
     stShowEditor();
-    stSave();       // automatic first save to the archive (editor is already usable)
   }catch(e){
     P.stop(); wsBusy = false;
     run.querySelector("#waRunErr").innerHTML = `<div class="ws-warn" style="background:#FBE9E7;border-color:#C1524A"><b>Could not finish.</b> ${esc(e.message||"Something went wrong.")}</div><div class="va-formrow"><button type="button" class="st-btn" id="waBack">Back to my settings</button></div>`;
@@ -4183,7 +4294,7 @@ async function stGenerate(root){
 
 /* ---------- Studio: build PDF, save to archive ---------- */
 async function stBuild(ver){
-  const logos = wsLogos(), M = {spec:S.spec, results:S.results, theme:S.theme};
+  const logos = wsLogos(), M = {spec:S.spec, results:S.results, theme:S.theme, gsec:S.gsec, gln:S.gln};
   const stage = document.createElement("div"); stage.style.cssText = "position:fixed;left:-12000px;top:0;width:794px"; stage.innerHTML = `<style>${WSX_CSS}</style>`; document.body.appendChild(stage);
   try{
     const fits = M.results.map((_,pi)=>wsFit(stage, wsxPageHTML(M,pi,logos,false)));
@@ -4216,13 +4327,19 @@ function stStatus(kind, text){
   el.className = "st-chip "+(kind||""); el.textContent = text;
 }
 function stDirty(){
-  S.ver++; clearTimeout(S.timer); stStatus("warn","Unsaved changes · saving soon…");
-  S.timer = setTimeout(stSave, 12000);
+  S.ver++; S.err = "";
+  stStatusRefresh();
 }
-async function stSave(){
-  if(!S.results) return;
-  if(S.saving){ S.again = true; return; }
-  S.saving = true; S.err = ""; clearTimeout(S.timer); stStatus("","Saving to the archive…");
+function stStatusRefresh(){
+  if(S.saving) return;
+  if(S.err) return stStatus("err","Not published: "+S.err);
+  if(S.recordId && S.savedVer===S.ver){ stStatus("ok","Published to the archive"+(S.pubTime?" · "+S.pubTime:"")); return; }
+  stStatus("warn", S.recordId ? "Changes not published yet" : "Draft · not in the archive yet. Press Publish when you are happy.");
+}
+async function stSave(){      // runs only when the teacher presses Publish
+  if(!S.results || S.saving) return;
+  S.saving = true; S.err = ""; stStatus("","Publishing to the archive…");
+  const pb = document.getElementById("stPublish"); if(pb) pb.disabled = true;
   const ver = S.ver;
   try{
     if(!S.build || S.build.ver!==ver) S.build = await stBuild(ver);
@@ -4236,23 +4353,19 @@ async function stSave(){
     await wsMergeSave(rec);
     S.recordId = rec.id; S.fileId = up.id; S.thumbId = thumbId; S.savedVer = ver;
     old.forEach(wsDeleteDriveFile);
-    const t = new Date(); stStatus("ok","Saved to the archive · "+t.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}));
-    const fx = document.getElementById("stFull"); if(fx) fx.hidden = !b.tooFull.length;
+    S.pubTime = new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+    S.saving = false; stRenderSide(true);
   }catch(e){
-    S.err = e.message || "Could not save."; stStatus("err","Not saved: "+S.err);
-    const rb = document.getElementById("stRetry"); if(rb) rb.hidden = false;
+    S.err = e.message || "Could not publish.";
   }finally{
-    S.saving = false;
-    if(!S.err && (S.again || S.ver!==S.savedVer)){ S.again = false; S.timer = setTimeout(stSave, 1500); }
+    S.saving = false; const pb2 = document.getElementById("stPublish"); if(pb2) pb2.disabled = false; stStatusRefresh();
   }
 }
-async function stDownload(which){
-  const btn = document.getElementById(which==="key"?"stKey":"stPdf"); const lab = btn ? btn.textContent : ""; if(btn){ btn.disabled = true; btn.textContent = "Preparing…"; }
+async function stKeyDownload(){
+  const btn = document.getElementById("stKey"); const lab = btn ? btn.textContent : ""; if(btn){ btn.disabled = true; btn.textContent = "Preparing…"; }
   try{
     if(!S.build || S.build.ver!==S.ver) S.build = await stBuild(S.ver);
-    const slug = wsSlug(S.spec.name);
-    if(which==="key"){ wsDownloadBlob(S.build.keyPdf, slug+"_ANSWER_KEY.pdf"); }
-    else { wsDownloadBlob(S.build.pdf, slug+".pdf"); if(S.savedVer!==S.ver || !S.recordId) stSave(); }
+    wsDownloadBlob(S.build.keyPdf, wsSlug(S.spec.name)+"_ANSWER_KEY.pdf");
   } finally { if(btn){ btn.disabled = false; btn.textContent = lab; } }
 }
 
@@ -4264,11 +4377,11 @@ function stActSpec(a){
 }
 function stShowEditor(){
   const root = document.getElementById("wsStudio");
-  root.innerHTML = stTopHTML("Worksheet Studio", `<span class="st-chip" id="stStatus" role="status">Starting…</span><button type="button" class="st-btn red" id="stRetry" hidden>Retry saving</button>`) +
+  root.innerHTML = stTopHTML("Worksheet Studio", `<span class="st-chip" id="stStatus" role="status">Starting\u2026</span>`) +
    `<div class="st-edit"><div class="st-pages" id="stPages"></div><div class="st-side" id="stSide"></div></div>`;
   if(!document.getElementById("wsxCss")){ const s = document.createElement("style"); s.id = "wsxCss"; s.textContent = WSX_CSS; document.head.appendChild(s); }
   stRenderPages(); stRenderSide();
-  document.getElementById("stRetry").onclick = ()=>{ document.getElementById("stRetry").hidden = true; stSave(); };
+  stStatusRefresh();
   const host = document.getElementById("stPages");
   host.addEventListener("input", e=>{
     const el = e.target.closest("[data-path]"); if(!el) return;
@@ -4284,7 +4397,7 @@ function stShowEditor(){
 }
 function stScale(){ const h = document.getElementById("stPages"); if(!h) return; const k = Math.max(0.4, Math.min(1, (h.clientWidth-40)/794)); h.style.setProperty("--k", k.toFixed(3)); }
 function stRenderPages(){
-  const h = document.getElementById("stPages"), logos = wsLogos(), M = {spec:S.spec, results:S.results, theme:S.theme};
+  const h = document.getElementById("stPages"), logos = wsLogos(), M = {spec:S.spec, results:S.results, theme:S.theme, gsec:S.gsec, gln:S.gln};
   const keepTop = h.scrollTop;
   h.innerHTML = S.results.map((_,pi)=>`<div class="st-pw${pi===S.page?" cur":""}" data-pi="${pi}"><div class="st-pi">${wsxPageHTML(M,pi,logos,true)}</div></div>`).join("");
   stScale(); h.scrollTop = keepTop;
@@ -4315,20 +4428,29 @@ function stRenderSide(keepScroll){
   const side = document.getElementById("stSide"), top = side.scrollTop;
   const pi = Math.min(S.page, S.results.length-1), r = S.results[pi];
   side.innerHTML = `
-   <div><h3>Save &amp; download</h3><div class="row"><button type="button" class="st-btn" id="stSaveNow">Save now</button><button type="button" class="st-btn alt" id="stPdf">Download PDF</button>${S.spec.withKey?'<button type="button" class="st-btn alt" id="stKey">Answer key</button>':""}<button type="button" class="st-btn alt" id="stPrint">Print</button></div>
-    <div class="st-note" style="margin-top:8px">Every worksheet is saved to the archive automatically, and again whenever you download it.</div>
+   <div><h3>Publish</h3><div class="row"><button type="button" class="st-btn red" id="stPublish">${S.recordId?"Update published copy":"Publish to archive"}</button></div>
+    <div class="st-note" style="margin-top:8px">Nothing is saved until you press Publish. After that, download, view or share it from the Worksheet Generator archive.</div>
+    ${S.recordId?`<div class="st-done"><b>Published.</b> <a class="st-btn alt sm" href="?view=worksheets">Open the archive</a>${S.spec.withKey?' <button type="button" class="st-btn alt sm" id="stKey">Answer key (PDF)</button>':""}</div>`:""}
     <div class="ws-warn" id="stFull" hidden>A page is very full, so part of it may be cut off. Remove a question or choose a smaller box.</div></div>
    <div><h3>Theme</h3><div id="stTheme"></div></div>
+   <div><h3>Spacing</h3>
+    <label class="st-note" for="stSec">Space between sections</label><input type="range" id="stSec" min="0.4" max="2.6" step="0.05" value="${S.gsec}" style="width:100%;accent-color:#1B3A6B">
+    <label class="st-note" for="stLn">Line gaps and answer lines</label><input type="range" id="stLn" min="0.5" max="2.6" step="0.05" value="${S.gln}" style="width:100%;accent-color:#1B3A6B">
+    <div class="st-note">Drag to spread the sections and lines out. If sentences look squashed, drag right.</div></div>
    <div><h3>Pages</h3><div class="st-ptabs">${S.results.map((_,i)=>`<button type="button" data-pg="${i}"${i===pi?' class="on"':""}>${i+1}</button>`).join("")}</div></div>
    <div><h3>Page ${pi+1}: questions &amp; answers</h3><div class="st-note" style="margin-bottom:8px">Click any text on the sheet to edit it. Use these boxes to set answers and to add or remove questions.</div>
     ${r.acts.map((a,ai)=>`<div class="st-act" style="margin-bottom:10px"><div class="hd"><span>${esc(WS_ACT_LABEL[a.t])}</span>${r.acts.length>1?`<button type="button" class="st-btn alt sm" data-act="${ai}" data-op="act-del">Remove activity</button>`:""}</div>${stQEditor(a,pi,ai)}</div>`).join("")}
     <div class="row"><select id="stNewType" style="flex:1;min-width:150px">${Object.keys(WS_ACT_LABEL).map(k=>`<option value="${k}">${WS_ACT_LABEL[k]}</option>`).join("")}</select><button type="button" class="st-btn alt" id="stAddAct">+ Add to this page</button></div>
-    <div class="row" style="margin-top:10px"><button type="button" class="st-btn alt" id="stRegen">Rewrite this page with AI</button></div><div class="st-note" id="stRegenMsg"></div></div>`;
+    <div style="margin-top:12px"><h3>Final prompts (optional)</h3><textarea id="stFinal" placeholder="e.g. Make the questions a bit harder. Use simpler words. Add a question about Vision 2030." style="min-height:70px"></textarea>
+    <div class="row" style="margin-top:8px"><button type="button" class="st-btn alt" id="stRegen">Apply to this page</button><button type="button" class="st-btn alt" id="stRegenAll">Apply to all pages</button></div>
+<div class="st-note" id="stRegenMsg"></div></div>`;
   stThemePicker(side.querySelector("#stTheme"), S.theme, k=>{ S.theme = k; stDirty(); stRenderPages(); });
-  side.querySelector("#stSaveNow").onclick = ()=>{ S.err=""; stSave(); };
-  side.querySelector("#stPdf").onclick = ()=>stDownload("pdf");
-  const kb = side.querySelector("#stKey"); if(kb) kb.onclick = ()=>stDownload("key");
-  side.querySelector("#stPrint").onclick = async ()=>{ if(!S.build || S.build.ver!==S.ver) S.build = await stBuild(S.ver); wsPrintImages(S.build.pageUrls); };
+  side.querySelector("#stPublish").onclick = ()=>{ S.err = ""; stSave(); };
+  const kb = side.querySelector("#stKey"); if(kb) kb.onclick = stKeyDownload;
+  let fitT = null;
+  const spacing = ()=>{ document.querySelectorAll("#stPages .wsx-page").forEach(pg=>{ pg.style.setProperty("--gsec", S.gsec); pg.style.setProperty("--gln", S.gln); }); stDirty(); clearTimeout(fitT); fitT = setTimeout(()=>{ let ok = true; document.querySelectorAll("#stPages .wsx-page").forEach(pg=>{ if(!wsFitEl(pg)) ok = false; }); const f = document.getElementById("stFull"); if(f) f.hidden = ok; }, 250); };
+  side.querySelector("#stSec").oninput = e=>{ S.gsec = +e.target.value; spacing(); };
+  side.querySelector("#stLn").oninput = e=>{ S.gln = +e.target.value; spacing(); };
   side.querySelectorAll("[data-pg]").forEach(b=> b.onclick = ()=>{ S.page = +b.dataset.pg; stRenderSide(); const pw = document.querySelector('.st-pw[data-pi="'+S.page+'"]'); document.querySelectorAll(".st-pw").forEach(x=>x.classList.toggle("cur", +x.dataset.pi===S.page)); if(pw) pw.scrollIntoView({behavior:"smooth",block:"start"}); });
   side.querySelector("#stAddAct").onclick = ()=>{
     const t = side.querySelector("#stNewType").value, o = {t, title:WS_ACT_LABEL[t].replace(" activity",""), instructions:"Write your instruction here."};
@@ -4339,14 +4461,21 @@ function stRenderSide(keepScroll){
     if(t==="brain") Object.assign(o,{center:"Our idea", notes:"", size:"half"});
     r.acts.push(o); stStruct();
   };
-  side.querySelector("#stRegen").onclick = async ()=>{
-    const b = side.querySelector("#stRegen"), m = side.querySelector("#stRegenMsg"); b.disabled = true; m.textContent = "Writing new questions…";
+  const rewrite = async (all)=>{
+    const m = side.querySelector("#stRegenMsg"), fin = side.querySelector("#stFinal").value.trim();
+    const btns = side.querySelectorAll("#stRegen,#stRegenAll"); btns.forEach(x=>x.disabled = true);
+    const idx = all ? S.results.map((_,i)=>i) : [pi];
     try{
-      const sp = Object.assign({}, S.spec, {pages:S.results.map((x,i)=>x.acts.map(stActSpec))});
-      const nr = await wsGeneratePage(sp, pi, S.digest); if(pi!==0) nr.intro = ""; else if(!nr.intro) nr.intro = r.intro;
-      S.results[pi] = nr; stStruct();
-    }catch(e){ b.disabled = false; m.textContent = e.message || "Could not rewrite the page."; }
+      const specs = S.results.map(x=>x.acts.map(stActSpec));
+      const sp = Object.assign({}, S.spec, {pages:specs, allowEmoji: S.spec.allowEmoji || /emoji/i.test(fin), extra: (S.spec.extra||"") + (fin ? "\nFinal instructions from the teacher: "+fin : ""), current: fin ? S.results.map(x=>JSON.stringify(x).slice(0,7000)) : null});
+      let n = 0; m.textContent = "Rewriting…";
+      const out = await Promise.all(idx.map(i=>wsGeneratePage(sp, i, S.digest).then(r=>{ n++; m.textContent = "Rewriting… ("+n+" of "+idx.length+")"; return r; })));
+      idx.forEach((i,k)=>{ const nr = out[k]; if(i!==0) nr.intro = ""; else if(!nr.intro) nr.intro = S.results[0].intro; S.results[i] = nr; });
+      stStruct();
+    }catch(e){ btns.forEach(x=>x.disabled = false); m.textContent = e.message || "Could not rewrite."; }
   };
+  side.querySelector("#stRegen").onclick = ()=>rewrite(false);
+  side.querySelector("#stRegenAll").onclick = ()=>rewrite(true);
   side.querySelectorAll("[data-op]").forEach(el=>{
     const handler = ()=>{
       const a = r.acts[+el.dataset.act], op = el.dataset.op, i = +el.dataset.i, v = el.value;
@@ -4368,7 +4497,6 @@ function stRenderSide(keepScroll){
     el.addEventListener(el.tagName==="BUTTON" ? "click" : "change", handler);
   });
   if(keepScroll) side.scrollTop = top;
-  S.err ? stStatus("err","Not saved: "+S.err) : (S.savedVer===S.ver && S.recordId ? null : null);
 }
 window.addEventListener("beforeunload", e=>{ if(WS_STUDIO && S.results && (S.saving || S.ver!==S.savedVer)){ e.preventDefault(); e.returnValue = ""; } });
 
@@ -4837,6 +4965,8 @@ document.getElementById("confirmBatchBtn").onclick = async ()=>{
     renderNavGrid();
     if(currentViewName!=="home") renderView(currentViewName);
   }
+  const wantView = new URLSearchParams(location.search).get("view");
+  if(wantView && ["worksheets","videos"].includes(wantView)) showView(wantView);
 })();
 </script>
 </body>
