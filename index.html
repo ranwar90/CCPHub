@@ -280,7 +280,8 @@
   .ws-x:hover{background:var(--bg);color:var(--ink);}
   .ws-choice{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;}
   .ws-choice button{border:1.5px solid var(--line);background:var(--bg);border-radius:12px;padding:18px 14px;text-align:left;display:flex;flex-direction:column;gap:6px;font:inherit;color:var(--ink);}
-  .ws-choice button:hover{border-color:var(--teal);background:var(--teal-soft);}
+  .ws-choice a{border:1.5px solid var(--line);background:var(--bg);border-radius:12px;padding:18px 14px;text-align:left;display:flex;flex-direction:column;gap:6px;font:inherit;color:var(--ink);text-decoration:none;cursor:pointer;}
+  .ws-choice a:hover,.ws-choice button:hover{border-color:var(--teal);background:var(--teal-soft);}
   .ws-choice b{font-family:"Space Grotesk",sans-serif;font-size:16px;}
   .ws-choice span{font-size:12.5px;color:var(--ink-soft);}
   .ws-sec{border-top:1px solid var(--line);margin-top:18px;padding-top:14px;}
@@ -570,9 +571,90 @@
     .stagetrack{display:none;}
     .stagenode{padding:0 !important;}
   }
+  /* ===== Worksheet Studio (own tab) ===== */
+  body.studio-mode{padding-left:0!important;background:#EEF1F7;}
+  body.studio-mode .wrap, body.studio-mode #sideNav, body.studio-mode #sideNavToggle, body.studio-mode #loadingOverlay{display:none!important;}
+  .st{min-height:100vh;color:var(--ink);}
+  .st[hidden],.st [hidden]{display:none!important;}
+  body.studio-mode .footer-note{display:none!important;}
+  .st-top{background:#1B3A6B;color:#fff;display:flex;align-items:center;gap:14px;padding:9px 20px;position:sticky;top:0;z-index:60;flex-wrap:wrap;}
+  .st-top .lg{display:flex;gap:8px;align-items:center;}
+  .st-top .lg img{height:32px;width:auto;background:#fff;border-radius:7px;padding:3px 7px;display:block;}
+  .st-top h1{font-size:18px;margin:0;color:#fff;letter-spacing:.01em;}
+  .st-top .sp{flex:1;}
+  .st-link{color:#fff;font-weight:700;font-size:13px;text-decoration:none;border:1.5px solid rgba(255,255,255,.55);border-radius:9px;padding:7px 13px;background:transparent;font-family:inherit;cursor:pointer;}
+  .st-link:hover{background:rgba(255,255,255,.14);}
+  .st-chip{font-size:12.5px;font-weight:700;border-radius:99px;padding:5px 12px;background:rgba(255,255,255,.16);color:#fff;}
+  .st-chip.ok{background:#2E7D46;} .st-chip.warn{background:#DFA61B;color:#1b2230;} .st-chip.err{background:#C1524A;}
+  .st-setup{max-width:960px;margin:22px auto 60px;padding:0 16px;}
+  .st-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:16px;}
+  .st-card h2{margin:0 0 4px;font-size:21px;} .st-card h3{margin:0 0 8px;font-size:15px;}
+  .st-card .sub{color:var(--ink-soft);font-size:13px;margin-bottom:14px;}
+  .st select, .st input[type=text], .st input[type=url], .st textarea, .st-in{background:#1B3A6B;color:#fff;border:1.5px solid #1B3A6B;border-radius:9px;padding:10px 12px;font:inherit;font-size:14px;min-height:42px;width:100%;}
+  .st select{appearance:none;-webkit-appearance:none;padding-right:34px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 11px center;}
+  .st select option{background:#1B3A6B;color:#fff;}
+  .st ::placeholder{color:#AFC0E0;opacity:1;}
+  .st input:focus, .st select:focus, .st textarea:focus{outline:3px solid #6FA0FF;outline-offset:1px;}
+  .st textarea{min-height:84px;resize:vertical;}
+  .st input[type=file]{width:100%;background:#1B3A6B;color:#fff;border-radius:9px;padding:8px;font:inherit;font-size:13px;}
+  .st input[type=file]::file-selector-button{background:#fff;color:#1B3A6B;border:0;border-radius:7px;padding:6px 12px;font-weight:700;margin-right:10px;cursor:pointer;}
+  .st-btn{background:#1B3A6B;color:#fff;border:1.5px solid #1B3A6B;border-radius:9px;padding:9px 16px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;min-height:40px;}
+  .st-btn:hover{background:#12294d;}
+  .st-btn:disabled{opacity:.55;cursor:default;}
+  .st-btn.alt{background:#fff;color:#1B3A6B;} .st-btn.alt:hover{background:#EAF0FA;}
+  .st-btn.red{background:#D3261B;border-color:#D3261B;} .st-btn.red:hover{background:#b81f15;}
+  .st-btn.sm{padding:5px 11px;min-height:32px;font-size:12.5px;border-radius:8px;}
+  .st .ws-seg button{background:#1B3A6B;color:#fff;border-left:1px solid rgba(255,255,255,.25);}
+  .st .ws-seg button.on{background:#fff;color:#1B3A6B;box-shadow:inset 0 0 0 2px #1B3A6B;}
+  .st .ws-seg{border:1.5px solid #1B3A6B;}
+  .st .wa-act{background:#EAF0FA;border-color:#C5D3EE;}
+  .st .wa-act select{background-color:#1B3A6B;color:#fff;border-color:#1B3A6B;min-height:36px;}
+  .st .wa-page{background:#F6F8FC;}
+  .st .ws-file{background:#EAF0FA;}
+  .st-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .st-f{display:flex;flex-direction:column;gap:6px;min-width:0;} .st-f.full{grid-column:1/-1;}
+  .st-f>label{font-size:13px;font-weight:700;}
+  .st-f .hint{font-size:12px;color:var(--ink-soft);}
+  .st-theme{position:relative;}
+  .st-theme-btn{width:100%;display:flex;align-items:center;gap:12px;justify-content:space-between;background:#1B3A6B;color:#fff;border:1.5px solid #1B3A6B;border-radius:9px;padding:9px 12px;font:inherit;font-size:14px;cursor:pointer;min-height:42px;}
+  .st-theme-pop{position:absolute;z-index:70;left:0;right:0;top:calc(100% + 6px);background:#fff;border:1.5px solid #1B3A6B;border-radius:12px;box-shadow:0 14px 40px rgba(10,14,24,.3);padding:6px;max-height:380px;overflow:auto;}
+  .st-theme-pop[hidden]{display:none!important;}
+  .st-theme-opt{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;border:0;background:transparent;padding:9px 10px;border-radius:8px;font:inherit;font-size:14px;font-weight:600;color:var(--ink);cursor:pointer;text-align:left;}
+  .st-theme-opt:hover, .st-theme-opt.on{background:#EAF0FA;}
+  .st-sw{display:inline-flex;gap:4px;}
+  .st-sw i{display:block;width:18px;height:18px;border-radius:5px;border:1px solid rgba(0,0,0,.28);}
+  .st-theme-btn .st-sw i{border-color:rgba(255,255,255,.7);}
+  .st-edit{display:grid;grid-template-columns:minmax(0,1fr) 410px;height:calc(100vh - 53px);}
+  .st-pages{overflow:auto;padding:22px 20px 60px;background:#DDE2EC;}
+  .st-pw{width:calc(794px*var(--k,1));height:calc(1123px*var(--k,1));margin:0 auto 24px;position:relative;box-shadow:0 4px 22px rgba(10,20,50,.22);background:#fff;}
+  .st-pw.cur{outline:3px solid #1B3A6B;outline-offset:3px;}
+  .st-pi{transform:scale(var(--k,1));transform-origin:0 0;width:794px;height:1123px;}
+  .st-pages [contenteditable]{outline:none;border-radius:3px;transition:background .12s;cursor:text;}
+  .st-pages [contenteditable]:hover{background:rgba(27,58,107,.12);}
+  .st-pages [contenteditable]:focus{background:rgba(27,58,107,.18);box-shadow:0 0 0 2px #1B3A6B;}
+  .st-pages .wsx-ah [contenteditable]:hover{background:rgba(255,255,255,.2);}
+  .st-pages .wsx-ah [contenteditable]:focus{background:rgba(255,255,255,.25);box-shadow:0 0 0 2px #fff;}
+  .st-pages .wsx-band [contenteditable]:hover{background:rgba(255,255,255,.18);}
+  .st-pages .wsx-ok{display:inline!important;color:#2E7D46;font-weight:800;margin-left:.4em;}
+  .st-side{overflow:auto;background:#fff;border-left:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:14px;}
+  .st-side h3{margin:0 0 6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);}
+  .st-side .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .st-ptabs{display:flex;gap:6px;flex-wrap:wrap;}
+  .st-ptabs button{min-width:38px;height:36px;border-radius:9px;border:1.5px solid #1B3A6B;background:#fff;color:#1B3A6B;font:inherit;font-weight:800;cursor:pointer;}
+  .st-ptabs button.on{background:#1B3A6B;color:#fff;}
+  .st-act{border:1.5px solid #C5D3EE;border-radius:12px;padding:10px;background:#F6F8FC;display:flex;flex-direction:column;gap:8px;}
+  .st-act .hd{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;color:#1B3A6B;font-size:14px;}
+  .st-q{background:#fff;border:1px solid #D6DEEE;border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:6px;}
+  .st-q .lb{font-size:12px;font-weight:700;color:var(--ink-soft);display:flex;justify-content:space-between;align-items:center;gap:6px;}
+  .st-q .lb span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .st-note{font-size:12.5px;color:var(--ink-soft);}
+  .st-genrun{max-width:720px;margin:60px auto;}
+  @media (max-width:1000px){.st-edit{grid-template-columns:1fr;height:auto;}.st-side{border-left:0;border-top:1px solid var(--line);}.st-grid2{grid-template-columns:1fr;}}
+
 </style>
 </head>
 <body>
+<div id="wsStudio" class="st" hidden></div>
 
 <button class="sidenav-toggle" id="sideNavToggle">
   <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -3506,10 +3588,9 @@ function wsChooser(){
   const d = wsOpenModal(true);
   d.innerHTML = wsHead("Add a worksheet","How would you like to add it?") + `<div class="ws-choice">
     <button type="button" id="wcUp"><b>Upload from computer</b><span>A PDF or Word file you already have. It is saved to the archive for everyone to download.</span></button>
-    <button type="button" id="wcAi"><b>Create using AI</b><span>Pick the grade, sprint and activities, add your resources, and a printable A4 worksheet is built for you.</span></button></div>`;
+    <a id="wcAi" class="wc-a" href="?studio=1" target="_blank" rel="noopener"><b>Create using AI</b><span>Opens the Worksheet Studio in a new tab: choose a theme, add resources, then edit the finished A4 sheet before it is saved.</span></a></div>`;
   wsBindClose(d);
   d.querySelector("#wcUp").onclick = wsUploadDialog;
-  d.querySelector("#wcAi").onclick = wsAiDialog;
 }
 
 /* ---------- helpers: files, Drive, libs ---------- */
@@ -3621,139 +3702,7 @@ function wsUploadDialog(){
   };
 }
 
-/* ---------- Create using AI ---------- */
-const WS_ACT_LABEL = {mcq:"MCQ activity", gap:"Gap fill activity", short:"Short answer activity", sketch:"Sketching activity", brain:"Brainstorming activity"};
-const WS_ACT_DEFAULT = {mcq:{n:5,o:3}, gap:{n:5,g:5}, short:{n:4,l:3}, sketch:{size:"half"}, brain:{size:"half"}};
-const WS_PAGE_DEFAULT = ["mcq","gap","short","sketch"];
-const WS_SIZE_EM = {small:11, half:20, full:36};
-const WSX_CSS = `
-.wsx-page{width:794px;height:1123px;box-sizing:border-box;padding:32px 40px 24px;background:#fff;color:#1b2230;font-family:"Segoe UI",Arial,Helvetica,sans-serif;display:flex;flex-direction:column;position:relative;overflow:hidden;line-height:1.3}
-.wsx-page *{box-sizing:border-box}
-.wsx-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.wsx-logos{display:flex;align-items:center;gap:14px}
-.wsx-logos img{height:52px;width:auto;display:block}
-.wsx-sep{width:1px;height:38px;background:#c9ced8}
-.wsx-org{font-size:11px;color:#5b6272;text-align:right;line-height:1.35}
-.wsx-title{margin-top:10px;border-bottom:3px solid #DFA61B;padding-bottom:7px}
-.wsx-title h1{margin:0;font-size:25px;line-height:1.1;color:#1B3A6B;font-weight:800}
-.wsx-title .sub{font-size:12px;color:#5b6272;margin-top:3px}
-.wsx-info{display:flex;gap:18px;margin-top:9px;font-size:13px;font-weight:700}
-.wsx-info span{flex:1;display:flex;align-items:flex-end;gap:6px;white-space:nowrap}
-.wsx-info span i{flex:1;border-bottom:1.5px dotted #5b6272;height:13px;display:block}
-.wsx-body{flex:1;min-height:0;overflow:hidden;margin-top:9px;font-size:calc(14px * var(--s,1));display:flex;flex-direction:column;gap:.7em}
-.wsx-intro{background:#FFF7DC;border:1.5px dashed #DFA61B;border-radius:12px;padding:.55em .9em}
-.wsx-ah{display:flex;justify-content:space-between;align-items:center;background:#1B3A6B;color:#fff;border-radius:.7em;padding:.4em .9em;font-weight:800;font-size:1.08em}
-.wsx-ah .sc{background:#fff;color:#1B3A6B;border-radius:99px;padding:.05em .7em;font-size:.85em}
-.wsx-ins{font-style:italic;color:#4b5263;margin:.35em 0 .1em;font-size:.95em}
-.wsx-q{display:flex;gap:.6em;margin-top:.55em}
-.wsx-n{flex:none;width:1.7em;height:1.7em;border-radius:50%;background:#DFA61B;color:#fff;font-weight:800;text-align:center;line-height:1.7em;font-size:.9em}
-.wsx-qt{flex:1}
-.wsx-opt{margin:.2em 0 0 0}
-.wsx-opt b{color:#1B3A6B}
-.wsx-bank{display:flex;flex-wrap:wrap;gap:.5em;margin:.4em 0 .2em}
-.wsx-bank span{border:1.5px solid #1B3A6B;color:#1B3A6B;border-radius:99px;padding:.1em .8em;font-weight:700}
-.wsx-gap{display:inline-block;min-width:6em;border-bottom:1.5px solid #1b2230;height:1em;vertical-align:baseline}
-.wsx-line{height:1.9em;border-bottom:1.2px solid #8a90a0}
-.wsx-box{position:relative;border:2px dashed #1B3A6B;border-radius:.8em;margin-top:.5em;background:#fcfdff}
-.wsx-box .hint{position:absolute;right:.7em;bottom:.4em;font-size:.8em;color:#9aa1b2}
-.wsx-labs{display:grid;grid-template-columns:1fr 1fr;gap:.5em;margin-top:.5em}
-.wsx-lab{border:1.5px solid #c9ced8;border-radius:.5em;padding:.3em .6em;min-height:3em}
-.wsx-lab b{font-size:.85em;color:#1B3A6B}
-.wsx-bc{position:absolute;left:35%;top:33%;width:30%;height:34%;border-radius:50%;background:#FFE9A8;border:2px solid #DFA61B;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;padding:.4em;color:#1B3A6B}
-.wsx-bb{position:absolute;width:24%;height:26%;border-radius:50%;border:1.8px solid #8a90a0;background:#fff}
-.wsx-foot{margin-top:7px;font-size:10px;color:#7a8091;display:flex;justify-content:space-between;border-top:1px solid #e3e5ea;padding-top:5px}
-.wsx-keytag{font-size:11px;font-weight:800;color:#b3261e;letter-spacing:.06em;text-transform:uppercase}
-.wsx-keyrow{margin:.3em 0;font-size:.95em}
-`;
-const wa = {pages:1, acts:[[{t:"mcq", ...WS_ACT_DEFAULT.mcq}]], files:[], links:[], result:null};
-
-function wsSelOpts(min,max,val){ let s=""; for(let i=min;i<=max;i++) s+=`<option${i===val?" selected":""}>${i}</option>`; return s; }
-function wsActRow(p,i,a){
-  const type = Object.keys(WS_ACT_LABEL).map(k=>`<option value="${k}"${a.t===k?" selected":""}>${WS_ACT_LABEL[k]}</option>`).join("");
-  let params = "";
-  if(a.t==="mcq") params = `<label>Questions<select data-k="n">${wsSelOpts(1,10,a.n)}</select></label><label>Options each<select data-k="o">${wsSelOpts(2,5,a.o)}</select></label>`;
-  if(a.t==="gap") params = `<label>Sentences<select data-k="n">${wsSelOpts(1,10,a.n)}</select></label><label>Gaps in total<select data-k="g">${wsSelOpts(1,15,a.g)}</select></label>`;
-  if(a.t==="short") params = `<label>Questions<select data-k="n">${wsSelOpts(1,8,a.n)}</select></label><label>Lines per answer<select data-k="l">${wsSelOpts(1,6,a.l)}</select></label>`;
-  if(a.t==="sketch"||a.t==="brain") params = `<label>Box size<select data-k="size">${[["small","Small box"],["half","Half page"],["full","Full page"]].map(o=>`<option value="${o[0]}"${a.size===o[0]?" selected":""}>${o[1]}</option>`).join("")}</select></label>`;
-  return `<div class="wa-act" data-p="${p}" data-i="${i}"><label class="grow">What goes here<select data-k="t">${type}</select></label>${params}<button type="button" class="va-btn ghost" data-rm aria-label="Remove activity">Remove</button></div>`;
-}
-function wsRenderBuilder(d){
-  const box = d.querySelector("#waBuilder");
-  box.innerHTML = wa.acts.map((acts,p)=>`<div class="wa-page"><h4>Page ${p+1}</h4>${acts.map((a,i)=>wsActRow(p,i,a)).join("")}${acts.length<3?`<button type="button" class="va-btn" data-add="${p}">+ Add activity to page ${p+1}</button>`:""}</div>`).join("");
-  box.querySelectorAll(".wa-act").forEach(row=>{
-    const p = +row.dataset.p, i = +row.dataset.i;
-    row.querySelectorAll("select").forEach(sel=> sel.onchange = ()=>{
-      const k = sel.dataset.k;
-      if(k==="t"){ wa.acts[p][i] = Object.assign({t:sel.value}, WS_ACT_DEFAULT[sel.value]); wsRenderBuilder(d); }
-      else wa.acts[p][i][k] = (k==="size") ? sel.value : +sel.value;
-    });
-    row.querySelector("[data-rm]").onclick = ()=>{ wa.acts[p].splice(i,1); wsRenderBuilder(d); };
-  });
-  box.querySelectorAll("[data-add]").forEach(b=> b.onclick = ()=>{ const p=+b.dataset.add; wa.acts[p].push(Object.assign({t:"short"}, WS_ACT_DEFAULT.short)); wsRenderBuilder(d); });
-}
-function wsSetPages(d,n){
-  wa.pages = n;
-  while(wa.acts.length < n){ const t = WS_PAGE_DEFAULT[wa.acts.length] || "short"; wa.acts.push([Object.assign({t}, WS_ACT_DEFAULT[t])]); }
-  wa.acts.length = n;
-  d.querySelectorAll("#waPages button").forEach(b=> b.classList.toggle("on", +b.dataset.n===n));
-  wsRenderBuilder(d);
-}
-function wsRenderFiles(d){
-  const box = d.querySelector("#waFiles"), tot = wa.files.reduce((s,f)=>s+f.size,0);
-  box.innerHTML = wa.files.map((f,i)=>`<div class="ws-file"><span class="nm">${esc(f.name)}</span><span class="sz">${wsFmtSize(f.size)}</span><button type="button" class="va-btn ghost" data-rmf="${i}">Remove</button></div>`).join("")
-    + wa.links.map((l,i)=>`<div class="ws-file"><span class="nm">\u{1F517} ${esc(l)}</span><button type="button" class="va-btn ghost" data-rml="${i}">Remove</button></div>`).join("");
-  d.querySelector("#waResCount").textContent = wa.files.length+" of 5 files ("+wsFmtSize(tot)+") · "+wa.links.length+" of 3 links";
-  box.querySelectorAll("[data-rmf]").forEach(b=> b.onclick = ()=>{ wa.files.splice(+b.dataset.rmf,1); wsRenderFiles(d); });
-  box.querySelectorAll("[data-rml]").forEach(b=> b.onclick = ()=>{ wa.links.splice(+b.dataset.rml,1); wsRenderFiles(d); });
-}
-function wsAiDialog(){
-  wa.pages = 1; wa.acts = [[Object.assign({t:"mcq"}, WS_ACT_DEFAULT.mcq)]]; wa.files = []; wa.links = []; wa.result = null;
-  const d = wsOpenModal(false);
-  d.innerHTML = wsHead("Create a worksheet with AI","Answer a few questions and a printable A4 worksheet with the Al-Rowad and CCP logos is built for you.") + `
-   <div id="waForm">
-    <div class="va-form">
-      <div class="va-field full"><label for="waName">Worksheet name</label><input class="va-inp" id="waName" type="text" autocomplete="off" placeholder="e.g. Week 6: Designing a Smart City Pod"></div>
-      <div class="va-field"><label for="waGrade">Grade level</label><select class="va-inp" id="waGrade"><option value="">Choose a grade</option>${WS_GRADES.map(g=>`<option>${g}</option>`).join("")}</select></div>
-      <div class="va-field"><label for="waSprint">Sprint</label><select class="va-inp" id="waSprint"><option value="">Choose a sprint</option>${WS_SPRINTS.map(g=>`<option>${g}</option>`).join("")}</select></div>
-      <div class="va-field"><label for="waBy">Created by</label><select class="va-inp" id="waBy"></select></div>
-    </div>
-    <div class="ws-sec"><h3>How many pages?</h3><div class="ws-seg" id="waPages">${[1,2,3,4].map(n=>`<button type="button" data-n="${n}"${n===1?' class="on"':""}>${n}</button>`).join("")}</div>
-      <div class="sub" style="margin:8px 0 0">Choose what goes on each page. Several activities can share a page.</div>
-      <div id="waBuilder"></div></div>
-    <div class="ws-sec"><h3>Your resources (optional)</h3>
-      <div class="sub" style="margin-bottom:8px">Images, PDFs, PowerPoint (.pptx) or Word (.docx) files, plus web links. Up to 5 files of 5 MB each (15 MB in total) and 3 links. The AI reads them and writes questions from what is in them.</div>
-      <input id="waFileIn" type="file" multiple accept="image/png,image/jpeg,image/webp,image/gif,.pdf,.pptx,.docx">
-      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><input class="va-inp" id="waLink" type="url" placeholder="https://example.com/page" style="flex:1;min-width:200px"><button type="button" class="va-btn" id="waLinkAdd">Add link</button></div>
-      <div class="va-msg" id="waResCount" style="margin-top:8px"></div><div class="ws-files" id="waFiles"></div><div class="va-msg err" id="waResErr"></div></div>
-    <div class="ws-sec"><label style="display:flex;gap:8px;align-items:center;font-size:14px"><input type="checkbox" id="waKey" checked> Also make a teacher answer key (separate PDF, not in the archive)</label></div>
-    <div class="va-formrow"><button type="button" class="va-btn primary" id="waGo">Generate worksheet</button><button type="button" class="va-btn ghost" data-close>Cancel</button><span class="va-msg" id="waMsg" role="status"></span></div>
-   </div>
-   <div id="waRun" hidden></div>`;
-  wsBindClose(d); wsFillBy(d.querySelector("#waBy")); wsRenderFiles(d); wsRenderBuilder(d);
-  d.querySelectorAll("#waPages button").forEach(b=> b.onclick = ()=>wsSetPages(d,+b.dataset.n));
-  const rerr = d.querySelector("#waResErr");
-  d.querySelector("#waFileIn").onchange = e=>{
-    rerr.textContent = "";
-    Array.from(e.target.files).forEach(f=>{
-      const ext = (f.name.split(".").pop()||"").toLowerCase();
-      if(!["png","jpg","jpeg","webp","gif","pdf","pptx","docx"].includes(ext)){ rerr.textContent = f.name+": use PDF, images, .pptx or .docx. Older .doc and .ppt files must be saved as .docx or .pptx first."; return; }
-      if(f.size > 5*1024*1024){ rerr.textContent = f.name+" is "+wsFmtSize(f.size)+". The limit is 5 MB per file."; return; }
-      if(wa.files.length >= 5){ rerr.textContent = "You can add up to 5 files."; return; }
-      if(wa.files.reduce((s,x)=>s+x.size,0)+f.size > 15*1024*1024){ rerr.textContent = "That would go over 15 MB in total."; return; }
-      wa.files.push(f);
-    });
-    e.target.value = ""; wsRenderFiles(d);
-  };
-  d.querySelector("#waLinkAdd").onclick = ()=>{
-    rerr.textContent = ""; let u = d.querySelector("#waLink").value.trim(); if(!u) return;
-    if(!/^https?:\/\//i.test(u)) u = "https://"+u;
-    try{ new URL(u); }catch(e){ rerr.textContent = "That does not look like a web link."; return; }
-    if(wa.links.length >= 3){ rerr.textContent = "You can add up to 3 links."; return; }
-    wa.links.push(u); d.querySelector("#waLink").value = ""; wsRenderFiles(d);
-  };
-  d.querySelector("#waGo").onclick = ()=>wsGenerate(d);
-}
-
+/* ---------- Create using AI: Worksheet Studio ---------- */
 /* ----- AI calls ----- */
 async function wsAi(task, content, links){
   const ctl = new AbortController(), t = setTimeout(()=>ctl.abort(), 120000);
@@ -3802,126 +3751,10 @@ function wsActSpecText(a,i){
   if(a.t==="sketch") return `${i}. sketch: one sketching activity (a drawing prompt plus 4 annotation labels such as Materials or Purpose).`;
   return `${i}. brain: one brainstorming activity (a mind-map with a centre topic).`;
 }
-function wsPagePrompt(spec, pi, digest){
-  const age = {6:11,7:12,8:13,9:14}[parseInt(spec.grade.replace(/\D/g,""),10)] || 12;
-  return `You are writing page ${pi+1} of ${spec.pages.length} of a printable classroom worksheet.
-School: Al-Rowad International Schools, Riyadh, Saudi Arabia. Programme: Cross Curricular Programme (CCP), project-based design and technology.
-Worksheet title: "${spec.name}". Class: ${spec.grade} (students about ${age} years old). Sprint (project theme): ${spec.sprint}.
-${digest ? "Teacher's source material. Base the questions on it:\n"+digest : "No source material was given. Write about the title and sprint theme using accurate, widely known facts."}
-Style: friendly, simple English a ${spec.grade} student can read alone. Short sentences. Add a fitting emoji to some headings and questions. No trick questions. Every fact must be correct. Never mention AI.
-This page must contain exactly these activities, in this order:
-${spec.pages[pi].map((a,i)=>wsActSpecText(a,i+1)).join("\n")}
-
-Reply with ONLY valid JSON, no markdown fences, in this shape:
-{"intro":"${pi===0?"one or two friendly sentences welcoming the student":"empty string"}","activities":[ ... one object per activity above, same order ... ]}
-Object shapes:
-mcq: {"type":"mcq","title":"short heading","instructions":"one short instruction","questions":[{"q":"question","options":["option text without letters"],"answer":0}]}  (answer = index of the correct option)
-gap: {"type":"gap","title":"...","instructions":"...","bank":["word"],"sentences":[{"text":"sentence using ___ where a word is missing","answers":["word"]}]}  (one ___ per missing word, in order)
-short: {"type":"short","title":"...","instructions":"...","questions":[{"q":"question","hint":"model answer in one short sentence"}]}
-sketch: {"type":"sketch","title":"...","instructions":"...","prompt":"what to draw","labels":["label 1","label 2","label 3","label 4"],"notes":"what a good drawing shows"}
-brain: {"type":"brain","title":"...","instructions":"...","center":"topic in 1-4 words","notes":"example ideas for the teacher"}`;
-}
 function wsParseJson(text){
   const a = text.indexOf("{"), b = text.lastIndexOf("}");
   if(a<0 || b<=a) throw new Error("The AI answer was not in the expected format.");
   return JSON.parse(text.slice(a,b+1));
-}
-function wsNormalizePage(json, acts){
-  const out = [];
-  acts.forEach((a,i)=>{
-    const x = (json.activities||[])[i];
-    if(!x || x.type!==a.t) throw new Error("The AI answer did not match the requested activities.");
-    const base = {t:a.t, title:String(x.title||""), instructions:String(x.instructions||"")};
-    if(a.t==="mcq"){
-      const qs = (x.questions||[]).slice(0,a.n).map(q=>{ const opts=(q.options||[]).map(String).slice(0,a.o); let ans=parseInt(q.answer,10); if(!(ans>=0&&ans<opts.length)) ans=0; return {q:String(q.q||""), options:opts, answer:ans}; }).filter(q=>q.q&&q.options.length>=2);
-      if(!qs.length) throw new Error("No usable questions came back."); out.push(Object.assign(base,{questions:qs, o:a.o}));
-    } else if(a.t==="gap"){
-      const ss = (x.sentences||[]).slice(0,a.n).map(s=>({text:String(s.text||""), answers:(s.answers||[]).map(String)})).filter(s=>/_{2,}/.test(s.text));
-      if(!ss.length) throw new Error("No usable sentences came back.");
-      let bank = (x.bank||[]).map(String); ss.forEach(s=>s.answers.forEach(w=>{ if(!bank.some(b=>b.toLowerCase()===w.toLowerCase())) bank.push(w); }));
-      out.push(Object.assign(base,{sentences:ss, bank}));
-    } else if(a.t==="short"){
-      const qs = (x.questions||[]).slice(0,a.n).map(q=>({q:String(q.q||""), hint:String(q.hint||"")})).filter(q=>q.q);
-      if(!qs.length) throw new Error("No usable questions came back."); out.push(Object.assign(base,{questions:qs, l:a.l}));
-    } else if(a.t==="sketch"){
-      out.push(Object.assign(base,{prompt:String(x.prompt||""), labels:(x.labels||[]).map(String).slice(0,6), notes:String(x.notes||""), size:a.size}));
-    } else {
-      out.push(Object.assign(base,{center:String(x.center||"Our idea"), notes:String(x.notes||""), size:a.size}));
-    }
-  });
-  return {intro:String(json.intro||""), acts:out};
-}
-async function wsGeneratePage(spec, pi, digest){
-  let lastErr;
-  for(let attempt=0; attempt<2; attempt++){
-    try{
-      const text = await wsAi("worksheet_page", [{type:"text", text:wsPagePrompt(spec,pi,digest)}], []);
-      return wsNormalizePage(wsParseJson(text), spec.pages[pi]);
-    }catch(e){ lastErr = e; if(/Apps Script has not been updated|API key|ANTHROPIC|too long/.test(e.message)) break; }
-  }
-  throw lastErr;
-}
-
-/* ----- page layout ----- */
-function wsx(h){ return esc(h); }
-function wsxHeader(spec, first, logos){
-  return `<div class="wsx-top"><div class="wsx-logos">${logos.rowad?`<img src="${logos.rowad}" alt="Al-Rowad International Schools">`:""}${logos.rowad&&logos.ccp?'<div class="wsx-sep"></div>':""}${logos.ccp?`<img src="${logos.ccp}" alt="Cross Curricular Programme">`:""}</div><div class="wsx-org">Al-Rowad International Schools<br>Cross Curricular Programme (CCP)</div></div>
-  <div class="wsx-title"><h1>${wsx(spec.name)}</h1><div class="sub">${wsx(spec.grade)} · ${wsx(spec.sprint)}</div></div>
-  <div class="wsx-info"><span>Student name: <i></i></span><span style="flex:.55">Class: <i></i></span><span style="flex:.55">Date: <i></i></span></div>`;
-}
-function wsxActivity(a, letter, key){
-  const total = a.t==="mcq"||a.t==="short" ? a.questions.length : a.t==="gap" ? a.sentences.length : 0;
-  const head = `<div class="wsx-ah"><span>Part ${letter}: ${wsx(a.title||WS_ACT_LABEL[a.t])}</span>${total?`<span class="sc">⭐ ___ / ${total}</span>`:""}</div>${a.instructions?`<div class="wsx-ins">${wsx(a.instructions)}</div>`:""}`;
-  let body = "";
-  if(a.t==="mcq"){
-    body = a.questions.map((q,i)=>`<div class="wsx-q"><div class="wsx-n">${i+1}</div><div class="wsx-qt"><div>${wsx(q.q)}</div>${q.options.map((o,j)=>`<div class="wsx-opt"><b>${"ABCDE"[j]}.</b> ${wsx(o)}</div>`).join("")}</div></div>`).join("");
-  } else if(a.t==="gap"){
-    body = `<div class="wsx-bank">${a.bank.map(w=>`<span>${wsx(w)}</span>`).join("")}</div>` + a.sentences.map((s,i)=>`<div class="wsx-q"><div class="wsx-n">${i+1}</div><div class="wsx-qt" style="line-height:1.9">${wsx(s.text).replace(/_{2,}/g,'<span class="wsx-gap"></span>')}</div></div>`).join("");
-  } else if(a.t==="short"){
-    body = a.questions.map((q,i)=>`<div class="wsx-q"><div class="wsx-n">${i+1}</div><div class="wsx-qt"><div>${wsx(q.q)}</div>${Array.from({length:a.l},()=>'<div class="wsx-line"></div>').join("")}</div></div>`).join("");
-  } else if(a.t==="sketch"){
-    body = `<div style="margin-top:.4em"><b>✏️ ${wsx(a.prompt)}</b></div><div class="wsx-box" style="height:${WS_SIZE_EM[a.size]||20}em"><span class="hint">Draw here</span></div>${a.labels.length?`<div class="wsx-labs">${a.labels.map(l=>`<div class="wsx-lab"><b>${wsx(l)}</b></div>`).join("")}</div>`:""}`;
-  } else {
-    const pos = [[6,8],[38,3],[70,8],[6,64],[38,70],[70,64]];
-    body = `<div class="wsx-box" style="height:${WS_SIZE_EM[a.size]||20}em">${pos.map(p=>`<div class="wsx-bb" style="left:${p[0]}%;top:${p[1]}%"></div>`).join("")}<div class="wsx-bc">${wsx(a.center)}</div></div>`;
-  }
-  return `<div>${head}${body}</div>`;
-}
-function wsxKeyActivity(a, letter){
-  let rows = "";
-  if(a.t==="mcq") rows = a.questions.map((q,i)=>`<div class="wsx-keyrow"><b>${i+1}.</b> ${"ABCDE"[q.answer]} – ${wsx(q.options[q.answer])}</div>`).join("");
-  else if(a.t==="gap") rows = `<div class="wsx-keyrow">Word bank: ${a.bank.map(wsx).join(", ")}</div>` + a.sentences.map((s,i)=>`<div class="wsx-keyrow"><b>${i+1}.</b> ${wsx(s.answers.join(", "))}</div>`).join("");
-  else if(a.t==="short") rows = a.questions.map((q,i)=>`<div class="wsx-keyrow"><b>${i+1}.</b> ${wsx(q.hint||"Accept any sensible answer.")}</div>`).join("");
-  else rows = `<div class="wsx-keyrow">${wsx(a.notes||"Accept any sensible, well-labelled answer.")}</div>`;
-  return `<div><div class="wsx-ah"><span>Part ${letter}: ${wsx(a.title||WS_ACT_LABEL[a.t])}</span></div>${rows}</div>`;
-}
-function wsBuildPages(spec, results, logos, withKey){
-  const N = spec.pages.length; let letterIx = 0; const pages = [];
-  results.forEach((r,pi)=>{
-    const acts = r.acts.map(a=>wsxActivity(a, String.fromCharCode(65+letterIx++), false)).join("");
-    pages.push(`<div class="wsx-page">${wsxHeader(spec,pi===0,logos)}<div class="wsx-body">${pi===0&&r.intro?`<div class="wsx-intro">\u{1F44B} ${wsx(r.intro)}</div>`:""}${acts}</div><div class="wsx-foot"><span>Cross Curricular Programme · Al-Rowad International Schools</span><span>Page ${pi+1} of ${N}</span></div></div>`);
-  });
-  let key = ""; if(withKey){
-    let li = 0; const rows = results.map(r=>r.acts.map(a=>wsxKeyActivity(a, String.fromCharCode(65+li++))).join("")).join("");
-    key = `<div class="wsx-page">${wsxHeader(spec,false,logos)}<div class="wsx-body"><div class="wsx-keytag">Teacher answer key – do not hand out</div>${rows}</div><div class="wsx-foot"><span>Teacher copy</span><span></span></div></div>`;
-  }
-  return {pages, key};
-}
-function wsFit(stage, html){
-  const holder = document.createElement("div"); holder.innerHTML = html; const page = holder.firstChild; stage.appendChild(page);
-  const body = page.querySelector(".wsx-body"), avail = body.clientHeight;
-  const measure = ()=>{ body.style.flex = "none"; body.style.height = "auto"; const h = body.offsetHeight; body.style.flex = ""; body.style.height = ""; return h; };
-  let s = 1; body.style.setProperty("--s","1");
-  while(measure() > avail + 1 && s > 0.66){ s = Math.round((s-0.04)*100)/100; body.style.setProperty("--s", String(s)); }
-  const fit = measure() <= avail + 1;
-  if(fit){   // short page: scale the content up a little so the sheet is not half empty
-    while(s < 1.3 && measure() < avail*0.8){
-      const t = Math.round((s+0.05)*100)/100; body.style.setProperty("--s", String(t));
-      if(measure() > avail){ body.style.setProperty("--s", String(s)); break; }
-      s = t;
-    }
-  }
-  return {page, fit};
 }
 function wsRenderCanvas(page, scale){
   return new Promise((res,rej)=>{
@@ -3962,21 +3795,364 @@ function wsPrintImages(urls){
   doc.close(); setTimeout(()=>{ try{ f.contentWindow.focus(); f.contentWindow.print(); }catch(e){} setTimeout(()=>f.remove(),60000); }, 400);
 }
 
-async function wsGenerate(d){
-  const msg = d.querySelector("#waMsg"), err = (t,id)=>{ msg.className="va-msg err"; msg.textContent=t; if(id) d.querySelector("#"+id).focus(); };
-  const name = d.querySelector("#waName").value.trim(), grade = d.querySelector("#waGrade").value, sprint = d.querySelector("#waSprint").value, by = d.querySelector("#waBy").value;
+/* ---------- Worksheet Studio: themes, icons, page builder ---------- */
+const WS_ACT_LABEL = {mcq:"MCQ activity", gap:"Gap fill activity", short:"Short answer activity", sketch:"Sketching activity", brain:"Brainstorming activity"};
+const WS_ACT_DEFAULT = {mcq:{n:5,o:3}, gap:{n:5,g:5}, short:{n:4,l:3}, sketch:{size:"half"}, brain:{size:"half"}};
+const WS_PAGE_DEFAULT = ["mcq","gap","short","sketch"];
+const WS_SIZE_EM = {small:11, half:20, full:36};
+const WS_MAX_PAGES = 8;
+const WS_ICONS = {
+  mcq:'<path d="M4 6.5l2 2 3.5-3.5M4 14.5l2 2 3.5-3.5"/><path d="M13 7h7M13 15h7"/>',
+  gap:'<path d="M3 7h18M3 17h10"/><path d="M3 12h5M16 12h5"/><path d="M9.5 12h5" stroke-dasharray="1.5 2.2"/>',
+  short:'<path d="M4 5h16v11H10l-5 4v-4H4z"/><path d="M8 9h8M8 12h5"/>',
+  sketch:'<path d="M4 20l1-4.2L16.2 4.6a1.6 1.6 0 0 1 2.3 0l.9.9a1.6 1.6 0 0 1 0 2.3L8.2 19z"/><path d="M14.5 6.5l3 3"/>',
+  brain:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1.1 1.2 1.1 2.2h5c0-1 .5-1.7 1.1-2.2A6 6 0 0 0 12 3z"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/>'
+};
+function wsIcon(k){ return `<svg class="wsx-ic" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${WS_ICONS[k]||""}</svg>`; }
+const WS_THEME_ORDER = ["ais","techy","crimson","terracotta","code","abstract","lagoon"];
+const WS_THEMES = {
+  ais:{name:"AIS", sw:["#000000","#1B3A6B","#DFA61B","#FFFFFF"], pri:"#1B3A6B", acc:"#DFA61B", soft:"#EEF2F9", ink:"#1b2230", on:"#ffffff", scbg:"#ffffff", scfg:"#1B3A6B", band:"#1B3A6B", bandtext:"#ffffff", font:'"Segoe UI",Arial,Helvetica,sans-serif', head:'"Segoe UI",Arial,Helvetica,sans-serif', kind:"ais",
+    deco:'<polygon points="236,0 276,0 226,90 186,90" fill="#DFA61B"/><polygon points="286,0 306,0 256,90 236,90" fill="#ffffff" opacity=".28"/>'},
+  techy:{name:"Techy", sw:["#2F6BFF","#7B3FE4","#17C3B2","#0B0F1A"], pri:"#2F6BFF", acc:"#17C3B2", soft:"#EEF1FF", ink:"#10162b", on:"#ffffff", scbg:"#0B0F1A", scfg:"#17C3B2", band:"linear-gradient(100deg,#0B0F1A 0%,#0B0F1A 50%,#27307d 100%)", bandtext:"#ffffff", font:'"Segoe UI",Arial,Helvetica,sans-serif', head:'"Segoe UI",Arial,Helvetica,sans-serif', kind:"techy", rot:["#2F6BFF","#7B3FE4","#0E9F94"],
+    deco:'<g fill="none" stroke-width="1.8"><path d="M320 20H252l-20 20h-44" stroke="#17C3B2"/><path d="M320 50H272l-14 14h-52l-12 12" stroke="#7B3FE4"/><path d="M320 78H286" stroke="#2F6BFF"/></g><circle cx="188" cy="40" r="4.5" fill="#17C3B2"/><circle cx="194" cy="76" r="4.5" fill="#7B3FE4"/><circle cx="286" cy="78" r="4.5" fill="#2F6BFF"/>'},
+  crimson:{name:"Crimson", sw:["#6D1230","#8D939C","#C8102E","#FFFFFF"], pri:"#B3122D", acc:"#8D939C", soft:"#F6EEF0", ink:"#2a1a1e", on:"#ffffff", scbg:"#ffffff", scfg:"#6D1230", band:"#6D1230", bandtext:"#ffffff", font:'"Segoe UI",Arial,Helvetica,sans-serif', head:'Georgia,"Times New Roman",serif', kind:"crimson",
+    deco:'<circle cx="282" cy="18" r="52" fill="#C8102E" opacity=".9"/><circle cx="232" cy="84" r="42" fill="#8D939C" opacity=".65"/><circle cx="312" cy="86" r="30" fill="#ffffff" opacity=".16"/>'},
+  terracotta:{name:"Terracotta", sw:["#E6AFC2","#ED8395","#E37674","#D86953"], pri:"#D86953", acc:"#E6AFC2", soft:"#FBEDF2", ink:"#3d2420", on:"#ffffff", scbg:"#ffffff", scfg:"#B5533F", band:"linear-gradient(100deg,#D86953 0%,#E37674 60%,#ED8395 100%)", bandtext:"#ffffff", font:'"Segoe UI",Arial,Helvetica,sans-serif', head:'Georgia,"Times New Roman",serif', kind:"terracotta",
+    deco:'<circle cx="300" cy="46" r="74" fill="#E6AFC2" opacity=".5"/><circle cx="300" cy="46" r="50" fill="#ED8395" opacity=".6"/><circle cx="300" cy="46" r="26" fill="#E6AFC2" opacity=".85"/>'},
+  code:{name:"Black & White", sw:["#000000","#4D4D4D","#BFBFBF","#FFFFFF"], pri:"#000000", acc:"#4D4D4D", soft:"#F2F2F2", ink:"#111111", on:"#ffffff", scbg:"#ffffff", scfg:"#000000", band:"#000000", bandtext:"#ffffff", font:'"Courier New",Consolas,Menlo,monospace', head:'"Courier New",Consolas,Menlo,monospace', kind:"code", prefix:"// part_",
+    deco:'<g font-family="Courier New,monospace" font-size="11" fill="#ffffff" opacity=".4"><text x="150" y="16">01001000 01100101</text><text x="150" y="32">01101100 01101100</text><text x="150" y="48">01101111 00100000</text><text x="150" y="64">01010111 01101111</text><text x="150" y="80">01110010 01101100</text></g>'},
+  abstract:{name:"Abstract", sw:["#D81B60","#F28C28","#2D4EDB","#35C9A1"], pri:"#2D4EDB", acc:"#F28C28", soft:"#FFF6EC", ink:"#1b1f3a", on:"#ffffff", scbg:"#ffffff", scfg:"#1b1f3a", band:"#FFF1E0", bandtext:"#1b1f3a", font:'"Segoe UI",Arial,Helvetica,sans-serif', head:'Georgia,"Times New Roman",serif', kind:"abstract", rot:["#D81B60","#2D4EDB","#0E8F7E","#D9650F"],
+    deco:'<path d="M236 0c34 8 66 32 54 64s-62 40-92 18 0-72 38-82z" fill="#D81B60"/><circle cx="292" cy="22" r="26" fill="#2D4EDB"/><path d="M196 90c20-34 66-34 90 0z" fill="#35C9A1"/><circle cx="214" cy="30" r="14" fill="#F28C28"/>'},
+  lagoon:{name:"Lagoon", sw:["#18B5A8","#FFC93C","#7DC8F5","#0E3B43"], pri:"#18B5A8", acc:"#FFC93C", soft:"#E9F8F6", ink:"#0E3B43", on:"#05303A", scbg:"#FFC93C", scfg:"#05303A", band:"#18B5A8", bandtext:"#05303A", font:'"Trebuchet MS","Segoe UI",Arial,sans-serif', head:'"Trebuchet MS","Segoe UI",Arial,sans-serif', kind:"lagoon",
+    deco:'<path d="M110 90C150 56 196 104 236 72S300 62 320 40V90z" fill="#7DC8F5"/><path d="M170 90c30-24 70 6 100-14s40-4 50-12V90z" fill="#ffffff" opacity=".35"/><circle cx="286" cy="26" r="21" fill="#FFC93C"/>'}
+};
+const WSX_CSS = `
+.wsx-page{width:794px;height:1123px;box-sizing:border-box;padding:30px 40px 24px;background:#fff;color:var(--ink);font-family:var(--font);display:flex;flex-direction:column;position:relative;overflow:hidden;line-height:1.3}
+.wsx-page *{box-sizing:border-box}
+.wsx-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.wsx-logos{display:flex;align-items:center;gap:14px}
+.wsx-logos img{height:50px;width:auto;display:block}
+.wsx-sep{width:1px;height:36px;background:#c9ced8}
+.wsx-org{font-size:11px;color:#5b6272;text-align:right;line-height:1.35}
+.wsx-band{position:relative;margin-top:10px;border-radius:12px;background:var(--band);color:var(--bandtext);padding:13px 18px;min-height:78px;overflow:hidden}
+.wsx-band h1{position:relative;margin:0;font-family:var(--head);font-size:25px;line-height:1.12;font-weight:800;max-width:72%}
+.wsx-band .sub{position:relative;font-size:12px;margin-top:4px;opacity:.9}
+.wsx-deco{position:absolute;right:0;top:0;height:100%;width:auto}
+.wsx-k-abstract .wsx-band{border:2px solid #1b1f3a}
+.wsx-k-code .wsx-band{border-radius:0}
+.wsx-info{display:flex;gap:18px;margin-top:10px;font-size:13px;font-weight:700}
+.wsx-info span{flex:1;display:flex;align-items:flex-end;gap:6px;white-space:nowrap}
+.wsx-info span i{flex:1;border-bottom:1.5px dotted var(--pri);height:13px;display:block}
+.wsx-body{flex:1;min-height:0;overflow:hidden;margin-top:9px;font-size:calc(14px * var(--s,1));display:flex;flex-direction:column;gap:.75em}
+.wsx-intro{background:var(--soft);border-left:4px solid var(--pri);border-radius:.5em;padding:.55em .9em;display:flex;gap:.6em;align-items:flex-start}
+.wsx-intro .wsx-ic{flex:none;color:var(--pri);margin-top:.1em}
+.wsx-ah{display:flex;align-items:center;gap:.6em;background:var(--bar);color:var(--on);border-radius:.7em;padding:.42em .9em;font-weight:800;font-size:1.06em;font-family:var(--head)}
+.wsx-k-code .wsx-ah{border-radius:0}
+.wsx-ah .tx{flex:1}
+.wsx-ah .wsx-ic{flex:none}
+.wsx-ah .sc{background:var(--scbg);color:var(--scfg);border-radius:99px;padding:.05em .75em;font-size:.82em;font-family:var(--font);font-weight:700}
+.wsx-ins{font-style:italic;color:#4b5263;margin:.35em 0 .1em;font-size:.95em}
+.wsx-q{display:flex;gap:.6em;margin-top:.55em}
+.wsx-n{flex:none;width:1.7em;height:1.7em;border-radius:50%;background:var(--bar);color:var(--on);font-weight:800;text-align:center;line-height:1.7em;font-size:.9em}
+.wsx-k-code .wsx-n{border-radius:.25em}
+.wsx-qt{flex:1}
+.wsx-opt{margin:.2em 0 0 0}
+.wsx-opt b{color:var(--bar)}
+.wsx-ok{display:none}
+.wsx-bank{display:flex;flex-wrap:wrap;gap:.5em;margin:.4em 0 .2em}
+.wsx-bank span{border:1.5px solid var(--bar);color:var(--ink);background:var(--soft);border-radius:99px;padding:.1em .8em;font-weight:700}
+.wsx-k-code .wsx-bank span{border-radius:0}
+.wsx-gap{display:inline-block;min-width:6em;border-bottom:1.5px solid var(--ink);height:1em;vertical-align:baseline}
+.wsx-line{height:1.9em;border-bottom:1.2px solid #8a90a0}
+.wsx-box{position:relative;border:2px dashed var(--bar);border-radius:.8em;margin-top:.5em;background:var(--soft)}
+.wsx-k-code .wsx-box{border-radius:0}
+.wsx-box .hint{position:absolute;right:.7em;bottom:.4em;font-size:.8em;color:#8a90a0}
+.wsx-labs{display:grid;grid-template-columns:1fr 1fr;gap:.5em;margin-top:.5em}
+.wsx-lab{border:1.5px solid #c9ced8;border-radius:.5em;padding:.3em .6em;min-height:3em}
+.wsx-lab b{font-size:.85em;color:var(--bar)}
+.wsx-bc{position:absolute;left:35%;top:33%;width:30%;height:34%;border-radius:50%;background:var(--bar);color:var(--on);display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;padding:.4em}
+.wsx-bb{position:absolute;width:24%;height:26%;border-radius:50%;border:1.8px solid var(--bar);background:#fff}
+.wsx-foot{margin-top:7px;font-size:10px;color:#7a8091;display:flex;justify-content:space-between;border-top:2px solid var(--pri);padding-top:5px}
+.wsx-keytag{font-size:11px;font-weight:800;color:#b3261e;letter-spacing:.06em;text-transform:uppercase}
+.wsx-keyrow{margin:.3em 0;font-size:.95em}
+`;
+function wsThemeVars(t){ return `--pri:${t.pri};--acc:${t.acc};--soft:${t.soft};--ink:${t.ink};--on:${t.on};--scbg:${t.scbg};--scfg:${t.scfg};--band:${t.band};--bandtext:${t.bandtext};--font:${t.font.replace(/"/g,"'")};--head:${t.head.replace(/"/g,"'")};`; }
+function wsBarColor(t, idx){ return t.rot ? t.rot[idx % t.rot.length] : t.pri; }
+function wsx(h){ return esc(h); }
+function wsxEd(edit, path){ return edit ? ` contenteditable="true" spellcheck="true" data-path="${path}"` : ""; }
+
+const WS_EMOJI_RE = /[\p{Extended_Pictographic}️‍]/gu;
+function wsClean(s, allow){ s = String(s==null?"":s); return allow ? s : s.replace(WS_EMOJI_RE,"").replace(/\s{2,}/g," ").trim(); }
+
+function wsxHeader(spec, t, logos, edit){
+  return `<div class="wsx-top"><div class="wsx-logos">${logos.rowad?`<img src="${logos.rowad}" alt="Al-Rowad International Schools">`:""}${logos.rowad&&logos.ccp?'<div class="wsx-sep"></div>':""}${logos.ccp?`<img src="${logos.ccp}" alt="Cross Curricular Programme">`:""}</div><div class="wsx-org">Al-Rowad International Schools<br>Cross Curricular Programme (CCP)</div></div>
+  <div class="wsx-band"><svg class="wsx-deco" viewBox="0 0 320 90" preserveAspectRatio="xMaxYMid slice" xmlns="http://www.w3.org/2000/svg">${t.deco}</svg><h1${wsxEd(edit,"spec.name")}>${wsx(spec.name)}</h1><div class="sub">${wsx(spec.grade)} · ${wsx(spec.sprint)}</div></div>
+  <div class="wsx-info"><span>Student name: <i></i></span><span style="flex:.55">Class: <i></i></span><span style="flex:.55">Date: <i></i></span></div>`;
+}
+function wsxActivity(a, letter, t, idx, edit, base){
+  const total = a.t==="mcq"||a.t==="short" ? a.questions.length : a.t==="gap" ? a.sentences.length : 0;
+  const bar = wsBarColor(t, idx), P = base;
+  const head = `<div class="wsx-ah">${wsIcon(a.t)}<span class="tx">${wsx((t.prefix||"Part ")+letter)}: <span${wsxEd(edit,P+".title")}>${wsx(a.title||WS_ACT_LABEL[a.t])}</span></span>${total?`<span class="sc">Score ___ / ${total}</span>`:""}</div>${a.instructions||edit?`<div class="wsx-ins"${wsxEd(edit,P+".instructions")}>${wsx(a.instructions)}</div>`:""}`;
+  let body = "";
+  if(a.t==="mcq"){
+    body = a.questions.map((q,i)=>`<div class="wsx-q"><div class="wsx-n">${i+1}</div><div class="wsx-qt"><div${wsxEd(edit,`${P}.questions.${i}.q`)}>${wsx(q.q)}</div>${q.options.map((o,j)=>`<div class="wsx-opt"><b>${"ABCDE"[j]}.</b> <span${wsxEd(edit,`${P}.questions.${i}.options.${j}`)}>${wsx(o)}</span>${edit&&j===q.answer?'<span class="wsx-ok" contenteditable="false">✓</span>':""}</div>`).join("")}</div></div>`).join("");
+  } else if(a.t==="gap"){
+    body = `<div class="wsx-bank">${a.bank.map((w,k)=>`<span${wsxEd(edit,`${P}.bank.${k}`)}>${wsx(w)}</span>`).join("")}</div>` + a.sentences.map((s,i)=>`<div class="wsx-q"><div class="wsx-n">${i+1}</div><div class="wsx-qt" style="line-height:1.9"><span${wsxEd(edit,`${P}.sentences.${i}.text`)}>${edit ? wsx(s.text) : wsx(s.text).replace(/_{2,}/g,'<span class="wsx-gap"></span>')}</span></div></div>`).join("");
+  } else if(a.t==="short"){
+    body = a.questions.map((q,i)=>`<div class="wsx-q"><div class="wsx-n">${i+1}</div><div class="wsx-qt"><div${wsxEd(edit,`${P}.questions.${i}.q`)}>${wsx(q.q)}</div>${Array.from({length:a.l},()=>'<div class="wsx-line"></div>').join("")}</div></div>`).join("");
+  } else if(a.t==="sketch"){
+    body = `<div style="margin-top:.4em"><b${wsxEd(edit,P+".prompt")}>${wsx(a.prompt)}</b></div><div class="wsx-box" style="height:${WS_SIZE_EM[a.size]||20}em"><span class="hint">Draw here</span></div>${a.labels.length?`<div class="wsx-labs">${a.labels.map((l,k)=>`<div class="wsx-lab"><b${wsxEd(edit,`${P}.labels.${k}`)}>${wsx(l)}</b></div>`).join("")}</div>`:""}`;
+  } else {
+    const pos = [[6,8],[38,3],[70,8],[6,64],[38,70],[70,64]];
+    body = `<div class="wsx-box" style="height:${WS_SIZE_EM[a.size]||20}em">${pos.map(p=>`<div class="wsx-bb" style="left:${p[0]}%;top:${p[1]}%"></div>`).join("")}<div class="wsx-bc"><span${wsxEd(edit,P+".center")}>${wsx(a.center)}</span></div></div>`;
+  }
+  return `<div class="wsx-act" style="--bar:${bar}">${head}${body}</div>`;
+}
+function wsxKeyActivity(a, letter, t, idx){
+  let rows = "";
+  if(a.t==="mcq") rows = a.questions.map((q,i)=>`<div class="wsx-keyrow"><b>${i+1}.</b> ${"ABCDE"[q.answer]} – ${wsx(q.options[q.answer])}</div>`).join("");
+  else if(a.t==="gap") rows = `<div class="wsx-keyrow">Word bank: ${a.bank.map(wsx).join(", ")}</div>` + a.sentences.map((s,i)=>`<div class="wsx-keyrow"><b>${i+1}.</b> ${wsx((s.answers||[]).join(", "))}</div>`).join("");
+  else if(a.t==="short") rows = a.questions.map((q,i)=>`<div class="wsx-keyrow"><b>${i+1}.</b> ${wsx(q.hint||"Accept any sensible answer.")}</div>`).join("");
+  else rows = `<div class="wsx-keyrow">${wsx(a.notes||"Accept any sensible, well-labelled answer.")}</div>`;
+  return `<div class="wsx-act" style="--bar:${wsBarColor(t,idx)}"><div class="wsx-ah">${wsIcon(a.t)}<span class="tx">${wsx((t.prefix||"Part ")+letter)}: ${wsx(a.title||WS_ACT_LABEL[a.t])}</span></div>${rows}</div>`;
+}
+function wsxPageHTML(M, pi, logos, edit){
+  const t = WS_THEMES[M.theme] || WS_THEMES.ais, N = M.results.length;
+  let before = 0; for(let i=0;i<pi;i++) before += M.results[i].acts.length;
+  const r = M.results[pi];
+  const acts = r.acts.map((a,ai)=>wsxActivity(a, String.fromCharCode(65+before+ai), t, before+ai, edit, `r.${pi}.acts.${ai}`)).join("");
+  const intro = pi===0 && (r.intro || edit) ? `<div class="wsx-intro">${wsIcon("info")}<span${wsxEd(edit,`r.0.intro`)}>${wsx(r.intro)}</span></div>` : "";
+  return `<div class="wsx-page wsx-k-${t.kind}" data-pi="${pi}" style="${wsThemeVars(t)}">${wsxHeader(M.spec,t,logos,edit)}<div class="wsx-body">${intro}${acts}</div><div class="wsx-foot"><span>Cross Curricular Programme · Al-Rowad International Schools</span><span>Page ${pi+1} of ${N}</span></div></div>`;
+}
+function wsxKeyHTML(M, logos){
+  const t = WS_THEMES[M.theme] || WS_THEMES.ais; let li = 0;
+  const rows = M.results.map(r=>r.acts.map(a=>{ const x = wsxKeyActivity(a, String.fromCharCode(65+li), t, li); li++; return x; }).join("")).join("");
+  return `<div class="wsx-page wsx-k-${t.kind}" style="${wsThemeVars(t)}">${wsxHeader(M.spec,t,logos,false)}<div class="wsx-body"><div class="wsx-keytag">Teacher answer key – do not hand out</div>${rows}</div><div class="wsx-foot"><span>Teacher copy</span><span></span></div></div>`;
+}
+function wsFitEl(page){
+  const body = page.querySelector(".wsx-body"), avail = body.clientHeight;
+  const measure = ()=>{ body.style.flex = "none"; body.style.height = "auto"; const h = body.offsetHeight; body.style.flex = ""; body.style.height = ""; return h; };
+  let s = 1; body.style.setProperty("--s","1");
+  while(measure() > avail + 1 && s > 0.66){ s = Math.round((s-0.04)*100)/100; body.style.setProperty("--s", String(s)); }
+  const fit = measure() <= avail + 1;
+  if(fit){
+    while(s < 1.3 && measure() < avail*0.8){
+      const t = Math.round((s+0.05)*100)/100; body.style.setProperty("--s", String(t));
+      if(measure() > avail){ body.style.setProperty("--s", String(s)); break; }
+      s = t;
+    }
+  }
+  return fit;
+}
+function wsFit(stage, html){
+  const holder = document.createElement("div"); holder.innerHTML = html; const page = holder.firstChild; stage.appendChild(page);
+  return {page, fit: wsFitEl(page)};
+}
+function wsLogos(){
+  const r = document.querySelector('.brandrow img[alt="Al-Rowad International Schools logo"]'), c = document.querySelector('.brandrow img[alt="Cross Curricular Programme logo"]');
+  return {rowad: r ? r.src : "", ccp: c ? c.src : ""};
+}
+function wsSetPath(root, path, val){
+  const parts = path.split("."); let o = root;
+  for(let i=0;i<parts.length-1;i++){ const k = /^\d+$/.test(parts[i]) ? +parts[i] : parts[i]; if(o[k]==null) return false; o = o[k]; }
+  const last = /^\d+$/.test(parts[parts.length-1]) ? +parts[parts.length-1] : parts[parts.length-1];
+  o[last] = val; return true;
+}
+
+/* ---------- AI prompt + parsing ---------- */
+function wsPagePrompt(spec, pi, digest){
+  const age = {6:11,7:12,8:13,9:14}[parseInt(spec.grade.replace(/\D/g,""),10)] || 12;
+  return `You are writing page ${pi+1} of ${spec.pages.length} of a printable classroom worksheet.
+School: Al-Rowad International Schools, Riyadh, Saudi Arabia. Programme: Cross Curricular Programme (CCP), project-based design and technology.
+Worksheet title: "${spec.name}". Class: ${spec.grade} (students about ${age} years old). Sprint (project theme): ${spec.sprint}.
+${digest ? "Teacher's source material. Base the questions on it:\n"+digest : "No source material was given. Write about the title and sprint theme using accurate, widely known facts."}
+Style: clear, mature, encouraging English that a ${spec.grade} student can read alone. Short sentences. No trick questions. Every fact must be correct. Never mention AI.
+${spec.allowEmoji ? "The teacher has asked for emojis, so use them where it suits their request." : "Do NOT use emojis, emoticons or decorative symbols anywhere in the text."}
+${spec.extra ? "Teacher's additional instructions (follow these closely):\n"+spec.extra+"\n" : ""}This page must contain exactly these activities, in this order:
+${spec.pages[pi].map((a,i)=>wsActSpecText(a,i+1)).join("\n")}
+
+Reply with ONLY valid JSON, no markdown fences, in this shape:
+{"intro":"${pi===0?"one or two sentences welcoming the student to the task":"empty string"}","activities":[ ... one object per activity above, same order ... ]}
+Object shapes:
+mcq: {"type":"mcq","title":"short heading","instructions":"one short instruction","questions":[{"q":"question","options":["option text without letters"],"answer":0}]}  (answer = index of the correct option)
+gap: {"type":"gap","title":"...","instructions":"...","bank":["word"],"sentences":[{"text":"sentence using ___ where a word is missing","answers":["word"]}]}  (one ___ per missing word, in order)
+short: {"type":"short","title":"...","instructions":"...","questions":[{"q":"question","hint":"model answer in one short sentence"}]}
+sketch: {"type":"sketch","title":"...","instructions":"...","prompt":"what to draw","labels":["label 1","label 2","label 3","label 4"],"notes":"what a good drawing shows"}
+brain: {"type":"brain","title":"...","instructions":"...","center":"topic in 1-4 words","notes":"example ideas for the teacher"}`;
+}
+function wsNormalizePage(json, acts, allow){
+  const out = [], T = x=>wsClean(x, allow);
+  acts.forEach((a,i)=>{
+    const x = (json.activities||[])[i];
+    if(!x || x.type!==a.t) throw new Error("The AI answer did not match the requested activities.");
+    const base = {t:a.t, title:T(x.title), instructions:T(x.instructions)};
+    if(a.t==="mcq"){
+      const qs = (x.questions||[]).slice(0,a.n).map(q=>{ const opts=(q.options||[]).map(T).slice(0,a.o); let ans=parseInt(q.answer,10); if(!(ans>=0&&ans<opts.length)) ans=0; return {q:T(q.q), options:opts, answer:ans}; }).filter(q=>q.q&&q.options.length>=2);
+      if(!qs.length) throw new Error("No usable questions came back."); out.push(Object.assign(base,{questions:qs, o:a.o}));
+    } else if(a.t==="gap"){
+      const ss = (x.sentences||[]).slice(0,a.n).map(s=>({text:T(s.text), answers:(s.answers||[]).map(T)})).filter(s=>/_{2,}/.test(s.text));
+      if(!ss.length) throw new Error("No usable sentences came back.");
+      const bank = (x.bank||[]).map(T); ss.forEach(s=>s.answers.forEach(w=>{ if(!bank.some(b=>b.toLowerCase()===w.toLowerCase())) bank.push(w); }));
+      out.push(Object.assign(base,{sentences:ss, bank}));
+    } else if(a.t==="short"){
+      const qs = (x.questions||[]).slice(0,a.n).map(q=>({q:T(q.q), hint:T(q.hint)})).filter(q=>q.q);
+      if(!qs.length) throw new Error("No usable questions came back."); out.push(Object.assign(base,{questions:qs, l:a.l}));
+    } else if(a.t==="sketch"){
+      out.push(Object.assign(base,{prompt:T(x.prompt), labels:(x.labels||[]).map(T).slice(0,6), notes:T(x.notes), size:a.size}));
+    } else {
+      out.push(Object.assign(base,{center:T(x.center)||"Our idea", notes:T(x.notes), size:a.size}));
+    }
+  });
+  return {intro:T(json.intro), acts:out};
+}
+async function wsGeneratePage(spec, pi, digest){
+  let lastErr;
+  for(let attempt=0; attempt<2; attempt++){
+    try{
+      const text = await wsAi("worksheet_page", [{type:"text", text:wsPagePrompt(spec,pi,digest)}], []);
+      return wsNormalizePage(wsParseJson(text), spec.pages[pi], spec.allowEmoji);
+    }catch(e){ lastErr = e; if(/Apps Script has not been updated|API key|ANTHROPIC|too long/.test(e.message)) break; }
+  }
+  throw lastErr;
+}
+
+
+/* ---------- Studio: setup form ---------- */
+const wa = {pages:1, acts:[[{t:"mcq", ...WS_ACT_DEFAULT.mcq}]], files:[], links:[], theme:"ais"};
+const S = {spec:null, results:null, theme:"ais", ver:0, savedVer:-1, saving:false, recordId:null, fileId:"", thumbId:"", build:null, timer:null, page:0, digest:"", again:false, err:""};
+const WS_STUDIO = new URLSearchParams(location.search).get("studio")==="1";
+
+function wsSelOpts(min,max,val){ let s=""; for(let i=min;i<=max;i++) s+=`<option${i===val?" selected":""}>${i}</option>`; return s; }
+function wsActRow(p,i,a){
+  const type = Object.keys(WS_ACT_LABEL).map(k=>`<option value="${k}"${a.t===k?" selected":""}>${WS_ACT_LABEL[k]}</option>`).join("");
+  let params = "";
+  if(a.t==="mcq") params = `<label>Questions<select data-k="n">${wsSelOpts(1,10,a.n)}</select></label><label>Options each<select data-k="o">${wsSelOpts(2,5,a.o)}</select></label>`;
+  if(a.t==="gap") params = `<label>Sentences<select data-k="n">${wsSelOpts(1,10,a.n)}</select></label><label>Gaps in total<select data-k="g">${wsSelOpts(1,15,a.g)}</select></label>`;
+  if(a.t==="short") params = `<label>Questions<select data-k="n">${wsSelOpts(1,8,a.n)}</select></label><label>Lines per answer<select data-k="l">${wsSelOpts(1,6,a.l)}</select></label>`;
+  if(a.t==="sketch"||a.t==="brain") params = `<label>Box size<select data-k="size">${[["small","Small box"],["half","Half page"],["full","Full page"]].map(o=>`<option value="${o[0]}"${a.size===o[0]?" selected":""}>${o[1]}</option>`).join("")}</select></label>`;
+  return `<div class="wa-act" data-p="${p}" data-i="${i}"><label class="grow">What goes here<select data-k="t">${type}</select></label>${params}<button type="button" class="st-btn alt sm" data-rm aria-label="Remove activity">Remove</button></div>`;
+}
+function wsRenderBuilder(d){
+  const box = d.querySelector("#waBuilder");
+  box.innerHTML = wa.acts.map((acts,p)=>`<div class="wa-page"><h4>Page ${p+1}</h4>${acts.map((a,i)=>wsActRow(p,i,a)).join("")}${acts.length<3?`<button type="button" class="st-btn alt sm" data-add="${p}">+ Add activity to page ${p+1}</button>`:""}</div>`).join("");
+  box.querySelectorAll(".wa-act").forEach(row=>{
+    const p = +row.dataset.p, i = +row.dataset.i;
+    row.querySelectorAll("select").forEach(sel=> sel.onchange = ()=>{
+      const k = sel.dataset.k;
+      if(k==="t"){ wa.acts[p][i] = Object.assign({t:sel.value}, WS_ACT_DEFAULT[sel.value]); wsRenderBuilder(d); }
+      else wa.acts[p][i][k] = (k==="size") ? sel.value : +sel.value;
+    });
+    row.querySelector("[data-rm]").onclick = ()=>{ wa.acts[p].splice(i,1); wsRenderBuilder(d); };
+  });
+  box.querySelectorAll("[data-add]").forEach(b=> b.onclick = ()=>{ const p=+b.dataset.add; wa.acts[p].push(Object.assign({t:"short"}, WS_ACT_DEFAULT.short)); wsRenderBuilder(d); });
+}
+function wsRenderPagesSeg(d){
+  const seg = d.querySelector("#waPages"), max = Math.max(3, wa.pages); let h = "";
+  for(let i=1;i<=max;i++) h += `<button type="button" data-n="${i}"${i===wa.pages?' class="on"':""}>${i}</button>`;
+  h += `<button type="button" data-plus aria-label="Add another page" title="Add another page">+</button>`;
+  seg.innerHTML = h;
+  seg.querySelectorAll("[data-n]").forEach(b=> b.onclick = ()=>wsSetPages(d,+b.dataset.n));
+  seg.querySelector("[data-plus]").onclick = ()=>{ if(wa.pages>=WS_MAX_PAGES){ d.querySelector("#waMsg").className="va-msg err"; d.querySelector("#waMsg").textContent="The most pages you can add is "+WS_MAX_PAGES+"."; return; } wsSetPages(d, wa.pages+1); };
+}
+function wsSetPages(d,n){
+  wa.pages = n;
+  while(wa.acts.length < n){ const t = WS_PAGE_DEFAULT[wa.acts.length] || "short"; wa.acts.push([Object.assign({t}, WS_ACT_DEFAULT[t])]); }
+  wa.acts.length = n;
+  wsRenderPagesSeg(d); wsRenderBuilder(d);
+}
+function wsRenderFiles(d){
+  const box = d.querySelector("#waFiles"), tot = wa.files.reduce((s,f)=>s+f.size,0);
+  box.innerHTML = wa.files.map((f,i)=>`<div class="ws-file"><span class="nm">${esc(f.name)}</span><span class="sz">${wsFmtSize(f.size)}</span><button type="button" class="st-btn alt sm" data-rmf="${i}">Remove</button></div>`).join("")
+    + wa.links.map((l,i)=>`<div class="ws-file"><span class="nm">Link: ${esc(l)}</span><button type="button" class="st-btn alt sm" data-rml="${i}">Remove</button></div>`).join("");
+  d.querySelector("#waResCount").textContent = wa.files.length+" of 5 files ("+wsFmtSize(tot)+") · "+wa.links.length+" of 3 links";
+  box.querySelectorAll("[data-rmf]").forEach(b=> b.onclick = ()=>{ wa.files.splice(+b.dataset.rmf,1); wsRenderFiles(d); });
+  box.querySelectorAll("[data-rml]").forEach(b=> b.onclick = ()=>{ wa.links.splice(+b.dataset.rml,1); wsRenderFiles(d); });
+}
+function stSwatches(t){ return `<span class="st-sw">${t.sw.map(c=>`<i style="background:${c}"></i>`).join("")}</span>`; }
+function stThemePicker(host, current, onChange){
+  let cur = current;
+  host.innerHTML = `<div class="st-theme"><button type="button" class="st-theme-btn" aria-haspopup="listbox"><span class="nm"></span><span class="sw"></span></button><div class="st-theme-pop" role="listbox" hidden></div></div>`;
+  const btn = host.querySelector(".st-theme-btn"), pop = host.querySelector(".st-theme-pop");
+  const paint = ()=>{ const t = WS_THEMES[cur]; btn.querySelector(".nm").textContent = t.name; btn.querySelector(".sw").innerHTML = stSwatches(t); pop.innerHTML = WS_THEME_ORDER.map(k=>`<button type="button" class="st-theme-opt${k===cur?" on":""}" role="option" data-k="${k}" aria-selected="${k===cur}"><span>${esc(WS_THEMES[k].name)}</span>${stSwatches(WS_THEMES[k])}</button>`).join(""); pop.querySelectorAll("[data-k]").forEach(o=> o.onclick = ()=>{ cur = o.dataset.k; pop.hidden = true; paint(); onChange && onChange(cur); }); };
+  btn.onclick = ()=>{ pop.hidden = !pop.hidden; };
+  document.addEventListener("click", e=>{ if(!pop.hidden && !e.composedPath().includes(host)) pop.hidden = true; });
+  paint();
+  return {set:k=>{ cur = k; paint(); }};
+}
+function stTopHTML(title, right){
+  const L = wsLogos();
+  return `<div class="st-top"><div class="lg">${L.rowad?`<img src="${L.rowad}" alt="Al-Rowad International Schools">`:""}${L.ccp?`<img src="${L.ccp}" alt="CCP">`:""}</div><h1>${title}</h1><span class="sp"></span>${right||""}<a class="st-link" href="${esc(location.pathname)}">Back to the Hub</a></div>`;
+}
+function stSetup(){
+  const root = document.getElementById("wsStudio"); root.hidden = false; document.title = "Worksheet Studio";
+  wa.pages = 1; wa.acts = [[Object.assign({t:"mcq"}, WS_ACT_DEFAULT.mcq)]]; wa.files = []; wa.links = []; wa.theme = "ais";
+  root.innerHTML = stTopHTML("Worksheet Studio") + `<div class="st-setup"><div class="st-card">
+   <h2>Create a worksheet with AI</h2><div class="sub">Answer a few questions. The worksheet opens here as an editable A4 sheet, and is saved to the archive automatically.</div>
+   <div id="waForm">
+    <div class="st-grid2">
+      <div class="st-f full"><label for="waName">Worksheet name</label><input type="text" id="waName" autocomplete="off" placeholder="e.g. Week 6: Designing a Smart City Pod"></div>
+      <div class="st-f"><label for="waGrade">Grade level</label><select id="waGrade"><option value="">Choose a grade</option>${WS_GRADES.map(g=>`<option>${g}</option>`).join("")}</select></div>
+      <div class="st-f"><label for="waSprint">Sprint</label><select id="waSprint"><option value="">Choose a sprint</option>${WS_SPRINTS.map(g=>`<option>${g}</option>`).join("")}</select></div>
+      <div class="st-f"><label for="waBy">Created by</label><select id="waBy"></select></div>
+      <div class="st-f"><label>Theme</label><div id="waTheme"></div></div>
+    </div>
+    <div class="ws-sec"><h3>How many pages?</h3><div class="ws-seg" id="waPages"></div>
+      <div class="sub" style="margin:8px 0 0">Choose what goes on each page. Several activities can share a page. Press + for more than 3 pages.</div>
+      <div id="waBuilder"></div></div>
+    <div class="ws-sec"><h3>Your resources (optional)</h3>
+      <div class="sub" style="margin-bottom:8px">Images, PDFs, PowerPoint (.pptx) or Word (.docx) files, plus web links. Up to 5 files of 5 MB each (15 MB in total) and 3 links. The AI reads them and writes questions from what is in them.</div>
+      <input id="waFileIn" type="file" multiple accept="image/png,image/jpeg,image/webp,image/gif,.pdf,.pptx,.docx">
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><input type="url" id="waLink" placeholder="https://example.com/page" style="flex:1;min-width:200px"><button type="button" class="st-btn" id="waLinkAdd">Add link</button></div>
+      <div class="va-msg" id="waResCount" style="margin-top:8px"></div><div class="ws-files" id="waFiles"></div><div class="va-msg err" id="waResErr"></div></div>
+    <div class="ws-sec"><h3>Any additional prompts? (optional)</h3>
+      <textarea id="waExtra" placeholder="e.g. Focus on sustainability. Keep the questions a little harder. Mention Vision 2030. Add emojis."></textarea>
+      <div class="sub" style="margin:6px 0 0">Worksheets use clean one-colour icons and no emojis, unless you ask for emojis here.</div></div>
+    <div class="ws-sec"><label style="display:flex;gap:8px;align-items:center;font-size:14px"><input type="checkbox" id="waKey" checked style="width:auto;min-height:0"> Also make a teacher answer key (separate PDF, not saved in the archive)</label></div>
+    <div class="va-formrow"><button type="button" class="st-btn red" id="waGo">Generate worksheet</button><span class="va-msg" id="waMsg" role="status"></span></div>
+   </div>
+   <div id="waRun" hidden></div></div></div>`;
+  wsFillBy(root.querySelector("#waBy")); wsRenderFiles(root); wsRenderPagesSeg(root); wsRenderBuilder(root);
+  stThemePicker(root.querySelector("#waTheme"), "ais", k=>{ wa.theme = k; });
+  const rerr = root.querySelector("#waResErr");
+  root.querySelector("#waFileIn").onchange = e=>{
+    rerr.textContent = "";
+    Array.from(e.target.files).forEach(f=>{
+      const ext = (f.name.split(".").pop()||"").toLowerCase();
+      if(!["png","jpg","jpeg","webp","gif","pdf","pptx","docx"].includes(ext)){ rerr.textContent = f.name+": use PDF, images, .pptx or .docx. Older .doc and .ppt files must be saved as .docx or .pptx first."; return; }
+      if(f.size > 5*1024*1024){ rerr.textContent = f.name+" is "+wsFmtSize(f.size)+". The limit is 5 MB per file."; return; }
+      if(wa.files.length >= 5){ rerr.textContent = "You can add up to 5 files."; return; }
+      if(wa.files.reduce((s,x)=>s+x.size,0)+f.size > 15*1024*1024){ rerr.textContent = "That would go over 15 MB in total."; return; }
+      wa.files.push(f);
+    });
+    e.target.value = ""; wsRenderFiles(root);
+  };
+  root.querySelector("#waLinkAdd").onclick = ()=>{
+    rerr.textContent = ""; let u = root.querySelector("#waLink").value.trim(); if(!u) return;
+    if(!/^https?:\/\//i.test(u)) u = "https://"+u;
+    try{ new URL(u); }catch(e){ rerr.textContent = "That does not look like a web link."; return; }
+    if(wa.links.length >= 3){ rerr.textContent = "You can add up to 3 links."; return; }
+    wa.links.push(u); root.querySelector("#waLink").value = ""; wsRenderFiles(root);
+  };
+  root.querySelector("#waGo").onclick = ()=>stGenerate(root);
+}
+
+/* ---------- Studio: generate ---------- */
+async function stGenerate(root){
+  const msg = root.querySelector("#waMsg"), err = (t,id)=>{ msg.className="va-msg err"; msg.textContent=t; if(id) root.querySelector("#"+id).focus(); };
+  const name = root.querySelector("#waName").value.trim(), grade = root.querySelector("#waGrade").value, sprint = root.querySelector("#waSprint").value, by = root.querySelector("#waBy").value;
+  const extra = root.querySelector("#waExtra").value.trim();
   if(!name) return err("Give the worksheet a name.","waName");
   if(!grade) return err("Choose the grade level.","waGrade");
   if(!sprint) return err("Choose the sprint.","waSprint");
   if(!by) return err("Choose who is creating this worksheet.","waBy");
   if(wa.acts.some(p=>!p.length)) return err("Every page needs at least one activity.");
   try{ localStorage.setItem("ccp_va_last_by", by); }catch(e){}
-  const spec = {name, grade, sprint, by, pages:wa.acts.map(p=>p.map(a=>Object.assign({},a))), withKey:d.querySelector("#waKey").checked};
-  const form = d.querySelector("#waForm"), run = d.querySelector("#waRun");
+  const spec = {name, grade, sprint, by, extra, allowEmoji:/emoji/i.test(extra), withKey:root.querySelector("#waKey").checked, pages:wa.acts.map(p=>p.map(a=>Object.assign({},a)))};
+  const form = root.querySelector("#waForm"), run = root.querySelector("#waRun");
   form.hidden = true; run.hidden = false; wsBusy = true;
-  run.innerHTML = `<h3 style="margin:18px 0 4px;font-size:17px">Creating your worksheet…</h3><div class="sub" style="margin:0">Please keep this window open. This usually takes under a minute.</div>${WS_PROG_HTML}<div id="waRunErr"></div>`;
+  run.innerHTML = `<h3 style="margin:6px 0 4px;font-size:18px">Creating your worksheet…</h3><div class="sub" style="margin:0">Keep this tab open. This usually takes under a minute.</div>${WS_PROG_HTML}<div id="waRunErr"></div>`;
   const P = wsProgress(run.querySelector(".ws-prog i"), run.querySelector(".pct"), run.querySelector(".lbl"));
-  let stage = null;
   try{
     P.to(2,"Getting started…");
     let digest = "";
@@ -3990,56 +4166,212 @@ async function wsGenerate(d){
     P.to(25,"Writing the questions…"); P.creep(72,"Writing the questions…");
     let done = 0; const N = spec.pages.length;
     const results = await Promise.all(spec.pages.map((_,pi)=>wsGeneratePage(spec,pi,digest).then(r=>{ done++; P.to(25+47*done/N, "Writing the questions… ("+done+" of "+N+" pages)"); return r; })));
-    P.stop(); P.to(74,"Laying out the pages…"); P.creep(90,"Laying out the pages…");
-    const logoR = document.querySelector('.brandrow img[alt="Al-Rowad International Schools logo"]'), logoC = document.querySelector('.brandrow img[alt="Cross Curricular Programme logo"]');
-    const logos = {rowad: logoR ? logoR.src : "", ccp: logoC ? logoC.src : ""};
-    const built = wsBuildPages(spec, results, logos, spec.withKey);
-    stage = document.createElement("div"); stage.style.cssText = "position:fixed;left:-12000px;top:0;width:794px"; stage.innerHTML = `<style>${WSX_CSS}</style>`; document.body.appendChild(stage);
-    const fits = built.pages.map(h=>wsFit(stage,h)); const keyFit = built.key ? wsFit(stage, built.key) : null;
-    const canv = []; for(let i=0;i<fits.length;i++){ canv.push(await wsRenderCanvas(fits[i].page, 2)); P.to(90+5*(i+1)/fits.length,"Drawing page "+(i+1)+"…"); }
-    P.creep(99,"Building the PDF…");
-    const pdf = wsMakePdf(canv);
-    let keyPdf = null; if(keyFit){ keyPdf = wsMakePdf([await wsRenderCanvas(keyFit.page, 2)]); }
-    const thumb = document.createElement("canvas"); thumb.width = 320; thumb.height = Math.round(320*1123/794); thumb.getContext("2d").drawImage(canv[0],0,0,thumb.width,thumb.height);
-    P.stop(); P.to(100,"Done");
-    wa.result = {spec, pdf, keyPdf, pageUrls:canv.map(c=>c.toDataURL("image/jpeg",0.8)), thumbB64:thumb.toDataURL("image/jpeg",0.8).split(",")[1], tooFull:fits.map((f,i)=>f.fit?0:i+1).filter(Boolean)};
-    stage.remove(); stage = null; wsBusy = false;
-    wsShowResult(d);
+    P.stop(); P.to(74,"Laying out the pages…");
+    Object.assign(S, {spec, results, theme:wa.theme, digest, ver:0, savedVer:-1, recordId:null, fileId:"", thumbId:"", build:null, page:0, err:""});
+    P.creep(92,"Laying out the pages…");
+    S.build = await stBuild(0);
+    P.stop(); P.to(96,"Saving to the archive…");
+    wsBusy = false;
+    stShowEditor();
+    stSave();       // automatic first save to the archive (editor is already usable)
   }catch(e){
-    P.stop(); wsBusy = false; if(stage) stage.remove();
-    run.querySelector("#waRunErr").innerHTML = `<div class="ws-warn" style="background:#FBE9E7;border-color:#C1524A"><b>Could not finish.</b> ${esc(e.message||"Something went wrong.")}</div><div class="va-formrow"><button type="button" class="va-btn primary" id="waBack">Back to my settings</button></div>`;
+    P.stop(); wsBusy = false;
+    run.querySelector("#waRunErr").innerHTML = `<div class="ws-warn" style="background:#FBE9E7;border-color:#C1524A"><b>Could not finish.</b> ${esc(e.message||"Something went wrong.")}</div><div class="va-formrow"><button type="button" class="st-btn" id="waBack">Back to my settings</button></div>`;
     run.querySelector("#waBack").onclick = ()=>{ run.hidden = true; form.hidden = false; };
   }
 }
-function wsShowResult(d){
-  const r = wa.result, run = d.querySelector("#waRun"), slug = wsSlug(r.spec.name);
-  run.innerHTML = `<h3 style="margin:18px 0 4px;font-size:17px">Your worksheet is ready</h3><div class="sub" style="margin:0">${r.pageUrls.length} page${r.pageUrls.length>1?"s":""}, A4. Check it over, then save it to the archive.</div>
-    ${r.tooFull.length?`<div class="ws-warn">Page ${r.tooFull.join(", ")} is very full and some of it may be cut off. Go back and choose fewer questions or a smaller box.</div>`:""}
-    <div class="ws-prev">${r.pageUrls.map((u,i)=>`<img src="${u}" alt="Page ${i+1} of the worksheet">`).join("")}</div>
-    <div class="va-formrow"><button type="button" class="va-btn primary" id="wrSave">Save to archive</button><button type="button" class="va-btn" id="wrPdf">Download PDF</button>${r.keyPdf?'<button type="button" class="va-btn" id="wrKey">Download answer key</button>':""}<button type="button" class="va-btn" id="wrPrint">Print</button><button type="button" class="va-btn ghost" id="wrBack">Change settings</button><span class="va-msg" id="wrMsg" role="status"></span></div>
-    <div id="wrProg" hidden>${WS_PROG_HTML}</div>`;
-  run.querySelector("#wrPdf").onclick = ()=>wsDownloadBlob(r.pdf, slug+".pdf");
-  if(r.keyPdf) run.querySelector("#wrKey").onclick = ()=>wsDownloadBlob(r.keyPdf, slug+"_ANSWER_KEY.pdf");
-  run.querySelector("#wrPrint").onclick = ()=>wsPrintImages(r.pageUrls);
-  run.querySelector("#wrBack").onclick = ()=>{ run.hidden = true; d.querySelector("#waForm").hidden = false; };
-  run.querySelector("#wrSave").onclick = async ()=>{
-    const msg = run.querySelector("#wrMsg"), btn = run.querySelector("#wrSave"), pw = run.querySelector("#wrProg");
-    btn.disabled = true; msg.className = "va-msg"; msg.textContent = ""; pw.hidden = false; wsBusy = true;
-    const P = wsProgress(pw.querySelector("i"), pw.querySelector(".pct"), pw.querySelector(".lbl"));
-    try{
-      P.to(5,"Preparing the file…"); const b64 = await wsToB64(r.pdf);
-      P.creep(80,"Uploading the worksheet…"); const up = await wsDriveUpload(slug+".pdf","application/pdf",b64);
-      let thumbId = ""; P.creep(92,"Uploading the thumbnail…");
-      try{ thumbId = (await wsDriveUpload(slug+"_thumb.jpg","image/jpeg",r.thumbB64)).id; }catch(e){ console.warn(e); }
-      P.stop(); P.to(95,"Saving to the archive…");
-      const tags = [r.spec.grade, r.spec.sprint]; r.spec.pages.forEach(p=>p.forEach(a=>{ const t = WS_ACT_TAGS[a.t]; if(!tags.includes(t)) tags.push(t); }));
-      worksheets.push({id:"w"+Date.now().toString(36), title:r.spec.name, grade:r.spec.grade, sprint:r.spec.sprint, tags, by:r.spec.by, added:Date.now(), kind:"ai", ext:"pdf", fileId:up.id, fileUrl:up.download, viewUrl:up.view, thumbId, thumbUrl: thumbId ? wsDriveThumb(thumbId) : ""});
-      const ok = await saveJSON("ccp_worksheets", worksheets);
-      P.to(100,"Saved"); wsBusy = false; wsCloseModal(true); renderWorksheets();
-      if(!ok) alert("The file was uploaded but the archive list could not be saved. Reload the page and try again.");
-    }catch(e){ P.stop(); wsBusy = false; btn.disabled = false; pw.hidden = true; msg.className = "va-msg err"; msg.textContent = e.message || "Could not save."; }
-  };
+
+/* ---------- Studio: build PDF, save to archive ---------- */
+async function stBuild(ver){
+  const logos = wsLogos(), M = {spec:S.spec, results:S.results, theme:S.theme};
+  const stage = document.createElement("div"); stage.style.cssText = "position:fixed;left:-12000px;top:0;width:794px"; stage.innerHTML = `<style>${WSX_CSS}</style>`; document.body.appendChild(stage);
+  try{
+    const fits = M.results.map((_,pi)=>wsFit(stage, wsxPageHTML(M,pi,logos,false)));
+    const keyFit = S.spec.withKey ? wsFit(stage, wsxKeyHTML(M,logos)) : null;
+    const canv = []; for(const f of fits){ canv.push(await wsRenderCanvas(f.page, 2)); }
+    const pdf = wsMakePdf(canv);
+    const keyPdf = keyFit ? wsMakePdf([await wsRenderCanvas(keyFit.page, 2)]) : null;
+    const thumb = document.createElement("canvas"); thumb.width = 320; thumb.height = Math.round(320*1123/794); thumb.getContext("2d").drawImage(canv[0],0,0,thumb.width,thumb.height);
+    return {ver, pdf, keyPdf, pageUrls:canv.map(c=>c.toDataURL("image/jpeg",0.8)), thumbB64:thumb.toDataURL("image/jpeg",0.8).split(",")[1], tooFull:fits.map((f,i)=>f.fit?0:i+1).filter(Boolean)};
+  } finally { stage.remove(); }
 }
+async function wsFetchLatest(){
+  try{
+    const r = await fetch(APPS_SCRIPT_URL+"?key=ccp_worksheets&token="+encodeURIComponent(APP_TOKEN)); const d = await r.json();
+    if(d && d.value===null) return JSON.parse(JSON.stringify(DEFAULT_WORKSHEETS));
+    if(d && d.value!=null){ const v = typeof d.value==="string" ? JSON.parse(d.value) : d.value; if(Array.isArray(v)) return v; }
+  }catch(e){}
+  return worksheets.slice();
+}
+async function wsMergeSave(rec){
+  const list = await wsFetchLatest(), i = list.findIndex(x=>x.id===rec.id);
+  if(i>=0) list[i] = rec; else list.push(rec);
+  const ok = await saveJSON("ccp_worksheets", list);
+  if(!ok) throw new Error("The archive list could not be saved. Check your connection.");
+  worksheets = list;
+}
+function wsDeleteDriveFile(id){ if(id) fetch(APPS_SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"deletefile",id,token:APP_TOKEN})}).catch(()=>{}); }
+function stStatus(kind, text){
+  const el = document.getElementById("stStatus"); if(!el) return;
+  el.className = "st-chip "+(kind||""); el.textContent = text;
+}
+function stDirty(){
+  S.ver++; clearTimeout(S.timer); stStatus("warn","Unsaved changes · saving soon…");
+  S.timer = setTimeout(stSave, 12000);
+}
+async function stSave(){
+  if(!S.results) return;
+  if(S.saving){ S.again = true; return; }
+  S.saving = true; S.err = ""; clearTimeout(S.timer); stStatus("","Saving to the archive…");
+  const ver = S.ver;
+  try{
+    if(!S.build || S.build.ver!==ver) S.build = await stBuild(ver);
+    const b = S.build, slug = wsSlug(S.spec.name);
+    const up = await wsDriveUpload(slug+".pdf","application/pdf",await wsToB64(b.pdf));
+    let thumbId = ""; try{ thumbId = (await wsDriveUpload(slug+"_thumb.jpg","image/jpeg",b.thumbB64)).id; }catch(e){ console.warn(e); }
+    const tags = [S.spec.grade, S.spec.sprint]; S.results.forEach(r=>r.acts.forEach(a=>{ const t = WS_ACT_TAGS[a.t]; if(!tags.includes(t)) tags.push(t); }));
+    const prev = S.recordId ? (worksheets.find(x=>x.id===S.recordId)||{}) : {};
+    const rec = {id:S.recordId||("w"+Date.now().toString(36)), title:S.spec.name, grade:S.spec.grade, sprint:S.spec.sprint, tags: prev.tags && S.recordId ? prev.tags : tags, by:S.spec.by, added: prev.added || Date.now(), kind:"ai", ext:"pdf", fileId:up.id, fileUrl:up.download, viewUrl:up.view, thumbId, thumbUrl: thumbId ? wsDriveThumb(thumbId) : ""};
+    const old = [S.fileId, S.thumbId];
+    await wsMergeSave(rec);
+    S.recordId = rec.id; S.fileId = up.id; S.thumbId = thumbId; S.savedVer = ver;
+    old.forEach(wsDeleteDriveFile);
+    const t = new Date(); stStatus("ok","Saved to the archive · "+t.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}));
+    const fx = document.getElementById("stFull"); if(fx) fx.hidden = !b.tooFull.length;
+  }catch(e){
+    S.err = e.message || "Could not save."; stStatus("err","Not saved: "+S.err);
+    const rb = document.getElementById("stRetry"); if(rb) rb.hidden = false;
+  }finally{
+    S.saving = false;
+    if(!S.err && (S.again || S.ver!==S.savedVer)){ S.again = false; S.timer = setTimeout(stSave, 1500); }
+  }
+}
+async function stDownload(which){
+  const btn = document.getElementById(which==="key"?"stKey":"stPdf"); const lab = btn ? btn.textContent : ""; if(btn){ btn.disabled = true; btn.textContent = "Preparing…"; }
+  try{
+    if(!S.build || S.build.ver!==S.ver) S.build = await stBuild(S.ver);
+    const slug = wsSlug(S.spec.name);
+    if(which==="key"){ wsDownloadBlob(S.build.keyPdf, slug+"_ANSWER_KEY.pdf"); }
+    else { wsDownloadBlob(S.build.pdf, slug+".pdf"); if(S.savedVer!==S.ver || !S.recordId) stSave(); }
+  } finally { if(btn){ btn.disabled = false; btn.textContent = lab; } }
+}
+
+/* ---------- Studio: editor ---------- */
+function stActSpec(a){
+  const n = (a.questions||a.sentences||[]).length || 1;
+  const g = a.t==="gap" ? a.sentences.reduce((s,x)=>s+(x.text.match(/_{2,}/g)||[]).length,0) || n : 0;
+  return {t:a.t, n, o:a.o||3, g, l:a.l||3, size:a.size||"half"};
+}
+function stShowEditor(){
+  const root = document.getElementById("wsStudio");
+  root.innerHTML = stTopHTML("Worksheet Studio", `<span class="st-chip" id="stStatus" role="status">Starting…</span><button type="button" class="st-btn red" id="stRetry" hidden>Retry saving</button>`) +
+   `<div class="st-edit"><div class="st-pages" id="stPages"></div><div class="st-side" id="stSide"></div></div>`;
+  if(!document.getElementById("wsxCss")){ const s = document.createElement("style"); s.id = "wsxCss"; s.textContent = WSX_CSS; document.head.appendChild(s); }
+  stRenderPages(); stRenderSide();
+  document.getElementById("stRetry").onclick = ()=>{ document.getElementById("stRetry").hidden = true; stSave(); };
+  const host = document.getElementById("stPages");
+  host.addEventListener("input", e=>{
+    const el = e.target.closest("[data-path]"); if(!el) return;
+    const val = el.textContent.replace(/\s*\n\s*/g," ");
+    if(wsSetPath({spec:S.spec, r:S.results}, el.dataset.path, val)){
+      stDirty(); const pg = el.closest(".wsx-page"); clearTimeout(pg._fit); pg._fit = setTimeout(()=>{ const ok = wsFitEl(pg); const f = document.getElementById("stFull"); if(f) f.hidden = ok; }, 350);
+    }
+  });
+  host.addEventListener("keydown", e=>{ if(e.key==="Enter" && e.target.closest("[data-path]")){ e.preventDefault(); e.target.blur(); } });
+  host.addEventListener("paste", e=>{ if(e.target.closest("[data-path]")){ e.preventDefault(); const t = (e.clipboardData||window.clipboardData).getData("text").replace(/\s*\n\s*/g," "); document.execCommand("insertText", false, t); } });
+  host.addEventListener("focusin", e=>{ const pw = e.target.closest(".st-pw"); if(pw && +pw.dataset.pi!==S.page){ S.page = +pw.dataset.pi; stRenderSide(true); host.querySelectorAll(".st-pw").forEach(x=>x.classList.toggle("cur", +x.dataset.pi===S.page)); } });
+  if(window.ResizeObserver) new ResizeObserver(()=>stScale()).observe(host); window.addEventListener("resize", stScale);
+}
+function stScale(){ const h = document.getElementById("stPages"); if(!h) return; const k = Math.max(0.4, Math.min(1, (h.clientWidth-40)/794)); h.style.setProperty("--k", k.toFixed(3)); }
+function stRenderPages(){
+  const h = document.getElementById("stPages"), logos = wsLogos(), M = {spec:S.spec, results:S.results, theme:S.theme};
+  const keepTop = h.scrollTop;
+  h.innerHTML = S.results.map((_,pi)=>`<div class="st-pw${pi===S.page?" cur":""}" data-pi="${pi}"><div class="st-pi">${wsxPageHTML(M,pi,logos,true)}</div></div>`).join("");
+  stScale(); h.scrollTop = keepTop;
+  let allFit = true; h.querySelectorAll(".wsx-page").forEach(p=>{ if(!wsFitEl(p)) allFit = false; });
+  const f = document.getElementById("stFull"); if(f) f.hidden = allFit;
+}
+function stStruct(){ stDirty(); stRenderPages(); stRenderSide(true); }
+function stQEditor(a, pi, ai){
+  const P = `r.${pi}.acts.${ai}`;
+  let h = "";
+  if(a.t==="mcq"){
+    h += `<div class="row"><label class="st-note">Options each</label><select data-act="${ai}" data-op="mcq-o" style="width:90px">${wsSelOpts(2,5,a.o||a.questions[0].options.length)}</select><button type="button" class="st-btn alt sm" data-act="${ai}" data-op="mcq-add">+ Question</button></div>`;
+    h += a.questions.map((q,i)=>`<div class="st-q"><div class="lb"><span>Q${i+1}: ${esc(q.q)}</span><button type="button" class="st-btn alt sm" data-act="${ai}" data-op="q-del" data-i="${i}">Remove</button></div><label class="st-note">Correct answer</label><select data-act="${ai}" data-op="mcq-ans" data-i="${i}">${q.options.map((o,j)=>`<option value="${j}"${j===q.answer?" selected":""}>${"ABCDE"[j]}. ${esc(o)}</option>`).join("")}</select></div>`).join("");
+  } else if(a.t==="gap"){
+    h += `<label class="st-note">Word bank (separate words with commas)</label><input type="text" data-act="${ai}" data-op="bank" value="${esc(a.bank.join(", "))}">`;
+    h += `<button type="button" class="st-btn alt sm" data-act="${ai}" data-op="gap-add">+ Sentence</button>`;
+    h += a.sentences.map((s,i)=>`<div class="st-q"><div class="lb"><span>${i+1}: ${esc(s.text)}</span><button type="button" class="st-btn alt sm" data-act="${ai}" data-op="s-del" data-i="${i}">Remove</button></div><label class="st-note">Answer(s) for the blank(s), separated by commas</label><input type="text" data-act="${ai}" data-op="gap-ans" data-i="${i}" value="${esc((s.answers||[]).join(", "))}"></div>`).join("");
+  } else if(a.t==="short"){
+    h += `<div class="row"><label class="st-note">Lines per answer</label><select data-act="${ai}" data-op="short-l" style="width:90px">${wsSelOpts(1,6,a.l)}</select><button type="button" class="st-btn alt sm" data-act="${ai}" data-op="short-add">+ Question</button></div>`;
+    h += a.questions.map((q,i)=>`<div class="st-q"><div class="lb"><span>Q${i+1}: ${esc(q.q)}</span><button type="button" class="st-btn alt sm" data-act="${ai}" data-op="q-del" data-i="${i}">Remove</button></div><label class="st-note">Model answer (answer key)</label><textarea data-act="${ai}" data-op="short-hint" data-i="${i}" style="min-height:60px">${esc(q.hint||"")}</textarea></div>`).join("");
+  } else {
+    h += `<div class="row"><label class="st-note">Box size</label><select data-act="${ai}" data-op="size" style="width:150px">${[["small","Small box"],["half","Half page"],["full","Full page"]].map(o=>`<option value="${o[0]}"${a.size===o[0]?" selected":""}>${o[1]}</option>`).join("")}</select></div>`;
+    h += `<label class="st-note">Teacher notes (answer key)</label><textarea data-act="${ai}" data-op="notes" style="min-height:60px">${esc(a.notes||"")}</textarea>`;
+  }
+  return h;
+}
+function stRenderSide(keepScroll){
+  const side = document.getElementById("stSide"), top = side.scrollTop;
+  const pi = Math.min(S.page, S.results.length-1), r = S.results[pi];
+  side.innerHTML = `
+   <div><h3>Save &amp; download</h3><div class="row"><button type="button" class="st-btn" id="stSaveNow">Save now</button><button type="button" class="st-btn alt" id="stPdf">Download PDF</button>${S.spec.withKey?'<button type="button" class="st-btn alt" id="stKey">Answer key</button>':""}<button type="button" class="st-btn alt" id="stPrint">Print</button></div>
+    <div class="st-note" style="margin-top:8px">Every worksheet is saved to the archive automatically, and again whenever you download it.</div>
+    <div class="ws-warn" id="stFull" hidden>A page is very full, so part of it may be cut off. Remove a question or choose a smaller box.</div></div>
+   <div><h3>Theme</h3><div id="stTheme"></div></div>
+   <div><h3>Pages</h3><div class="st-ptabs">${S.results.map((_,i)=>`<button type="button" data-pg="${i}"${i===pi?' class="on"':""}>${i+1}</button>`).join("")}</div></div>
+   <div><h3>Page ${pi+1}: questions &amp; answers</h3><div class="st-note" style="margin-bottom:8px">Click any text on the sheet to edit it. Use these boxes to set answers and to add or remove questions.</div>
+    ${r.acts.map((a,ai)=>`<div class="st-act" style="margin-bottom:10px"><div class="hd"><span>${esc(WS_ACT_LABEL[a.t])}</span>${r.acts.length>1?`<button type="button" class="st-btn alt sm" data-act="${ai}" data-op="act-del">Remove activity</button>`:""}</div>${stQEditor(a,pi,ai)}</div>`).join("")}
+    <div class="row"><select id="stNewType" style="flex:1;min-width:150px">${Object.keys(WS_ACT_LABEL).map(k=>`<option value="${k}">${WS_ACT_LABEL[k]}</option>`).join("")}</select><button type="button" class="st-btn alt" id="stAddAct">+ Add to this page</button></div>
+    <div class="row" style="margin-top:10px"><button type="button" class="st-btn alt" id="stRegen">Rewrite this page with AI</button></div><div class="st-note" id="stRegenMsg"></div></div>`;
+  stThemePicker(side.querySelector("#stTheme"), S.theme, k=>{ S.theme = k; stDirty(); stRenderPages(); });
+  side.querySelector("#stSaveNow").onclick = ()=>{ S.err=""; stSave(); };
+  side.querySelector("#stPdf").onclick = ()=>stDownload("pdf");
+  const kb = side.querySelector("#stKey"); if(kb) kb.onclick = ()=>stDownload("key");
+  side.querySelector("#stPrint").onclick = async ()=>{ if(!S.build || S.build.ver!==S.ver) S.build = await stBuild(S.ver); wsPrintImages(S.build.pageUrls); };
+  side.querySelectorAll("[data-pg]").forEach(b=> b.onclick = ()=>{ S.page = +b.dataset.pg; stRenderSide(); const pw = document.querySelector('.st-pw[data-pi="'+S.page+'"]'); document.querySelectorAll(".st-pw").forEach(x=>x.classList.toggle("cur", +x.dataset.pi===S.page)); if(pw) pw.scrollIntoView({behavior:"smooth",block:"start"}); });
+  side.querySelector("#stAddAct").onclick = ()=>{
+    const t = side.querySelector("#stNewType").value, o = {t, title:WS_ACT_LABEL[t].replace(" activity",""), instructions:"Write your instruction here."};
+    if(t==="mcq") Object.assign(o,{o:3, questions:[{q:"New question",options:["Option 1","Option 2","Option 3"],answer:0}]});
+    if(t==="gap") Object.assign(o,{bank:["word"], sentences:[{text:"Write a sentence with a ___ here.",answers:["word"]}]});
+    if(t==="short") Object.assign(o,{l:3, questions:[{q:"New question",hint:""}]});
+    if(t==="sketch") Object.assign(o,{prompt:"Describe what to draw.", labels:["Label 1","Label 2"], notes:"", size:"half"});
+    if(t==="brain") Object.assign(o,{center:"Our idea", notes:"", size:"half"});
+    r.acts.push(o); stStruct();
+  };
+  side.querySelector("#stRegen").onclick = async ()=>{
+    const b = side.querySelector("#stRegen"), m = side.querySelector("#stRegenMsg"); b.disabled = true; m.textContent = "Writing new questions…";
+    try{
+      const sp = Object.assign({}, S.spec, {pages:S.results.map((x,i)=>x.acts.map(stActSpec))});
+      const nr = await wsGeneratePage(sp, pi, S.digest); if(pi!==0) nr.intro = ""; else if(!nr.intro) nr.intro = r.intro;
+      S.results[pi] = nr; stStruct();
+    }catch(e){ b.disabled = false; m.textContent = e.message || "Could not rewrite the page."; }
+  };
+  side.querySelectorAll("[data-op]").forEach(el=>{
+    const handler = ()=>{
+      const a = r.acts[+el.dataset.act], op = el.dataset.op, i = +el.dataset.i, v = el.value;
+      if(op==="mcq-ans"){ a.questions[i].answer = +v; return stStruct(); }
+      if(op==="mcq-o"){ const n = +v; a.o = n; a.questions.forEach(q=>{ while(q.options.length<n) q.options.push("Option "+(q.options.length+1)); q.options.length = n; if(q.answer>=n) q.answer = 0; }); return stStruct(); }
+      if(op==="mcq-add"){ const n = a.o||a.questions[0].options.length; a.questions.push({q:"New question", options:Array.from({length:n},(_,j)=>"Option "+(j+1)), answer:0}); return stStruct(); }
+      if(op==="q-del"){ if(a.questions.length>1){ a.questions.splice(i,1); stStruct(); } return; }
+      if(op==="bank"){ a.bank = v.split(",").map(x=>x.trim()).filter(Boolean); return stStruct(); }
+      if(op==="gap-ans"){ a.sentences[i].answers = v.split(",").map(x=>x.trim()).filter(Boolean); a.sentences[i].answers.forEach(w=>{ if(!a.bank.some(b=>b.toLowerCase()===w.toLowerCase())) a.bank.push(w); }); return stStruct(); }
+      if(op==="gap-add"){ a.sentences.push({text:"Write a sentence with a ___ here.", answers:["word"]}); if(!a.bank.includes("word")) a.bank.push("word"); return stStruct(); }
+      if(op==="s-del"){ if(a.sentences.length>1){ a.sentences.splice(i,1); stStruct(); } return; }
+      if(op==="short-l"){ a.l = +v; return stStruct(); }
+      if(op==="short-add"){ a.questions.push({q:"New question", hint:""}); return stStruct(); }
+      if(op==="short-hint"){ a.questions[i].hint = v; stDirty(); return; }
+      if(op==="size"){ a.size = v; return stStruct(); }
+      if(op==="notes"){ a.notes = v; stDirty(); return; }
+      if(op==="act-del"){ r.acts.splice(+el.dataset.act,1); return stStruct(); }
+    };
+    el.addEventListener(el.tagName==="BUTTON" ? "click" : "change", handler);
+  });
+  if(keepScroll) side.scrollTop = top;
+  S.err ? stStatus("err","Not saved: "+S.err) : (S.savedVer===S.ver && S.recordId ? null : null);
+}
+window.addEventListener("beforeunload", e=>{ if(WS_STUDIO && S.results && (S.saving || S.ver!==S.savedVer)){ e.preventDefault(); e.returnValue = ""; } });
+
 
 function renderView(name){
   if(name==="home") renderNavGrid();
@@ -4481,6 +4813,13 @@ document.getElementById("confirmBatchBtn").onclick = async ()=>{
 
 /* ---------------- boot ---------------- */
 (async function(){
+  if(WS_STUDIO){
+    document.body.classList.add("studio-mode");
+    document.getElementById("wsStudio").innerHTML = '<div class="st-genrun"><div class="sub">Loading the Worksheet Studio\u2026</div></div>'; document.getElementById("wsStudio").hidden = false;
+    initFromCache();
+    try{ await syncFromSheet(); }catch(e){}
+    stSetup(); return;
+  }
   document.getElementById("asOfInput").value = todayStr();
   const hadCache = initFromCache();
   const overlay = document.getElementById("loadingOverlay");
