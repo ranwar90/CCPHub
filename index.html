@@ -49,6 +49,9 @@
 
   .homegrid{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:76px;gap:14px;}
   .homegrid{grid-auto-flow:dense;}
+  .hw-hint{margin-top:12px;text-align:center;font-size:12.5px;color:var(--ink-soft);}
+  .homegrid .navcard{background:linear-gradient(150deg,#FFFFFF 0%,#F4F5F8 52%,#E9EBF0 100%);border-color:#E0E3E9;box-shadow:0 1px 2px rgba(25,35,70,.05),0 10px 24px -12px rgba(25,35,70,.18);transition:box-shadow .2s,transform .2s,border-color .2s;}
+  .homegrid .navcard:hover{box-shadow:0 2px 4px rgba(25,35,70,.07),0 16px 30px -12px rgba(25,35,70,.26);border-color:#CDD2DC;}
   .homegrid .navcard{min-width:0;min-height:0;overflow:hidden;position:relative;user-select:none;}
   .homegrid .navcard.g-meeting{overflow:visible;}
   .homegrid .navcard.hw-sel{outline:3px solid #1B3A6B;outline-offset:2px;border-color:#1B3A6B;overflow:visible;z-index:3;}
@@ -70,7 +73,7 @@
   .hw-vid{position:relative;flex:1;min-height:0;display:flex;align-items:center;gap:4px;}
   .hw-vtrack{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;flex:1;min-width:0;scroll-behavior:smooth;}
   .hw-vtrack::-webkit-scrollbar{display:none;}
-  .hw-vitem{flex:0 0 calc(40% - 6px);scroll-snap-align:start;min-width:0;}
+  .hw-vitem{flex:0 0 calc((100% - 20px) / 3);scroll-snap-align:start;min-width:0;}
   .hw-vth{aspect-ratio:16/9;border-radius:7px;overflow:hidden;position:relative;background:#222;}
   .hw-vth img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;}
   .hw-vt{font-size:11px;line-height:1.25;margin-top:4px;max-height:2.5em;overflow:hidden;}
@@ -484,6 +487,13 @@
   .calstage .today span{position:absolute;top:98px;left:5px;background:#e0342b;color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap;}
 
   /* settings */
+  .schedup{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0 4px;}
+  .schedctl{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0;}
+  .schedctl label{font-size:12px;color:var(--ink-soft);display:flex;flex-direction:column;gap:4px;font-weight:600;}
+  .schedctl select,.schedctl input{font:inherit;font-size:14px;padding:7px 10px;border:1.5px solid #1B3A6B;border-radius:8px;background:#1B3A6B;color:#fff;min-width:110px;}
+  .settbl td.dur{cursor:pointer;user-select:none;}
+  .settbl td.dur.ovr{font-weight:700;color:#B0623D;}
+  .settbl td.dur input{width:70px;background:#fff;color:#1B3A6B;border:2px solid #1B3A6B;border-radius:6px;padding:4px 6px;font:inherit;}
   .settbl-wrap{overflow-x:auto;}
   .settbl{border-collapse:collapse;width:100%;font-size:13.5px;}
   .settbl th{text-align:left;font-size:12px;color:var(--ink-soft);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap;}
@@ -695,7 +705,7 @@
     <button data-navmenu="backlog"><svg class="mi" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9l2 2 3-3M8 15h8"/></svg><span>Task Bars</span></button>
     <button data-navmenu="attendance"><svg class="mi" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M17 11l2 2 4-4"/></svg><span>Attendance</span></button>
     <button data-navmenu="meeting"><svg class="mi" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Scheduling</span></button>
-    <button data-navmenu="videos"><svg class="mi" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9.5v5l4.5-2.5z"/></svg><span>Video Archives</span></button>
+    <button data-navmenu="videos"><svg class="mi" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9.5v5l4.5-2.5z"/></svg><span>CCP Video Archives</span></button>
     <button data-navmenu="worksheets"><svg class="mi" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg><span>Worksheet Generator</span></button>
     <button data-navmenu="handbook"><svg class="mi" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 21.5A2.5 2.5 0 0 0 6.5 24H20"/></svg><span>Department Handbook</span></button>
     <button data-navmenu="weeklyplan"><svg class="mi" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg><span>Weekly Plan Generator</span></button>
@@ -720,9 +730,6 @@
     </div>
     <div style="display:flex;align-items:center;gap:10px;position:relative;">
       <div class="asof">As of <input type="date" id="asOfInput"></div>
-      <button class="gear" id="settingsBtn" title="Manage timetable">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
-      </button>
     </div>
   </header>
   <div class="quotebar" id="headerQuoteBar"></div>
@@ -737,6 +744,7 @@
   <!-- HOME -->
   <div id="view-home">
     <div class="homegrid" id="homeGrid"></div>
+    <div class="hw-hint">Double-click on a widget to enter the page in detail.</div>
     <div class="quicklinks">
       <a class="quicklinkbtn" href="https://alrowad.nuvustudio.com/discover/studios" target="_blank">
         <img src="data:image/png;base64,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" alt="NuVuX">
@@ -878,10 +886,15 @@
           <h2 style="margin-bottom:4px;">Weekly overview</h2>
           <div class="sub" style="margin-bottom:0;">Colour-coded by teacher — a quick look at who's teaching what, when.</div>
         </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <button class="gear" id="settingsBtn" title="Timetable settings: add, edit or remove sessions" style="width:auto;padding:0 12px;gap:7px;font-size:13px;font-weight:600;height:38px;">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      Timetable settings</button>
         <button class="btn primary" id="uploadBtn" style="white-space:nowrap;display:flex;align-items:center;gap:8px;">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
           Upload your timetable PDF / PNG here
         </button>
+        </div>
       </div>
       <div id="ttFocusBar" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0 12px;"></div>
       <div class="ttgridwrap">
@@ -980,7 +993,7 @@
       <img class="va-logo" id="vaLogo" alt="CCP">
       <div class="va-div"></div>
       <div>
-        <h2>Video Archives</h2>
+        <h2>CCP Video Archives</h2>
         <div class="va-count" id="vaCount"></div>
       </div>
       <div class="va-grow"></div>
@@ -1081,9 +1094,12 @@
     </div>
     <div class="panel">
       <h2>Daily schedule</h2>
-      <div class="sub">Set the start and end of each period. Meeting slots, the timetable headers and the "who is free" pop-ups all use these times.</div>
+      <div class="sub">Upload a PDF or PNG of the daily schedule, or set it here. Meeting slots, the timetable headers and the "who is free" pop-ups all use these times.</div>
+      <div class="schedup"><button class="btn primary small" id="schedUpBtn" type="button">Upload schedule PDF / PNG</button><input type="file" id="schedFile" accept=".pdf,.png,.jpg,.jpeg" hidden><span class="note" id="schedUpNote" style="margin:0;"></span><button class="btn ghost small" id="schedUndo" type="button" hidden>Undo upload</button></div>
+      <div class="schedctl" id="schedCtl"></div>
+      <div class="sub" style="margin:2px 0 8px;">Change a number at the top and every period follows. To change just one period, double-click its Minutes cell: the next start times move automatically.</div>
       <div class="settbl-wrap"><table class="settbl" id="schedTable"></table></div>
-      <div style="margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><button class="btn ghost small" id="schedReset">Reset to the online schedule</button><span class="note" id="schedNote" style="margin:0;"></span></div>
+      <div style="margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><button class="btn ghost small" id="schedClear" type="button">Clear single-period changes</button><button class="btn ghost small" id="schedReset">Reset to the online schedule</button><span class="note" id="schedNote" style="margin:0;"></span></div>
     </div>
   </div>
 
@@ -2383,6 +2399,7 @@ function busyHtml(names, day, period){
   return parts.join(" &nbsp;·&nbsp; ");
 }
 function clsLabel(t){
+  if(t.label && String(t.label).trim()) return String(t.label).trim();
   const c = String(t.cls||"").trim();
   if(t.type==="Elective" && (c===""||c==="—"||c==="-"||c==="–")) return "Electives";
   return c.replace(/\s*co-?teach\s*/i," ").trim();
@@ -2447,7 +2464,7 @@ function buildTimetableGrid(groupTeachers, colorMap){
       const entries = timetable.filter(t=> t.teacher===teacher && t.day===d);
       const blocks = entries.map(t=>{
         const p1=Number(t.p1), p2=Number(t.p2);
-        return `<div class="ttblock ${ttFocus.size && !ttFocus.has(teacher)?'ttfade':''}" style="grid-column:${p1} / span ${p2-p1+1};background:${colorMap[teacher]};" title="${teacher} — ${t.cls||clsLabel(t)}">${clsLabel(t)}</div>`;
+        return `<div class="ttblock ${ttFocus.size && !ttFocus.has(teacher)?'ttfade':''}" data-tid="${esc(t.id)}" style="grid-column:${p1} / span ${p2-p1+1};background:${colorMap[teacher]};" title="${teacher} — ${t.cls||clsLabel(t)} (double-click to rename)">${esc(clsLabel(t))}</div>`;
       }).join("");
       html += `<div class="ttlane">${blocks}</div>`;
     });
@@ -2457,6 +2474,26 @@ function buildTimetableGrid(groupTeachers, colorMap){
 }
 function buildLegend(groupTeachers, colorMap){
   return groupTeachers.map(t=>`<div class="ttlegenditem clickable ${ttFocus.size && !ttFocus.has(t)?'ttfade':''}" data-ttf="${t}" role="button" tabindex="0" title="Click to focus on ${t}"><span class="sw" style="background:${colorMap[t]};"></span>${t} (${INITIALS[t]})</div>`).join("");
+}
+function ttRenameBlock(el){
+  const rec = timetable.find(x=>String(x.id)===el.dataset.tid); if(!rec || el.querySelector("input")) return;
+  const cur = clsLabel(rec), inp = document.createElement("input");
+  inp.type = "text"; inp.value = cur; inp.maxLength = 30; inp.setAttribute("aria-label","Block name");
+  inp.style.cssText = "width:100%;min-width:0;font:inherit;font-size:inherit;padding:1px 3px;border:2px solid #fff;border-radius:4px;background:#fff;color:#1B3A6B;";
+  el.textContent = ""; el.appendChild(inp); inp.focus(); inp.select();
+  let done = false;
+  const finish = (save)=>{
+    if(done) return; done = true;
+    const v = inp.value.trim();
+    if(save && v!==cur){
+      rec.label = v && v!==String(rec.cls||"").trim() ? v : "";
+      saveJSON("ccp_timetable_v3", timetable);
+    }
+    renderTimetableGrids();
+  };
+  inp.onkeydown = e=>{ e.stopPropagation(); if(e.key==="Enter"){ e.preventDefault(); finish(true); } else if(e.key==="Escape"){ e.preventDefault(); finish(false); } };
+  inp.onblur = ()=>finish(true);
+  inp.onclick = e=>e.stopPropagation(); inp.ondblclick = e=>e.stopPropagation();
 }
 function renderTimetableGrids(){
   const bar = document.getElementById("ttFocusBar");
@@ -2472,6 +2509,7 @@ function renderTimetableGrids(){
     const go = ()=>{ const t=el.dataset.ttf; ttFocus.has(t) ? ttFocus.delete(t) : ttFocus.add(t); renderTimetableGrids(); };
     el.onclick = go; el.onkeydown = e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); } };
   });
+  ["gridBoys","gridGirls"].forEach(id=>{ const g = document.getElementById(id); if(g) g.ondblclick = e=>{ const b = e.target.closest(".ttblock"); if(b && b.dataset.tid) ttRenameBlock(b); }; });
   const clr = document.getElementById("ttFocusClear"); if(clr) clr.onclick = ()=>{ ttFocus.clear(); renderTimetableGrids(); };
 }
 
@@ -2563,7 +2601,7 @@ function homeApplyLayout(){
       showView(c.dataset.nav);
     };
   });
-  g.querySelectorAll("[data-varr]").forEach(b=> b.onclick = e=>{ e.stopPropagation(); const tr = document.getElementById("hwVTrack"); if(tr) tr.scrollBy({left:(+b.dataset.varr)*Math.max(120, tr.clientWidth/2), behavior:"smooth"}); });
+  g.querySelectorAll("[data-varr]").forEach(b=> b.onclick = e=>{ e.stopPropagation(); const tr = document.getElementById("hwVTrack"); if(tr) tr.scrollBy({left:(+b.dataset.varr)*(tr.clientWidth+10), behavior:"smooth"}); });
   const old = document.getElementById("homeAddBar"); if(old) old.remove();
 }
 
@@ -2613,8 +2651,8 @@ function renderNavGrid(){
     </div>
 
     <div class="navcard g-videos" data-nav="videos" data-hw="videos">
-      <div class="icnrow"><div class="icn">${ICONS.video}</div><div class="ttl">Video Archive</div><span class="prev" style="margin-left:auto;">Latest ${Math.min(3,videos.length)}</span></div>
-      <div class="hw-vid"><button type="button" class="hw-arr" data-varr="-1" aria-label="Scroll left">\u2039</button><div class="hw-vtrack" id="hwVTrack">${videos.slice().sort((a,b)=>(b.added||0)-(a.added||0)).slice(0,3).map(v=>{ const pp = vaParse(v.url) || {src:"link"}; const th = vaThumb(pp); const h = vaHue(v.id||v.title); return `<div class="hw-vitem"><div class="hw-vth" style="background:linear-gradient(135deg,hsl(${h} 55% 32%),hsl(${(h+50)%360} 60% 20%))">${th?`<img src="${esc(th)}" alt="" loading="lazy" onerror="this.remove()">`:""}</div><div class="hw-vt">${esc(v.title)}</div></div>`; }).join("") || '<div class="prev">No videos yet</div>'}</div><button type="button" class="hw-arr" data-varr="1" aria-label="Scroll right">\u203A</button></div>
+      <div class="icnrow"><div class="icn">${ICONS.video}</div><div class="ttl">CCP Video Archives</div><span class="prev" style="margin-left:auto;">${videos.length} video${videos.length===1?"":"s"}</span></div>
+      <div class="hw-vid"><button type="button" class="hw-arr" data-varr="-1" aria-label="Scroll left">\u2039</button><div class="hw-vtrack" id="hwVTrack">${videos.slice().sort((a,b)=>(b.added||0)-(a.added||0)).map(v=>{ const pp = vaParse(v.url) || {src:"link"}; const th = vaThumb(pp); const h = vaHue(v.id||v.title); return `<div class="hw-vitem"><div class="hw-vth" style="background:linear-gradient(135deg,hsl(${h} 55% 32%),hsl(${(h+50)%360} 60% 20%))">${th?`<img src="${esc(th)}" alt="" loading="lazy" onerror="this.remove()">`:""}</div><div class="hw-vt">${esc(v.title)}</div></div>`; }).join("") || '<div class="prev">No videos yet</div>'}</div><button type="button" class="hw-arr" data-varr="1" aria-label="Scroll right">\u203A</button></div>
     </div>
 
     <div class="navcard g-minutes" data-nav="minutes" data-hw="minutes" style="justify-content:center;">
@@ -3211,33 +3249,120 @@ function parseStaffPaste(text){
   });
   return out;
 }
-function renderSchedule(){
-  const sc = schedule && schedule.p ? schedule : DEFAULT_SCHEDULE;
-  const rows = [["p",1],["p",2],["p",3],["brk"],["p",4],["p",5],["p",6],["p",7],["salah"],["p",8]];
-  const mins = (a)=>{ const m=t=>{const [h,mi]=String(t).split(":").map(Number); return h*60+mi;}; return m(a[1])-m(a[0]); };
-  document.getElementById("schedTable").innerHTML = `<tr><th>Period</th><th style="width:130px;">Starts</th><th style="width:130px;">Ends</th><th style="width:90px;">Minutes</th></tr>` +
-    rows.map(r=>{
-      const key = r[0]==="p" ? "p"+r[1] : r[0];
-      const a = r[0]==="p" ? (sc.p[r[1]]||DEFAULT_SCHEDULE.p[r[1]]) : (sc[r[0]]||DEFAULT_SCHEDULE[r[0]]);
-      const label = r[0]==="p" ? "Period "+r[1] : (r[0]==="brk" ? "Break" : "Salah");
-      const d = mins(a);
-      return `<tr class="${r[0]==="p"?"":"fixedrow"}" data-k="${key}"><td class="lbl">${label}</td><td><input type="time" data-i="0" value="${a[0]}"></td><td><input type="time" data-i="1" value="${a[1]}" class="${d<=0?"bad":""}"></td><td style="color:var(--ink-soft);">${d>0?d:"–"}</td></tr>`;
-    }).join("");
-  document.querySelectorAll("#schedTable tr[data-k]").forEach(tr=>{
-    tr.querySelectorAll("input").forEach(inp=> inp.onchange = ()=>{
-      const k = tr.dataset.k, i = Number(inp.dataset.i);
-      const next = JSON.parse(JSON.stringify(schedule && schedule.p ? schedule : DEFAULT_SCHEDULE));
-      const arr = k[0]==="p" ? (next.p[k.slice(1)] = (next.p[k.slice(1)]||DEFAULT_SCHEDULE.p[k.slice(1)]).slice()) : (next[k] = (next[k]||DEFAULT_SCHEDULE[k]).slice());
-      arr[i] = inp.value;
-      if(k[0]==="p") next.p[k.slice(1)] = arr; else next[k] = arr;
-      schedule = next; rebuildPeriodTimes(); renderSchedule(); saveSchedule();
-    });
+/* ---- daily schedule: first start + lengths cascade down the day ---- */
+const SCHED_SEQ = ["p1","p2","p3","brk","p4","p5","p6","p7","salah","p8"];
+const tmin = s=>{ const [h,m] = String(s).split(":").map(Number); return h*60+m; };
+const mt = n=>{ n = ((n%1440)+1440)%1440; return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0"); };
+function schedGet(sc,k){ return k[0]==="p" ? sc.p[k.slice(1)] : sc[k]; }
+function schedNorm(src){
+  const sc = JSON.parse(JSON.stringify(src && src.p ? src : DEFAULT_SCHEDULE));
+  const g = k=> schedGet(sc,k) || schedGet(DEFAULT_SCHEDULE,k), dur = k=> tmin(g(k)[1]) - tmin(g(k)[0]);
+  if(!sc.cfg){
+    sc.cfg = {start:g("p1")[0], period:dur("p1"), brk:dur("brk"), salah:dur("salah"), gap:Math.max(0, tmin(g("p2")[0]) - tmin(g("p1")[1]))};
+    sc.ovr = {};
+    SCHED_SEQ.forEach(k=>{ const base = k==="brk" ? sc.cfg.brk : k==="salah" ? sc.cfg.salah : sc.cfg.period; if(dur(k)!==base) sc.ovr[k] = dur(k); });
+  }
+  sc.ovr = sc.ovr || {};
+  return sc;
+}
+function schedCompute(sc){
+  let t = tmin(sc.cfg.start), prevSpecial = true;
+  SCHED_SEQ.forEach((k,i)=>{
+    const special = k==="brk" || k==="salah";
+    const base = k==="brk" ? sc.cfg.brk : k==="salah" ? sc.cfg.salah : sc.cfg.period;
+    const d = sc.ovr[k]!=null ? sc.ovr[k] : base;
+    if(i>0 && !special && !prevSpecial) t += sc.cfg.gap;
+    const a = [mt(t), mt(t+d)];
+    if(k[0]==="p"){ sc.p = sc.p || {}; sc.p[k.slice(1)] = a; } else sc[k] = a;
+    t += d; prevSpecial = special;
   });
+}
+function schedCommit(sc){ schedCompute(sc); schedule = sc; rebuildPeriodTimes(); renderSchedule(); saveSchedule(); }
+function schedOpts(from,to,step,cur){
+  const set = new Set(); for(let v=from; v<=to; v+=step) set.add(v); set.add(cur);
+  return Array.from(set).sort((a,b)=>a-b).map(v=>`<option value="${v}"${v===cur?" selected":""}>${v} min</option>`).join("");
+}
+function renderSchedule(){
+  const sc = schedNorm(schedule);
+  const label = k=> k[0]==="p" ? "Period "+k.slice(1) : (k==="brk" ? "Break" : "Salaah");
+  document.getElementById("schedCtl").innerHTML = `
+    <label>First period starts<input type="time" id="scStart" value="${sc.cfg.start}"></label>
+    <label>Period length<select id="scPer">${schedOpts(20,90,5,sc.cfg.period)}</select></label>
+    <label>Time between periods<select id="scGap">${schedOpts(0,15,1,sc.cfg.gap)}</select></label>
+    <label>Break length<select id="scBrk">${schedOpts(5,40,5,sc.cfg.brk)}</select></label>
+    <label>Salaah length<select id="scSal">${schedOpts(5,45,5,sc.cfg.salah)}</select></label>`;
+  const upd = fn=>{ const n = schedNorm(schedule); fn(n); schedCommit(n); };
+  document.getElementById("scStart").onchange = e=>{ if(!e.target.value) return; upd(n=>{ n.cfg.start = e.target.value; }); };
+  document.getElementById("scPer").onchange = e=>upd(n=>{ n.cfg.period = +e.target.value; ["p1","p2","p3","p4","p5","p6","p7","p8"].forEach(k=>delete n.ovr[k]); });
+  document.getElementById("scGap").onchange = e=>upd(n=>{ n.cfg.gap = +e.target.value; });
+  document.getElementById("scBrk").onchange = e=>upd(n=>{ n.cfg.brk = +e.target.value; delete n.ovr.brk; });
+  document.getElementById("scSal").onchange = e=>upd(n=>{ n.cfg.salah = +e.target.value; delete n.ovr.salah; });
+  document.getElementById("schedTable").innerHTML = `<tr><th>Period</th><th style="width:110px;">Starts</th><th style="width:110px;">Ends</th><th style="width:130px;">Minutes</th></tr>` +
+    SCHED_SEQ.map(k=>{
+      const a = schedGet(sc,k) || schedGet(DEFAULT_SCHEDULE,k), d = tmin(a[1]) - tmin(a[0]), ov = sc.ovr[k]!=null;
+      return `<tr class="${k[0]==="p"?"":"fixedrow"}" data-k="${k}"><td class="lbl">${label(k)}</td><td>${a[0]}</td><td>${a[1]}</td><td class="dur${ov?" ovr":""}" title="Double-click to change just this one">${d}${ov?" ✎":""}</td></tr>`;
+    }).join("");
+  document.querySelectorAll("#schedTable td.dur").forEach(td=>{
+    td.ondblclick = ()=>{
+      if(td.querySelector("input")) return;
+      const k = td.parentNode.dataset.k, cur = parseInt(td.textContent,10) || 0;
+      const inp = document.createElement("input"); inp.type = "number"; inp.min = 5; inp.max = 180; inp.value = cur;
+      td.textContent = ""; td.appendChild(inp); inp.focus(); inp.select();
+      let done = false;
+      const finish = save=>{
+        if(done) return; done = true;
+        const v = Math.round(Number(inp.value));
+        if(!save || !(v>=5 && v<=180) || v===cur){ renderSchedule(); return; }
+        const n = schedNorm(schedule), base = k==="brk" ? n.cfg.brk : k==="salah" ? n.cfg.salah : n.cfg.period;
+        if(v===base) delete n.ovr[k]; else n.ovr[k] = v;
+        schedCommit(n);
+      };
+      inp.onkeydown = e=>{ if(e.key==="Enter"){ e.preventDefault(); finish(true); } else if(e.key==="Escape"){ e.preventDefault(); finish(false); } };
+      inp.onblur = ()=>finish(true);
+    };
+  });
+  const clr = document.getElementById("schedClear"); if(clr) clr.disabled = !Object.keys(sc.ovr).length;
 }
 async function saveSchedule(){
   const n = document.getElementById("schedNote"); if(n) n.textContent = "Saving…";
   const ok = await saveJSON("ccp_schedule", schedule);
   if(n) n.textContent = ok ? "Saved for everyone." : "Couldn't save. Check your connection.";
+}
+const SCHED_READ_PROMPT = `This is a school's daily bell schedule (the times of each lesson period, the break and the prayer/salaah time). Read it and reply with ONLY a JSON object, no other text, in this shape:
+{"periods":[{"n":1,"start":"HH:MM","end":"HH:MM"}],"break":{"start":"HH:MM","end":"HH:MM"} or null,"salah":{"start":"HH:MM","end":"HH:MM"} or null}
+Rules: use 24-hour times (a school day runs from about 07:00 to 14:00, so 1:10 means 13:10). List periods 1 to 8 in order. If the sheet shows only some of them, list only those you can read. Do not invent times.`;
+let schedBackup = null;
+async function schedUpload(file){
+  const note = document.getElementById("schedUpNote"), undo = document.getElementById("schedUndo");
+  note.textContent = "Reading the schedule… this can take up to 30 seconds.";
+  try{
+    const isPdf = file.type==="application/pdf" || /\.pdf$/i.test(file.name);
+    const dataUrl = await fileToBase64(file);
+    let block;
+    if(isPdf) block = {type:"document", source:{type:"base64", media_type:"application/pdf", data:dataUrl.split(",")[1]}};
+    else { const img = await downscaleImage(dataUrl); block = {type:"image", source:{type:"base64", media_type:img.mime, data:img.dataUrl.split(",")[1]}}; }
+    const text = await aiCall("timetable", [block, {type:"text", text:SCHED_READ_PROMPT}]);
+    const m = text.match(/\{[\s\S]*\}/); if(!m) throw new Error("The schedule could not be read from that file.");
+    const j = JSON.parse(m[0]), ok = x=> x && /^\d{1,2}:\d{2}$/.test(String(x.start||"")) && /^\d{1,2}:\d{2}$/.test(String(x.end||"")) && tmin(x.end) > tmin(x.start);
+    const pad = s=>{ const [h,mi] = String(s).split(":"); return h.padStart(2,"0")+":"+mi; };
+    const next = JSON.parse(JSON.stringify(schedNorm(schedule))); let found = 0;
+    (j.periods||[]).forEach(x=>{ const n = Number(x.n); if(n>=1 && n<=8 && ok(x)){ next.p[n] = [pad(x.start), pad(x.end)]; found++; } });
+    if(ok(j.break)){ next.brk = [pad(j.break.start), pad(j.break.end)]; found++; }
+    if(ok(j.salah)){ next.salah = [pad(j.salah.start), pad(j.salah.end)]; found++; }
+    if(!found) throw new Error("No period times were found in that file. Try a clearer picture, or set the times below.");
+    delete next.cfg; delete next.ovr;
+    schedBackup = JSON.parse(JSON.stringify(schedule));
+    schedule = schedNorm(next); rebuildPeriodTimes(); renderSchedule(); saveSchedule();
+    note.textContent = "Updated from your file ("+found+" times read). Check the table below.";
+    if(undo) undo.hidden = false;
+  }catch(e){ note.textContent = e.message || "Could not read that file."; }
+}
+function schedWire(){
+  document.getElementById("schedUpBtn").onclick = ()=>document.getElementById("schedFile").click();
+  document.getElementById("schedFile").onchange = e=>{ const f = e.target.files[0]; e.target.value = ""; if(f) schedUpload(f); };
+  document.getElementById("schedUndo").onclick = ()=>{ if(!schedBackup) return; schedule = schedBackup; schedBackup = null; rebuildPeriodTimes(); renderSchedule(); saveSchedule(); document.getElementById("schedUndo").hidden = true; document.getElementById("schedUpNote").textContent = "Upload undone."; };
+  document.getElementById("schedClear").onclick = ()=>{ const n = schedNorm(schedule); n.ovr = {}; schedCommit(n); };
+  document.getElementById("schedReset").onclick = ()=>{ schedule = schedNorm(JSON.parse(JSON.stringify(DEFAULT_SCHEDULE))); delete schedule.cfg; delete schedule.ovr; schedule = schedNorm(schedule); rebuildPeriodTimes(); renderSchedule(); saveSchedule(); };
 }
 function renderSettings(){
   renderStaff(); renderSchedule();
@@ -3261,7 +3386,7 @@ function renderSettings(){
       if(added){ staffQueueSave(); } staffMarkSaved(added ? `Added ${added} people.` : "No new emails found in what you pasted.");
       renderStaff();
     };
-    document.getElementById("schedReset").onclick = ()=>{ schedule = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)); rebuildPeriodTimes(); renderSchedule(); saveSchedule(); };
+    schedWire();
   }
 }
 
