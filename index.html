@@ -1703,7 +1703,7 @@ function renderHandbook(){
 /* ---------------- Weekly Plan Generator content ---------------- */
 const SPRINTS = [
 {
-  id: "g6-living-motion", label: "Grade 6 – Living Motion",
+  id: "g6-living-motion", label: "Living Motion",
   sessions: [
     { label:"Session 1", title:"Precedent Research & Sketching",
       goals:["Analyze a creature's movement pattern closely","Sketch its movement in three sequential frames","Design a paper-prototype recreation sketch"],
@@ -1723,7 +1723,7 @@ const SPRINTS = [
   ]
 },
 {
-  id: "g6-ar-product", label: "Grade 6 – AR Product",
+  id: "g6-ar-product", label: "AR Product",
   sessions: [
     { label:"Session 1", title:"Research & Idea Building",
       goals:["Research Vision 2030 sustainability and innovation themes","Choose a real place to redesign","Collect reference images to inspire your layers"],
@@ -1743,7 +1743,7 @@ const SPRINTS = [
   ]
 },
 {
-  id: "g7-tiny-house", label: "Grade 7 – Tiny House",
+  id: "g7-tiny-house", label: "Tiny House",
   sessions: [
     { label:"Session 1", title:"Mental Mapping & Ikea Testing",
       goals:["Draw your bedroom completely from memory","Explore the Ikea website for design ideas"],
@@ -1763,7 +1763,7 @@ const SPRINTS = [
   ]
 },
 {
-  id: "g7-9-fashion-lab", label: "Grade 7-9 – Fashion Lab",
+  id: "g7-9-fashion-lab", label: "Fashion Lab",
   sessions: [
     { label:"Session 1", title:"Ideation + Inspiration",
       goals:["Identify a problem clothing could solve","Explore functional clothing and textile techniques","Sketch a wearable solution to your problem"],
@@ -1783,7 +1783,7 @@ const SPRINTS = [
   ]
 },
 {
-  id: "g8-gamebots", label: "Grade 8 – GameBots",
+  id: "g8-gamebots", label: "GameBots",
   sessions: [
     { label:"Session 1", title:"Precedent Research + Conceptualization",
       goals:["Research examples in groups of four","Sketch your bot's intended movement mechanism","Create blueprint drawings of the mechanism"],
@@ -1803,7 +1803,7 @@ const SPRINTS = [
   ]
 },
 {
-  id: "g8-ai-systems", label: "Grade 8 – AI Systems",
+  id: "g8-ai-systems", label: "AI Systems",
   overview:"Choose a theme that excites you and take it with you throughout your AI journey! You'll explore how AI learns by collecting data, training models, and experimenting with intelligent behaviors. In the final challenge, you'll bring everything together to design your own AI-powered game, where your theme shapes the characters, environment, challenges, and gameplay.",
   sessions: [
     { label:"Session 1", title:"AI RolePlaying", duration:"1 hour",
@@ -1818,7 +1818,22 @@ const SPRINTS = [
   ]
 },
 {
-  id: "g9-ar-world", label: "Grade 9 – AR World",
+  id: "arduino-skills-lab", label: "Arduino Skills Lab",
+  overview:"A short skills lab that takes you from zero to your first working Arduino program. You'll install the software, get to know the Arduino board, and learn the process of turning an idea into code, starting with the goal of blinking an LED.",
+  sessions: [
+    { label:"Session 1", title:"Installation",
+      goals:["Download the Arduino software from arduino.cc","Follow the step-by-step installation instructions","Check the install worked by opening the Arduino app on your computer","Get ready to connect the interface to a physical Arduino device"],
+      keywords:["Arduino","installation","arduino.cc","software setup"] },
+    { label:"Session 2", title:"Introduction and Hardware",
+      goals:["Understand what an Arduino is and how it can enhance your project's behaviors","Think of the Arduino as a simple object that follows a set of instructions, like a person flipping light switches","Get to know the Arduino hardware"],
+      keywords:["Arduino","introduction","hardware","board","electronics","behavior"] },
+    { label:"Session 3", title:"From Speech to Code",
+      goals:["Talk it out: describe in words what someone else would need to know to perform the task","Describe the general behavior you want, for example turn the LED on for a second, then off for a second","Turn your plan into code to blink the LED"],
+      keywords:["Arduino","coding","talk it out","LED","blinking","process"] },
+  ]
+},
+{
+  id: "g9-ar-world", label: "AR World",
   sessions: [
     { label:"Session 1", title:"Research & Idea Building",
       goals:["Research Vision 2030 sustainability and innovation themes","Choose a real place to redesign","Collect reference images to inspire your layers"],
@@ -3395,7 +3410,7 @@ function renderSettings(){
 }
 
 /* ===================== Video Archives ===================== */
-const VA_PRESET = ["Prototyping","Brainstorming","Laser Cutting","Sketching","Presenting","Teamwork","Mechanism","AI","Gaming","Living Motion","Cultural Utopia","AR World","AI Systems","GameBots","Fashion Lab","Girls","Boys","Future World","Animation","Storytelling","Mute","No Music","Speed"];
+const VA_PRESET = ["Prototyping","Brainstorming","Laser Cutting","Sketching","Presenting","Teamwork","Mechanism","AI","Gaming","Living Motion","Cultural Utopia","AR World","AI Systems","Arduino Skills Lab","GameBots","Fashion Lab","Girls","Boys","Future World","Animation","Storytelling","Mute","No Music","Speed"];
 const VA_ME = "Raiyan Anwar";
 const DEFAULT_VIDEOS = [
   {url:"https://www.youtube.com/watch?v=Fdhwkap2DFU", title:"NEW TESLA ROADSTER - It Can Fly!!! (SpaceX Technology)", author:"YOUCAR", tags:["Future World","Mechanism","Speed","Mute"]},
