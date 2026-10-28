@@ -49,6 +49,7 @@
 
   .homegrid{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:76px;gap:14px;}
   .homegrid{grid-auto-flow:dense;}
+  .va-field[hidden],#vaProgWrap[hidden]{display:none!important;}
   .hw-hint{margin-top:12px;text-align:center;font-size:12.5px;color:var(--ink-soft);}
   .homegrid .navcard{background:linear-gradient(150deg,#FFFFFF 0%,#F4F5F8 52%,#E9EBF0 100%);border-color:#E0E3E9;box-shadow:0 1px 2px rgba(25,35,70,.05),0 10px 24px -12px rgba(25,35,70,.18);transition:box-shadow .2s,transform .2s,border-color .2s;}
   .homegrid .navcard:hover{box-shadow:0 2px 4px rgba(25,35,70,.07),0 16px 30px -12px rgba(25,35,70,.26);border-color:#CDD2DC;}
@@ -1005,9 +1006,15 @@
 
     <div class="panel" id="vaAddPanel" hidden>
       <h2>Add a video</h2>
-      <div class="sub">Paste the link, name it, say who added it and tick the tags that fit. Everyone sees it straight away.</div>
+      <div class="sub">Add a link, or upload a video from your device (up to 500 MB). Name it, say who added it and tick the tags that fit. Everyone sees it straight away.</div>
+      <div class="ws-seg va-mode" id="vaMode" style="margin:6px 0 12px;"><button type="button" data-m="link" class="on">Add video link</button><button type="button" data-m="file">Upload video from device</button></div>
       <div class="va-form">
-        <div class="va-field full">
+        <div class="va-field full" id="vaFileField" hidden>
+          <label for="vaFile">Video file</label>
+          <input class="va-inp" id="vaFile" type="file" accept="video/*,.mp4,.mov,.m4v,.webm">
+          <span class="hint">MP4, MOV or WebM, up to 500 MB. It is stored in the school Google Drive and plays from the archive. Large files take a few minutes: keep this tab open until the bar reaches 100%.</span>
+        </div>
+        <div class="va-field full" id="vaUrlField">
           <label for="vaUrl">Video link</label>
           <input class="va-inp" id="vaUrl" type="url" inputmode="url" placeholder="Paste a YouTube, Vimeo or Google Drive link" autocomplete="off">
           <span class="hint">YouTube, Shorts, Vimeo and Google Drive links play here. Any other link is saved and opens in a new tab.</span>
@@ -1025,6 +1032,7 @@
           <div id="vaAddPicker"></div>
         </div>
       </div>
+      <div id="vaProgWrap" hidden style="margin:8px 0 4px;"></div>
       <div class="va-formrow">
         <button class="va-btn primary" id="vaSave">Save to archive</button>
         <button class="va-btn ghost" id="vaCancel">Cancel</button>
@@ -1796,22 +1804,17 @@ const SPRINTS = [
 },
 {
   id: "g8-ai-systems", label: "Grade 8 – AI Systems",
+  overview:"Choose a theme that excites you and take it with you throughout your AI journey! You'll explore how AI learns by collecting data, training models, and experimenting with intelligent behaviors. In the final challenge, you'll bring everything together to design your own AI-powered game, where your theme shapes the characters, environment, challenges, and gameplay.",
   sessions: [
-    { label:"Session 1", title:"Design Your Bot",
-      goals:["Go to art-bot.net to begin","Select the Reinforcement Learning mini-game specifically"],
-      keywords:["ArtBot","reinforcement learning","game selection","setup"] },
-    { label:"Session 2", title:"Design Your Bot",
-      goals:["Choose one of five bot profiles","Set parameters to match your creature","Run several episodes and record observations"],
-      keywords:["bot profiles","parameters","episodes","observation"] },
-    { label:"Session 3", title:"Turn it into a Game!",
-      goals:["Choose a theme to shape your game","Design rewards, hazards, and a mission"],
-      keywords:["game design","theme","rewards","hazards"] },
-    { label:"Session 4", title:"Turn it into a Game!",
-      goals:["Fill in the AI prompt template fully","Define your creature's personality and behaviors","Generate a working HTML platformer game"],
-      keywords:["AI prompt","personality","HTML game","behaviors"] },
-    { label:"Session 5", title:"Turn it into a Game!",
-      goals:["Paste and modify your prompt with AI","Add a twist mechanic to your game","Save and open the game as HTML"],
-      keywords:["AI prompt","twist mechanic","HTML file","game"] },
+    { label:"Session 1", title:"AI RolePlaying", duration:"1 hour",
+      goals:["Roleplay as both the trainer and the AI","Discover how examples and patterns help machines make decisions","Choose a theme to carry through your AI journey"],
+      keywords:["AI roleplaying","trainer","examples","patterns","decisions","theme"] },
+    { label:"Session 2", title:"Data Scavenger Hunt", duration:"1 hour",
+      goals:["Collect real-world examples during a Data Scavenger Hunt","Organize and improve your examples","Understand why quality data matters"],
+      keywords:["data","scavenger hunt","examples","data quality","organizing data"] },
+    { label:"Session 3-6", title:"Build a Game", duration:"3 hours",
+      goals:["Build your own machine learning model","Test reinforcement learning through interactive challenges","Use AI tools like Claude to create an interactive platformer and AI-inspired mazes","Let your theme shape the characters, environment, challenges, and gameplay"],
+      keywords:["machine learning model","reinforcement learning","Claude","platformer","AI-inspired mazes","theme","game design"] },
   ]
 },
 {
@@ -1837,7 +1840,7 @@ const SPRINTS = [
 ];
 
 function formatSessionText(s){
-  return `Topic: ${s.title}\n\nGoals:\n${s.goals.map(g=>"• "+g).join("\n")}\n\nKeywords: ${s.keywords.join(", ")}`;
+  return `Topic: ${s.title}${s.duration?"\nDuration: "+s.duration:""}\n\nGoals:\n${s.goals.map(g=>"• "+g).join("\n")}\n\nKeywords: ${s.keywords.join(", ")}`;
 }
 let customSprints = [];
 function allSprints(){ return SPRINTS.concat(customSprints); }
@@ -1852,14 +1855,15 @@ function renderSessionBoxes(){
   const sprint = allSprints().find(x=>x.id===sel.value) || allSprints()[0];
   document.getElementById("sprintDelBtn").style.display = sprint.custom ? "inline-flex" : "none";
   const container = document.getElementById("sessionBoxes");
-  container.innerHTML = sprint.sessions.map((x,i)=>`
+  container.innerHTML = (sprint.overview ? `<div class="sessionbox" style="grid-column:1/-1;"><div class="sessionbox-head"><b>Sprint overview</b><button class="copybtn" data-ov="1" title="Copy overview">${ICONS.copy}</button></div><textarea readonly rows="5">${esc(sprint.overview)}</textarea></div>` : "") + sprint.sessions.map((x,i)=>`
     <div class="sessionbox">
       <div class="sessionbox-head">
-        <b>${esc(x.label)}: ${esc(x.title)}</b>
+        <b>${esc(x.label)}: ${esc(x.title)}${x.duration?" ("+esc(x.duration)+")":""}</b>
         <button class="copybtn" data-sessidx="${i}" title="Copy this session">${ICONS.copy}</button>
       </div>
-      <textarea readonly rows="6">${esc(formatSessionText(x))}</textarea>
+      <textarea readonly rows="9">${esc(formatSessionText(x))}</textarea>
     </div>`).join("");
+  const ovb = container.querySelector("[data-ov]"); if(ovb) ovb.onclick = ()=> copyLink(sprint.overview, ovb);
   container.querySelectorAll("[data-sessidx]").forEach(b=>{
     b.onclick = ()=> copyLink(formatSessionText(sprint.sessions[Number(b.dataset.sessidx)]), b);
   });
@@ -3586,7 +3590,7 @@ function renderVideos(){
   g.querySelectorAll("[data-edit]").forEach(b=> b.onclick = ()=>{ vaState.editing = vaState.editing===b.dataset.edit ? null : b.dataset.edit; renderVideos(); });
   g.querySelectorAll("[data-del]").forEach(b=> b.onclick = ()=>{
     const id = b.dataset.del;
-    if(vaState.confirmDel===id){ videos = videos.filter(x=>x.id!==id); vaState.confirmDel=null; vaSave(); renderVideos(); }
+    if(vaState.confirmDel===id){ const gone = videos.find(x=>x.id===id); if(gone && gone.fileId) wsDeleteDriveFile(gone.fileId); videos = videos.filter(x=>x.id!==id); vaState.confirmDel=null; vaSave(); renderVideos(); }
     else { vaState.confirmDel = id; renderVideos(); setTimeout(()=>{ if(vaState.confirmDel===id){ vaState.confirmDel=null; renderVideos(); } },3500); }
   });
   const eb = g.querySelector("[data-editbox]");
@@ -3602,18 +3606,36 @@ function renderVideos(){
   wire();
   function wire(){ vaWire(); }
 }
+let vaMode = "link", vaBusy = false, vaCancelUp = false;
+const VA_MAX_BYTES = 500*1024*1024, VA_CHUNK = 8*1024*1024;
 let vaWired = false, vaAddPicker = null, vaAuthor = "", vaTitleTouched = false, vaSeq = 0;
 function vaWire(){
   if(vaWired) return; vaWired = true;
   const logoSrc = document.querySelector('.brandrow img[alt="Cross Curricular Programme logo"]') || document.querySelector('.sidenav-logogrid img[alt="CCP"]'); if(logoSrc) document.getElementById("vaLogo").src = logoSrc.src;
   vaAddPicker = vaMakePicker(document.getElementById("vaAddPicker"), [], null);
   document.getElementById("vaTitle").addEventListener("input", ()=>{ vaTitleTouched = true; });
+  const setMode = m=>{
+    vaMode = m;
+    document.querySelectorAll("#vaMode button").forEach(b=>b.classList.toggle("on", b.dataset.m===m));
+    document.getElementById("vaUrlField").hidden = m!=="link"; document.getElementById("vaFileField").hidden = m!=="file";
+    document.getElementById("vaSave").textContent = m==="file" ? "Upload and save" : "Save to archive";
+    const msg = document.getElementById("vaMsg"); msg.className = "va-msg"; msg.textContent = "";
+  };
+  document.querySelectorAll("#vaMode button").forEach(b=> b.onclick = ()=>{ if(!vaBusy) setMode(b.dataset.m); });
+  document.getElementById("vaFile").addEventListener("change", e=>{
+    const f = e.target.files[0], msg = document.getElementById("vaMsg"); if(!f) return;
+    msg.className = "va-msg";
+    if(f.size > VA_MAX_BYTES){ msg.className = "va-msg err"; msg.textContent = f.name+" is "+wsFmtSize(f.size)+". The limit is 500 MB."; e.target.value = ""; return; }
+    if(!/^video\//.test(f.type) && !/\.(mp4|mov|m4v|webm)$/i.test(f.name)){ msg.className = "va-msg err"; msg.textContent = "Please choose a video file (MP4, MOV or WebM)."; e.target.value = ""; return; }
+    msg.textContent = f.name+" ("+wsFmtSize(f.size)+")";
+    if(!vaTitleTouched) document.getElementById("vaTitle").value = f.name.replace(/\.[^.]+$/,"").replace(/[_]+/g," ").trim();
+  });
   document.getElementById("vaToggleAdd").onclick = function(){
     const p = document.getElementById("vaAddPanel"); p.hidden = !p.hidden; this.setAttribute("aria-expanded", String(!p.hidden));
     if(!p.hidden){ vaFillBy(); document.getElementById("vaUrl").focus(); }
   };
-  const reset = ()=>{ ["vaUrl","vaTitle"].forEach(i=>document.getElementById(i).value=""); const m=document.getElementById("vaMsg"); m.textContent=""; m.className="va-msg"; vaTitleTouched=false; vaAuthor=""; vaAddPicker.set([]); };
-  document.getElementById("vaCancel").onclick = ()=>{ reset(); document.getElementById("vaAddPanel").hidden = true; document.getElementById("vaToggleAdd").setAttribute("aria-expanded","false"); };
+  const reset = ()=>{ ["vaUrl","vaTitle","vaFile"].forEach(i=>document.getElementById(i).value=""); setMode("link"); document.getElementById("vaProgWrap").hidden = true; const m=document.getElementById("vaMsg"); m.textContent=""; m.className="va-msg"; vaTitleTouched=false; vaAuthor=""; vaAddPicker.set([]); };
+  document.getElementById("vaCancel").onclick = ()=>{ if(vaBusy){ vaCancelUp = true; return; } reset(); document.getElementById("vaAddPanel").hidden = true; document.getElementById("vaToggleAdd").setAttribute("aria-expanded","false"); };
   const lookup = async ()=>{
     const p = vaParse(document.getElementById("vaUrl").value); if(!p || p.src==="link") return;
     const seq = ++vaSeq, msg = document.getElementById("vaMsg"); msg.className="va-msg"; msg.textContent="Looking up the name…";
@@ -3627,17 +3649,71 @@ function vaWire(){
   };
   document.getElementById("vaUrl").addEventListener("change", lookup);
   document.getElementById("vaUrl").addEventListener("paste", ()=>setTimeout(lookup,50));
-  document.getElementById("vaSave").onclick = ()=>{
-    const msg = document.getElementById("vaMsg"), p = vaParse(document.getElementById("vaUrl").value);
+  async function vaUploadVideo(file, P){
+    const post = async body=>{
+      const r = await fetch(APPS_SCRIPT_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(Object.assign({token:APP_TOKEN}, body))});
+      const d = await r.json();
+      if(d.error){ if(/Missing 'key'/.test(d.error)) throw new Error("The Google Apps Script has not been updated for video uploads yet. Paste the new Code.gs, save it, then deploy a New version."); throw new Error(d.error); }
+      return d;
+    };
+    const mime = file.type || (/\.mov$/i.test(file.name) ? "video/quicktime" : /\.webm$/i.test(file.name) ? "video/webm" : "video/mp4");
+    P.to(1, "Starting the upload…");
+    const s = await post({action:"videostart", name:file.name, mime, size:file.size});
+    let pos = 0, res = null;
+    while(pos < file.size){
+      if(vaCancelUp) throw new Error("Upload cancelled.");
+      const end = Math.min(pos + VA_CHUNK, file.size), b64 = await wsToB64(file.slice(pos, end));
+      let lastErr = null;
+      for(let k=0; k<3; k++){
+        try{ res = await post({action:"videochunk", session:s.session, start:pos, total:file.size, data:b64}); lastErr = null; break; }
+        catch(e){ lastErr = e; if(/not been updated/.test(e.message)) throw e; await new Promise(r=>setTimeout(r, 1500*(k+1))); }
+      }
+      if(lastErr) throw lastErr;
+      pos = end; P.to(2 + 96*pos/file.size, "Uploading… "+wsFmtSize(pos)+" of "+wsFmtSize(file.size));
+    }
+    if(!res || !res.done) throw new Error("The upload did not finish. Please try again.");
+    P.to(100, "Upload complete"); return res;
+  }
+  document.getElementById("vaSave").onclick = async ()=>{
+    if(vaBusy) return;
+    const msg = document.getElementById("vaMsg");
     const err = (t,el)=>{ msg.className="va-msg err"; msg.textContent=t; if(el) document.getElementById(el).focus(); };
-    if(!p) return err("Paste a video link first.","vaUrl");
-    const title = document.getElementById("vaTitle").value.trim(); if(!title) return err("Give the video a name.","vaTitle");
-    const by = document.getElementById("vaBy").value; if(!by) return err("Choose who is adding this video.","vaBy");
-    const tags = vaAddPicker.get(); if(!tags.length) return err("Choose at least one tag so others can find it.");
+    const title = document.getElementById("vaTitle").value.trim();
+    const by = document.getElementById("vaBy").value;
+    const tags = vaAddPicker.get();
+    if(vaMode==="link"){
+      const p = vaParse(document.getElementById("vaUrl").value);
+      if(!p) return err("Paste a video link first.","vaUrl");
+      if(!title) return err("Give the video a name.","vaTitle");
+      if(!by) return err("Choose who is adding this video.","vaBy");
+      if(!tags.length) return err("Choose at least one tag so others can find it.");
+      try{ localStorage.setItem("ccp_va_last_by", by); }catch(e){}
+      videos.push({id:"v"+Date.now().toString(36), url:p.url, title, author:vaAuthor, by, tags, added:Date.now()});
+      vaSave(); reset(); renderVideos();
+      msg.className="va-msg"; msg.textContent="Saved to the archive."; setTimeout(()=>{ if(msg.textContent==="Saved to the archive.") msg.textContent=""; },2500);
+      return;
+    }
+    const f = document.getElementById("vaFile").files[0];
+    if(!f) return err("Choose a video file first.","vaFile");
+    if(f.size > VA_MAX_BYTES) return err(f.name+" is "+wsFmtSize(f.size)+". The limit is 500 MB.","vaFile");
+    if(!title) return err("Give the video a name.","vaTitle");
+    if(!by) return err("Choose who is adding this video.","vaBy");
+    if(!tags.length) return err("Choose at least one tag so others can find it.");
     try{ localStorage.setItem("ccp_va_last_by", by); }catch(e){}
-    videos.push({id:"v"+Date.now().toString(36), url:p.url, title, author:vaAuthor, by, tags, added:Date.now()});
-    vaSave(); reset(); renderVideos();
-    msg.className="va-msg"; msg.textContent="Saved to the archive."; setTimeout(()=>{ if(msg.textContent==="Saved to the archive.") msg.textContent=""; },2500);
+    const wrap = document.getElementById("vaProgWrap"); wrap.hidden = false; wrap.innerHTML = WS_PROG_HTML;
+    const P = wsProgress(wrap.querySelector(".ws-prog i"), wrap.querySelector(".pct"), wrap.querySelector(".lbl"));
+    const sv = document.getElementById("vaSave"), cn = document.getElementById("vaCancel");
+    vaBusy = true; vaCancelUp = false; sv.disabled = true; cn.textContent = "Stop upload"; msg.className = "va-msg"; msg.textContent = "Keep this tab open until the upload finishes.";
+    try{
+      const up = await vaUploadVideo(f, P);
+      videos.push({id:"v"+Date.now().toString(36), url:up.view, title, author:"", by, tags, added:Date.now(), fileId:up.id, kind:"upload", size:f.size});
+      vaSave(); vaBusy = false; cn.textContent = "Cancel"; sv.disabled = false; reset(); renderVideos();
+      msg.className = "va-msg"; msg.textContent = "Uploaded and saved to the archive. Google may take a minute to prepare the preview.";
+      setTimeout(()=>{ if(/^Uploaded/.test(msg.textContent)) msg.textContent = ""; }, 6000);
+    }catch(e){
+      vaBusy = false; cn.textContent = "Cancel"; sv.disabled = false; P.stop(); wrap.hidden = true;
+      msg.className = "va-msg err"; msg.textContent = e.message || "The upload failed. Please try again.";
+    }
   };
   document.getElementById("vaQ").addEventListener("input", function(){ vaState.q = this.value; renderVideos(); });
 }
@@ -4581,6 +4657,7 @@ function stRenderSide(keepScroll){
   });
   if(keepScroll) side.scrollTop = top;
 }
+window.addEventListener("beforeunload", e=>{ if(vaBusy){ e.preventDefault(); e.returnValue = ""; } });
 window.addEventListener("beforeunload", e=>{ if(WS_STUDIO && S.results && (S.saving || S.ver!==S.savedVer)){ e.preventDefault(); e.returnValue = ""; } });
 
 
