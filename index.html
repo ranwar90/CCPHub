@@ -179,6 +179,29 @@
   .ttperiodhdr.now .ptime{color:#fff;}
   .ttdaylabel.today{background:#DDF1E5;color:#14774A;}
   .ttnow{position:absolute;top:0;bottom:0;width:calc(100%/8);background:rgba(30,158,90,.15);border:1.5px solid #1E9E5A;border-radius:3px;pointer-events:none;z-index:2;box-sizing:border-box;}
+  .sched-tabs{display:flex;gap:6px;margin:0 0 14px;border-bottom:2px solid var(--line);}
+  .sched-tabs button{border:0;background:transparent;padding:10px 16px;font:inherit;font-weight:700;font-size:14px;color:var(--ink-soft);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;}
+  .sched-tabs button.on{color:#1B3A6B;border-bottom-color:#1B3A6B;}
+  #schedMain[hidden],#schedOne[hidden]{display:none!important;}
+  .mt-note{min-height:0;font-size:13px;margin-top:8px;}
+  .mt-note.ok{color:#14774A;font-weight:600;} .mt-note.bad{color:#C8372D;font-weight:600;}
+  .mt-evhead{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;}
+  .mt-evhead h3{margin:0;font-size:17px;font-family:"Space Grotesk",sans-serif;}
+  .mt-evact{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .mt-chip{display:inline-flex;padding:6px 12px;border-radius:99px;background:#E7ECF4;color:#1B3A6B;font-weight:700;font-size:13px;}
+  .mt-book{margin:10px 0 4px;font-size:13px;color:var(--ink-soft);}
+  .mt-dh{font-weight:700;font-size:13.5px;margin:12px 0 6px;}
+  .mt-slots{display:flex;flex-wrap:wrap;gap:8px;}
+  .mt-slot{min-width:78px;padding:8px 10px;border:1.5px solid #1B3A6B;border-radius:10px;background:#fff;color:#1B3A6B;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1.2;transition:transform .12s,box-shadow .12s;}
+  .mt-slot b{font-size:15px;} .mt-slot span{font-size:11px;opacity:.85;}
+  .mt-slot:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 12px rgba(27,58,107,.25);background:#EEF3FB;}
+  .mt-slot.taken{color:#fff;} .mt-slot.taken:hover{background:inherit;filter:brightness(.92);}
+  .mt-slot.past{border-color:#D5D9E0;color:#A0A6B2;cursor:not-allowed;background:#F4F5F8;}
+  .mt-blk{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px;}
+  .mt-blk input{font:inherit;font-size:14px;padding:7px 10px;border:1.5px solid #1B3A6B;border-radius:8px;background:#1B3A6B;color:#fff;}
+  .mt-count{margin-top:8px;font-size:13px;font-weight:700;color:#14774A;} .mt-count.bad{color:#C8372D;}
+  .mt-past{margin-top:12px;} .mt-past summary{cursor:pointer;font-weight:700;font-size:13px;color:var(--ink-soft);margin-bottom:8px;}
+  .mt-ev{margin-top:14px;}
   .ttgrid-scroll{overflow-x:auto;}
   .ttgroup{min-width:340px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface);}
   .ttheader{display:grid;grid-template-columns:27px repeat(8,1fr);background:var(--bg);border-bottom:1px solid var(--line);}
@@ -902,6 +925,8 @@
   <!-- MEETING -->
   <div id="view-meeting" style="display:none;">
     <button class="backbtn" data-back>&larr; Back</button>
+    <div class="sched-tabs" id="schedTabs"><button type="button" data-st="main" class="on">Timetable &amp; meeting times</button><button type="button" data-st="one">One-to-one meetings</button></div>
+    <div id="schedMain">
     <div class="panel">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:4px;">
         <div>
@@ -947,6 +972,8 @@
       <div class="togglebar"><button class="btn ghost small" id="toggleAllSlots">Show all day/period slots</button></div>
       <table class="fulltable" id="allSlotsTable" style="display:none;margin-top:10px;"></table>
     </div>
+    </div>
+    <div id="schedOne" hidden></div>
   </div>
 
   <!-- HANDBOOK -->
@@ -2192,7 +2219,7 @@ function getVal(key, fallback){
   if(raw==null || raw==="") return fallback;
   try{ return JSON.parse(raw); }catch(e){ return fallback; }
 }
-const DATA_KEYS = ["ccp_timetable_v3","ccp_absences","ccp_practices","ccp_minutes","ccp_backlog","ccp_custom_sprints","ccp_staff","ccp_schedule","ccp_videos","ccp_worksheets"];
+const DATA_KEYS = ["ccp_timetable_v3","ccp_absences","ccp_practices","ccp_minutes","ccp_backlog","ccp_custom_sprints","ccp_staff","ccp_schedule","ccp_videos","ccp_worksheets","ccp_meetings"];
 function applyStore(){
   timetable     = getVal("ccp_timetable_v3", DEFAULT_TIMETABLE);
   absences      = getVal("ccp_absences", DEFAULT_ABSENCES);
@@ -2204,6 +2231,7 @@ function applyStore(){
   schedule      = getVal("ccp_schedule", DEFAULT_SCHEDULE);
   videos        = getVal("ccp_videos", DEFAULT_VIDEOS);
   worksheets    = getVal("ccp_worksheets", DEFAULT_WORKSHEETS);
+  meetings      = getVal("ccp_meetings", []);
   rebuildPeriodTimes();
 }
 async function fetchAllFromSheet(){
@@ -2536,6 +2564,214 @@ function ttRenameBlock(el){
   inp.onblur = ()=>finish(true);
   inp.onclick = e=>e.stopPropagation(); inp.ondblclick = e=>e.stopPropagation();
 }
+/* ===================== One-to-one meetings (Scheduling > One-to-one) ===================== */
+const MT_ADMINS = ["r.anwar@ais.sch.sa"];
+const MT_LENGTHS = [5,10,15,20,25,30,40,45,60];
+const MT_MIN_SLOTS = 8;
+let meetings = [];
+let mtAdminOK = false, mtDraft = null, mtTab = "main", mtTimer = null, mtMsg = "";
+function mtEmail(s){ return String(s||"").trim().toLowerCase(); }
+function mtPerson(email){
+  const e = mtEmail(email); if(!e) return null;
+  const s = staff.find(x=>mtEmail(x.email)===e); if(!s) return null;
+  const name = String(s.name||"").trim(); if(!name) return null;
+  const full = matchTeacherName(name) || name;
+  const ini = INITIALS[full] || name.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join("") || "?";
+  return {name:full, ini, color:TEACHER_COLORS[full] || "#1B3A6B"};
+}
+function mtSlots(ev){
+  const out = [];
+  (ev.blocks||[]).forEach(b=>{
+    let t = tmin(b.from); const end = tmin(b.to), len = Number(ev.len)||15;
+    while(t + len <= end){ out.push({key:b.date+"|"+mt(t), date:b.date, start:mt(t), end:mt(t+len)}); t += len; }
+  });
+  return out.sort((a,b)=> a.key<b.key ? -1 : 1);
+}
+const mtPast = s=> new Date(s.date+"T"+s.end+":00").getTime() < Date.now();
+const mtDateLabel = d=> new Date(d+"T00:00:00").toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+function mtSetTab(tab){
+  mtTab = tab; try{ sessionStorage.setItem("ccp_sched_tab", tab); }catch(e){}
+  document.getElementById("schedMain").hidden = tab!=="main"; document.getElementById("schedOne").hidden = tab!=="one";
+  document.querySelectorAll("#schedTabs button").forEach(b=>b.classList.toggle("on", b.dataset.st===tab));
+  clearInterval(mtTimer);
+  if(tab==="one"){ renderOneToOne(); mtTimer = setInterval(()=>{ if(document.getElementById("schedOne") && !document.getElementById("schedOne").hidden && !document.querySelector(".ws-overlay") && !mtDraft) mtRefresh(); }, 45000); }
+  else ttLiveTick(true);
+}
+async function mtFetchLatest(){
+  try{
+    const r = await fetch(APPS_SCRIPT_URL+"?key=ccp_meetings&token="+encodeURIComponent(APP_TOKEN)); const d = await r.json();
+    if(d && d.value===null) return [];
+    if(d && d.value!=null){ const v = typeof d.value==="string" ? JSON.parse(d.value) : d.value; if(Array.isArray(v)) return v; }
+  }catch(e){ throw new Error("Could not reach the shared sheet. Check your connection and try again."); }
+  return meetings.slice();
+}
+async function mtRefresh(){ try{ const l = await mtFetchLatest(); if(JSON.stringify(l)!==JSON.stringify(meetings)){ meetings = l; rawStore.ccp_meetings = JSON.stringify(l); renderOneToOne(); } }catch(e){} }
+async function mtCommit(mutator){          // read latest, change, save: so two people booking at once don't overwrite each other
+  const list = await mtFetchLatest(); const res = mutator(list);
+  if(res && res.error) return res;
+  const ok = await saveJSON("ccp_meetings", list);
+  if(!ok) return {error:"The change could not be saved. Check your connection and try again."};
+  meetings = list; return res || {};
+}
+/* ---- small email prompt ---- */
+function mtAsk(o){
+  return new Promise(resolve=>{
+    const d = wsOpenModal(true);
+    d.innerHTML = wsHead(o.title, o.sub||"") + `<div class="va-field"><label for="mtEm">Your email address</label><input class="va-inp" id="mtEm" type="email" autocomplete="email" placeholder="name@school.edu"></div><div class="va-msg err" id="mtEmErr" style="min-height:18px;margin-top:6px;"></div><div class="va-formrow" style="margin-top:10px;"><button type="button" class="va-btn ${o.danger?"":"primary"}" id="mtEmGo"${o.danger?' style="background:#C8372D;color:#fff;border-color:#C8372D;"':""}>${esc(o.confirm||"Confirm")}</button><button type="button" class="va-btn ghost" data-close>Cancel</button></div>`;
+    wsBindClose(d); const inp = d.querySelector("#mtEm"), err = d.querySelector("#mtEmErr"), go = d.querySelector("#mtEmGo"); inp.focus();
+    let finished = false;
+    const submit = async ()=>{
+      if(finished) return; const email = inp.value.trim(); err.textContent = "";
+      if(!email){ err.textContent = "Enter your email address."; return; }
+      go.disabled = true; go.textContent = "Checking…";
+      try{ const msg = await o.verify(email); if(msg){ err.textContent = msg; go.disabled = false; go.textContent = o.confirm||"Confirm"; return; } }
+      catch(e){ err.textContent = e.message || "Something went wrong."; go.disabled = false; go.textContent = o.confirm||"Confirm"; return; }
+      finished = true; wsCloseModal(true); resolve(true);
+    };
+    go.onclick = submit; inp.onkeydown = e=>{ if(e.key==="Enter"){ e.preventDefault(); submit(); } };
+    const obs = new MutationObserver(()=>{ if(!document.body.contains(d)){ obs.disconnect(); if(!finished){ finished = true; resolve(false); } } });
+    obs.observe(document.body,{childList:true,subtree:true});
+  });
+}
+function mtToast(t, bad){ mtMsg = t; const el = document.getElementById("mtNote"); if(el){ el.textContent = t; el.className = "mt-note"+(bad?" bad":" ok"); clearTimeout(mtToast._t); mtToast._t = setTimeout(()=>{ el.textContent = ""; el.className = "mt-note"; }, 7000); } }
+async function mtAdminGate(){
+  if(mtAdminOK) return true;
+  const ok = await mtAsk({title:"Admin check", sub:"Only the admin can set up or delete meeting events. Enter the admin email address.", confirm:"Continue", verify: async e=> MT_ADMINS.includes(mtEmail(e)) ? "" : "That email does not have admin access."});
+  if(ok) mtAdminOK = true; return ok;
+}
+async function mtBook(evId, slot){
+  let person = null;
+  const ev0 = meetings.find(e=>e.id===evId); if(!ev0) return;
+  const done = await mtAsk({title:"Book "+hhmm(slot.start)+"–"+hhmm(slot.end), sub:esc(ev0.title)+" · "+mtDateLabel(slot.date)+". Enter your email address to confirm the booking.", confirm:"Confirm booking",
+    verify: async email=>{
+      person = mtPerson(email); if(!person) return "That email is not in the staff list. Ask Raiyan to add it in Settings.";
+      const res = await mtCommit(list=>{
+        const ev = list.find(e=>e.id===evId); if(!ev) return {error:"This event has been removed."};
+        ev.booked = ev.booked || {};
+        const mine = Object.keys(ev.booked).find(k=>ev.booked[k].name===person.name);
+        if(mine) return {error:"You already have the "+hhmm(mine.split("|")[1])+" slot on "+mtDateLabel(mine.split("|")[0])+". Click that slot to cancel it first."};
+        if(ev.booked[slot.key]) return {error:"Sorry, "+ev.booked[slot.key].ini+" just booked that slot. Please pick another."};
+        ev.booked[slot.key] = {name:person.name, ini:person.ini, at:Date.now()};
+      });
+      if(res.error){ renderOneToOne(); return res.error; }
+      return "";
+    }});
+  renderOneToOne();
+  if(done){
+    mtToast("Booked: "+hhmm(slot.start)+"–"+hhmm(slot.end)+" for "+person.name+".");
+    setTimeout(async ()=>{ try{ const l = await mtFetchLatest(); const ev = l.find(e=>e.id===evId); if(ev && ev.booked && ev.booked[slot.key] && ev.booked[slot.key].name!==person.name){ meetings = l; renderOneToOne(); mtToast("Another teacher booked that slot at the same moment. Please choose a different time.", true); } }catch(e){} }, 1800);
+  }
+}
+async function mtCancel(evId, slot){
+  const ev0 = meetings.find(e=>e.id===evId); const b0 = ev0 && ev0.booked && ev0.booked[slot.key]; if(!b0) return;
+  const done = await mtAsk({title:"Cancel this booking?", sub:esc(ev0.title)+" · "+hhmm(slot.start)+"–"+hhmm(slot.end)+", booked by "+esc(b0.ini)+". Enter the email address of the teacher who booked it.", confirm:"Cancel booking", danger:true,
+    verify: async email=>{
+      const p = mtPerson(email), isAdmin = MT_ADMINS.includes(mtEmail(email));
+      if(!p && !isAdmin) return "That email is not in the staff list.";
+      if(!isAdmin && p.name!==b0.name) return "Only the teacher who booked this slot can cancel it.";
+      const res = await mtCommit(list=>{
+        const ev = list.find(e=>e.id===evId); if(!ev || !ev.booked || !ev.booked[slot.key]) return {error:"This slot is no longer booked."};
+        delete ev.booked[slot.key];
+      });
+      if(res.error){ renderOneToOne(); return res.error; }
+      return "";
+    }});
+  renderOneToOne(); if(done) mtToast("Booking cancelled. The slot is free again.");
+}
+async function mtDeleteEvent(evId){
+  if(!(await mtAdminGate())) return;
+  const ev = meetings.find(e=>e.id===evId); if(!ev) return;
+  const n = Object.keys(ev.booked||{}).length;
+  if(!confirm('Delete "'+ev.title+'"'+(n?" and its "+n+" booking"+(n===1?"":"s"):"")+" for everyone?")) return;
+  const res = await mtCommit(list=>{ const i = list.findIndex(e=>e.id===evId); if(i>=0) list.splice(i,1); });
+  renderOneToOne(); mtToast(res.error || "Event deleted.", !!res.error);
+}
+/* ---- create-event form ---- */
+function mtNewDraft(){ const t = new Date(); t.setMinutes(t.getMinutes()-t.getTimezoneOffset()); return {title:"", mode:"meet", where:"", len:15, blocks:[{date:t.toISOString().slice(0,10), from:"12:30", to:"14:30"}]}; }
+function mtDraftSlots(){ return mtSlots({len:mtDraft.len, blocks:mtDraft.blocks.filter(b=>b.date && b.from && b.to)}); }
+function mtDraftCheck(){
+  const d = mtDraft;
+  if(!d.title.trim()) return "Give the event a title.";
+  if(d.mode==="meet"){ if(!/^https:\/\/\S+$/i.test(d.where.trim())) return "Paste your Google Meet link (it starts with https://)."; }
+  else if(!d.where.trim()) return "Enter the meeting location.";
+  for(const b of d.blocks){ if(!b.date || !b.from || !b.to) return "Fill in the date and times for every block."; if(tmin(b.to) <= tmin(b.from)) return "Each block must end after it starts."; }
+  const by = {}; for(const b of d.blocks){ (by[b.date] = by[b.date]||[]).push(b); }
+  for(const k in by){ const a = by[k].slice().sort((x,y)=>tmin(x.from)-tmin(y.from)); for(let i=1;i<a.length;i++) if(tmin(a[i].from) < tmin(a[i-1].to)) return "Two blocks on "+k+" overlap."; }
+  const n = mtDraftSlots().length;
+  if(n < MT_MIN_SLOTS) return "That gives "+n+" slot"+(n===1?"":"s")+". You need at least "+MT_MIN_SLOTS+" (one per teacher): widen the time range or shorten each session.";
+  return "";
+}
+function mtFormHTML(){
+  const d = mtDraft, n = mtDraftSlots().length, bad = n < MT_MIN_SLOTS;
+  return `<div class="panel mt-form"><h3 style="margin:0 0 4px;">Add meeting event</h3><div class="sub" style="margin-bottom:10px;">Set the title, your meeting link or place, how long each session is, and when you are available. Teachers then pick their own slot.</div>
+   <div class="va-form">
+    <div class="va-field full"><label for="mtTitle">Event title</label><input class="va-inp" id="mtTitle" type="text" placeholder="e.g. One-to-one Sprint 1 reflection" value="${esc(d.title)}" autocomplete="off"></div>
+    <div class="va-field"><label>Type</label><div class="ws-seg" id="mtMode"><button type="button" data-m="meet" class="${d.mode==="meet"?"on":""}">Google Meet</button><button type="button" data-m="room" class="${d.mode==="room"?"on":""}">Face-to-face</button></div></div>
+    <div class="va-field"><label for="mtWhere">${d.mode==="meet"?"Your Google Meet link":"Location"}</label><input class="va-inp" id="mtWhere" type="${d.mode==="meet"?"url":"text"}" placeholder="${d.mode==="meet"?"https://meet.google.com/abc-defg-hij":"e.g. Director's office, Room 12"}" value="${esc(d.where)}" autocomplete="off"></div>
+    <div class="va-field"><label for="mtLen">Length of each session</label><select class="va-inp" id="mtLen">${MT_LENGTHS.map(m=>`<option value="${m}"${m===d.len?" selected":""}>${m} minutes</option>`).join("")}</select></div>
+    <div class="va-field full"><label>When are you available?</label>
+     <div id="mtBlocks">${d.blocks.map((b,i)=>`<div class="mt-blk" data-i="${i}"><input type="date" data-k="date" value="${esc(b.date)}" aria-label="Date"><input type="time" data-k="from" value="${esc(b.from)}" aria-label="From"><span>to</span><input type="time" data-k="to" value="${esc(b.to)}" aria-label="To">${d.blocks.length>1?`<button type="button" class="va-btn ghost" data-rmb="${i}">Remove</button>`:""}</div>`).join("")}</div>
+     <button type="button" class="va-btn" id="mtAddBlk" style="margin-top:6px;">+ Add another block of time</button>
+     <div class="mt-count${bad?" bad":""}" id="mtCount">${n} slot${n===1?"":"s"} will be created${bad?" (minimum "+MT_MIN_SLOTS+")":""}</div></div>
+   </div>
+   <div class="va-formrow"><button type="button" class="va-btn primary" id="mtSave">Save event</button><button type="button" class="va-btn ghost" id="mtCancelForm">Cancel</button><span class="va-msg" id="mtFormMsg" role="status"></span></div></div>`;
+}
+function mtWireForm(host){
+  const d = mtDraft, upd = ()=>{ const n = mtDraftSlots().length, c = host.querySelector("#mtCount"); c.textContent = n+" slot"+(n===1?"":"s")+" will be created"+(n<MT_MIN_SLOTS?" (minimum "+MT_MIN_SLOTS+")":""); c.className = "mt-count"+(n<MT_MIN_SLOTS?" bad":""); };
+  host.querySelector("#mtTitle").oninput = e=>{ d.title = e.target.value; };
+  host.querySelector("#mtWhere").oninput = e=>{ d.where = e.target.value; };
+  host.querySelector("#mtLen").onchange = e=>{ d.len = +e.target.value; upd(); };
+  host.querySelectorAll("#mtMode button").forEach(b=> b.onclick = ()=>{ d.mode = b.dataset.m; d.where = ""; renderOneToOne(); });
+  host.querySelectorAll(".mt-blk").forEach(r=>{ const i = +r.dataset.i; r.querySelectorAll("input").forEach(inp=> inp.onchange = ()=>{ d.blocks[i][inp.dataset.k] = inp.value; upd(); }); });
+  host.querySelectorAll("[data-rmb]").forEach(b=> b.onclick = ()=>{ d.blocks.splice(+b.dataset.rmb,1); renderOneToOne(); });
+  host.querySelector("#mtAddBlk").onclick = ()=>{ const l = d.blocks[d.blocks.length-1]; d.blocks.push({date:l.date, from:l.to, to:mt(Math.min(tmin(l.to)+120,23*60+59))}); renderOneToOne(); };
+  host.querySelector("#mtCancelForm").onclick = ()=>{ mtDraft = null; renderOneToOne(); };
+  host.querySelector("#mtSave").onclick = async ()=>{
+    const msg = host.querySelector("#mtFormMsg"), e = mtDraftCheck(); if(e){ msg.className = "va-msg err"; msg.textContent = e; return; }
+    const btn = host.querySelector("#mtSave"); btn.disabled = true; msg.className = "va-msg"; msg.textContent = "Saving…";
+    const ev = {id:"m"+Date.now().toString(36), title:d.title.trim(), mode:d.mode, where:d.where.trim(), len:d.len, blocks:d.blocks.map(b=>({date:b.date,from:b.from,to:b.to})), booked:{}, created:Date.now()};
+    const res = await mtCommit(list=>{ list.push(ev); });
+    if(res.error){ btn.disabled = false; msg.className = "va-msg err"; msg.textContent = res.error; return; }
+    mtDraft = null; renderOneToOne(); mtToast("Event saved. Teachers can now book a slot.");
+  };
+}
+/* ---- the page ---- */
+function mtEventHTML(ev){
+  const slots = mtSlots(ev), booked = ev.booked||{}, nb = slots.filter(s=>booked[s.key]).length, dates = [...new Set(slots.map(s=>s.date))];
+  const where = ev.mode==="meet" ? `<a class="va-btn primary" href="${esc(ev.where)}" target="_blank" rel="noopener noreferrer">Join Google Meet ↗</a>` : `<span class="mt-chip">Face-to-face: ${esc(ev.where)}</span>`;
+  return `<article class="panel mt-ev" data-ev="${esc(ev.id)}"><div class="mt-evhead"><div><h3>${esc(ev.title)}</h3><div class="sub" style="margin:2px 0 0;">${ev.len}-minute sessions · ${nb} of ${slots.length} booked</div></div><div class="mt-evact">${where}<button type="button" class="va-btn ghost" data-delev="${esc(ev.id)}">Delete</button></div></div>
+   <div class="mt-book">Book your slot: tap a free time, then enter your email address to confirm. Tap your own slot to cancel it.</div>
+   ${dates.map(dt=>`<div class="mt-day"><div class="mt-dh">${esc(mtDateLabel(dt))}</div><div class="mt-slots">${slots.filter(s=>s.date===dt).map(s=>{
+      const b = booked[s.key], past = mtPast(s), p = b ? (mtPerson(staffEmailFor(b.name)) || {color:TEACHER_COLORS[b.name]||"#1B3A6B"}) : null;
+      const col = b ? (TEACHER_COLORS[b.name] || (p&&p.color) || "#1B3A6B") : "";
+      return b ? `<button type="button" class="mt-slot taken" data-sk="${esc(s.key)}" style="background:${col};border-color:${col};" title="Booked by ${esc(b.name)} (tap to cancel)"><b>${esc(b.ini)}</b><span>${hhmm(s.start)}–${hhmm(s.end)}</span></button>`
+        : `<button type="button" class="mt-slot${past?" past":""}" data-sk="${esc(s.key)}"${past?" disabled":""}><b>${hhmm(s.start)}</b><span>${past?"passed":"free"}</span></button>`;
+    }).join("")}</div></div>`).join("")}</article>`;
+}
+function staffEmailFor(name){ const s = staff.find(x=>(matchTeacherName(x.name)||String(x.name||"").trim())===name); return s ? s.email : ""; }
+function renderOneToOne(){
+  const host = document.getElementById("schedOne"); if(!host) return;
+  const now = Date.now(), live = [], past = [];
+  meetings.slice().sort((a,b)=>(mtSlots(a)[0]||{key:""}).key < (mtSlots(b)[0]||{key:""}).key ? -1 : 1).forEach(e=>{ const sl = mtSlots(e); (sl.length && sl.every(mtPast) ? past : live).push(e); });
+  host.innerHTML = `<div class="panel"><div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;justify-content:space-between;"><div><h2 style="margin:0 0 4px;">One-to-one meetings</h2><div class="sub" style="margin:0;">Book a time with Raiyan on Google Meet or face-to-face. Everyone can see which slots are taken.</div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;"><button type="button" class="va-btn" id="mtCopy">Copy booking link</button>${mtDraft?"":'<button type="button" class="va-btn primary" id="mtAdd">+ Add meeting event</button>'}</div></div><div class="mt-note" id="mtNote" role="status"></div></div>`
+    + (mtDraft ? mtFormHTML() : "")
+    + (live.length ? live.map(mtEventHTML).join("") : (mtDraft ? "" : `<div class="panel va-empty"><b>No meetings to book yet</b>When an event is set up, the available times will appear here.</div>`))
+    + (past.length ? `<details class="mt-past"><summary>Past events (${past.length})</summary>${past.map(mtEventHTML).join("")}</details>` : "");
+  const addBtn = host.querySelector("#mtAdd"); if(addBtn) addBtn.onclick = async ()=>{ if(await mtAdminGate()){ mtDraft = mtNewDraft(); renderOneToOne(); host.querySelector("#mtTitle") && host.querySelector("#mtTitle").focus(); } };
+  host.querySelector("#mtCopy").onclick = async function(){ const url = location.origin && location.origin!=="null" ? location.origin+location.pathname+"?view=meeting&tab=one" : location.href; await copyLink(url, this); mtToast("Booking link copied. Send it to the teachers."); };
+  if(mtDraft) mtWireForm(host);
+  host.querySelectorAll(".mt-ev").forEach(card=>{
+    const id = card.dataset.ev, ev = meetings.find(e=>e.id===id); if(!ev) return; const slots = mtSlots(ev);
+    card.querySelectorAll(".mt-slot").forEach(b=> b.onclick = ()=>{ const s = slots.find(x=>x.key===b.dataset.sk); if(!s) return; (ev.booked||{})[s.key] ? mtCancel(id, s) : mtBook(id, s); });
+    const del = card.querySelector("[data-delev]"); if(del) del.onclick = ()=>mtDeleteEvent(id);
+  });
+  if(mtMsg){ const el = host.querySelector("#mtNote"); if(el){ el.textContent = mtMsg; el.className = "mt-note ok"; } }
+}
+function mtWireTabs(){
+  document.querySelectorAll("#schedTabs button").forEach(b=> b.onclick = ()=>mtSetTab(b.dataset.st));
+}
+
 /* ---- live clock + running period ---- */
 function ttNow(d){
   const sc = schedNorm(schedule), m = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
@@ -4759,7 +4995,7 @@ function renderView(name){
   if(name==="practice") renderPractice();
   if(name==="backlog") renderBacklog();
   if(name==="minutes") renderMinutes();
-  if(name==="meeting") renderMeeting();
+  if(name==="meeting"){ renderMeeting(); if(!mtWireTabs._d){ mtWireTabs._d = 1; mtWireTabs(); } let tb = "main"; try{ tb = sessionStorage.getItem("ccp_sched_tab")||"main"; }catch(e){} mtSetTab(tb); }
   if(name==="handbook") renderHandbook();
   if(name==="weeklyplan") renderWeeklyPlan();
   if(name==="safeguarding") renderSafeguarding();
@@ -5218,7 +5454,7 @@ document.getElementById("confirmBatchBtn").onclick = async ()=>{
     if(currentViewName!=="home") renderView(currentViewName);
   }
   const wantView = new URLSearchParams(location.search).get("view");
-  if(wantView && ["worksheets","videos"].includes(wantView)) showView(wantView);
+  if(wantView && ["worksheets","videos","meeting"].includes(wantView)){ showView(wantView); if(wantView==="meeting" && new URLSearchParams(location.search).get("tab")==="one") mtSetTab("one"); }
 })();
 </script>
 </body>
