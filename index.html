@@ -158,6 +158,27 @@
   .ttlegend{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:10px;}
   .ttlegenditem{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-soft);}
   .ttlegenditem .sw{width:10px;height:10px;border-radius:3px;flex:none;}
+  .ttclock{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin:4px 0 14px;padding:12px 16px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(150deg,#fff,#F1F3F7);}
+  .ttclock .tm{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:30px;line-height:1;letter-spacing:.02em;color:#1B3A6B;font-variant-numeric:tabular-nums;}
+  .ttclock .dt{font-size:12.5px;color:var(--ink-soft);margin-top:4px;}
+  .ttclock .cst{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:3px;text-align:right;}
+  .ttclock .chip{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:13.5px;padding:6px 12px;border-radius:99px;background:#E7ECF4;color:#1B3A6B;}
+  .ttclock .chip.live{background:#1E9E5A;color:#fff;}
+  .ttclock .chip.live::before{content:"";width:8px;height:8px;border-radius:50%;background:#fff;animation:ttpulse 1.6s ease-in-out infinite;}
+  .ttclock .chip.pause{background:#FFF1D6;color:#8A5A00;}
+  .ttclock .sub2{font-size:12px;color:var(--ink-soft);}
+  @keyframes ttpulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .ttprog{display:grid;grid-template-columns:27px repeat(8,1fr);background:var(--surface);border-bottom:1px solid var(--line);padding:4px 0 3px;}
+  .ttprog .ttcorner{background:transparent;border-right:0;}
+  .ttpc{display:grid;grid-template-columns:repeat(8,1fr);gap:1px;padding:0 2px;align-items:center;}
+  .ttpc i{display:block;height:6px;border-radius:1.5px;background:#E1E5EC;}
+  .ttpc.done i{background:#A8D9BC;}
+  .ttpc.cur i.on{background:#1E9E5A;}
+  .ttpc.cur i.on:last-of-type{animation:ttpulse 1.6s ease-in-out infinite;}
+  .ttperiodhdr.now{background:#1E9E5A;color:#fff;}
+  .ttperiodhdr.now .ptime{color:#fff;}
+  .ttdaylabel.today{background:#DDF1E5;color:#14774A;}
+  .ttnow{position:absolute;top:0;bottom:0;width:calc(100%/8);background:rgba(30,158,90,.15);border:1.5px solid #1E9E5A;border-radius:3px;pointer-events:none;z-index:2;box-sizing:border-box;}
   .ttgrid-scroll{overflow-x:auto;}
   .ttgroup{min-width:340px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface);}
   .ttheader{display:grid;grid-template-columns:27px repeat(8,1fr);background:var(--bg);border-bottom:1px solid var(--line);}
@@ -897,6 +918,7 @@
         </button>
         </div>
       </div>
+      <div class="ttclock" id="ttClock"><div><div class="tm" id="ttClockTime">--:--:--</div><div class="dt" id="ttClockDate"></div></div><div class="cst"><span class="chip" id="ttClockChip">…</span><span class="sub2" id="ttClockSub"></span></div></div>
       <div id="ttFocusBar" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0 12px;"></div>
       <div class="ttgridwrap">
         <div class="ttgridcol">
@@ -2474,8 +2496,8 @@ const GIRLS_COLORS = TEACHER_COLORS;
 // which is exactly why a merged table cell / colspan can't work here).
 const ttFocus = new Set();   // teachers currently in focus on the weekly overview (empty = show everyone)
 function buildTimetableGrid(groupTeachers, colorMap){
-  let html = `<div class="ttheader"><div class="ttcorner"></div>` +
-    PERIODS.map(p=>`<div class="ttperiodhdr">P${p}<div class="ptime">${PERIOD_TIMES[p]}</div></div>`).join('') +
+  let html = `<div class="ttprog"><div class="ttcorner"></div>${PERIODS.map(p=>`<div class="ttpc" data-p="${p}">${"<i></i>".repeat(8)}</div>`).join("")}</div>` + `<div class="ttheader"><div class="ttcorner"></div>` +
+    PERIODS.map(p=>`<div class="ttperiodhdr" data-p="${p}">P${p}<div class="ptime">${PERIOD_TIMES[p]}</div></div>`).join('') +
     `</div>`;
   DAYS.forEach(d=>{
     html += `<div class="ttdayblock"><div class="ttdaylabel">${d}</div><div class="ttlanewrap">`;
@@ -2514,6 +2536,60 @@ function ttRenameBlock(el){
   inp.onblur = ()=>finish(true);
   inp.onclick = e=>e.stopPropagation(); inp.ondblclick = e=>e.stopPropagation();
 }
+/* ---- live clock + running period ---- */
+function ttNow(d){
+  const sc = schedNorm(schedule), m = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
+  const items = SCHED_SEQ.map(k=>{ const a = schedGet(sc,k) || schedGet(DEFAULT_SCHEDULE,k); return {k, s:tmin(a[0]), e:tmin(a[1])}; });
+  const day = d.getDay()<=4 ? DAYS[d.getDay()] : null;
+  const info = {m, items, day, curP:0, segs:0, status:"", sub:"", kind:""};
+  const fmt = n=>{ n = Math.max(0, Math.ceil(n)); const h = Math.floor(n/60), r = n%60; return h ? h+" h "+(r?r+" min":"") : r+" min"; };
+  if(!day){ info.status = "No school today"; info.sub = "Sunday to Thursday are school days"; return info; }
+  const cur = items.find(i=> m>=i.s && m<i.e);
+  if(cur){
+    const dur = cur.e - cur.s, el = m - cur.s;
+    if(cur.k[0]==="p"){
+      info.curP = Number(cur.k.slice(1)); info.segs = Math.min(8, Math.floor(el/(dur/8)) + 1); info.kind = "live";
+      info.status = "Period "+info.curP+" is running";
+      info.sub = Math.floor(el)+" of "+Math.round(dur)+" min done · "+fmt(dur-el)+" left · "+hhmm(mt(cur.s))+"–"+hhmm(mt(cur.e));
+    } else { info.kind = "pause"; info.status = cur.k==="brk" ? "Break" : "Salaah"; info.sub = fmt(cur.e-m)+" left"; }
+    return info;
+  }
+  const next = items.find(i=> i.s>m && i.k[0]==="p");
+  if(!next){ info.status = "School day finished"; info.sub = "Back tomorrow"; info.kind = "pause"; return info; }
+  info.kind = "pause";
+  info.status = next===items[0] ? "School has not started" : "Passing time";
+  info.sub = "Period "+next.k.slice(1)+" starts at "+hhmm(mt(next.s))+" (in "+fmt(next.s-m)+")";
+  return info;
+}
+function ttLiveTick(force){
+  const clk = document.getElementById("ttClockTime"); if(!clk || !clk.offsetParent) return;
+  const d = new Date(), info = ttNow(d);
+  clk.textContent = d.toLocaleTimeString();
+  document.getElementById("ttClockDate").textContent = d.toLocaleDateString(undefined, {weekday:"long", day:"numeric", month:"long", year:"numeric"});
+  const chip = document.getElementById("ttClockChip"); chip.textContent = info.status; chip.className = "chip "+(info.kind||"");
+  document.getElementById("ttClockSub").textContent = info.sub;
+  ["gridBoys","gridGirls"].forEach(id=>{
+    const g = document.getElementById(id); if(!g) return;
+    g.querySelectorAll(".ttpc").forEach(c=>{
+      const p = Number(c.dataset.p), it = info.items.find(i=>i.k==="p"+p);
+      let state = "", n = 0;
+      if(info.day && info.curP===p){ state = "cur"; n = info.segs; } else if(info.day && it && info.m>=it.e){ state = "done"; n = 8; }
+      const key = state+n; if(c.dataset.k===key && !force) return; c.dataset.k = key;
+      c.className = "ttpc "+state; c.querySelectorAll("i").forEach((s,i)=> s.classList.toggle("on", i<n));
+    });
+    g.querySelectorAll(".ttperiodhdr").forEach(h=> h.classList.toggle("now", !!info.day && Number(h.dataset.p)===info.curP));
+    g.querySelectorAll(".ttdayblock").forEach((blk,i)=>{
+      const today = !!info.day && DAYS[i]===info.day;
+      const lab = blk.querySelector(".ttdaylabel"); if(lab) lab.classList.toggle("today", today);
+      blk.querySelectorAll(".ttlane").forEach(l=>{
+        let o = l.querySelector(".ttnow");
+        if(today && info.curP){ if(!o){ o = document.createElement("span"); o.className = "ttnow"; l.appendChild(o); } o.style.left = ((info.curP-1)*12.5)+"%"; }
+        else if(o) o.remove();
+      });
+    });
+  });
+}
+setInterval(()=>ttLiveTick(false), 1000);
 function renderTimetableGrids(){
   const bar = document.getElementById("ttFocusBar");
   if(bar) bar.innerHTML = `<span style="font-size:12px;color:var(--ink-soft);">Focus on:</span>` + TEACHERS.map(t=>{
@@ -2530,6 +2606,7 @@ function renderTimetableGrids(){
   });
   ["gridBoys","gridGirls"].forEach(id=>{ const g = document.getElementById(id); if(g) g.ondblclick = e=>{ const b = e.target.closest(".ttblock"); if(b && b.dataset.tid) ttRenameBlock(b); }; });
   const clr = document.getElementById("ttFocusClear"); if(clr) clr.onclick = ()=>{ ttFocus.clear(); renderTimetableGrids(); };
+  ttLiveTick(true);
 }
 
 function activeTeacherList(){
