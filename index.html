@@ -2568,6 +2568,7 @@ function ttRenameBlock(el){
 const MT_ADMINS = ["r.anwar@ais.sch.sa"];
 const MT_LENGTHS = [5,10,15,20,25,30,40,45,60];
 const MT_MIN_SLOTS = 8;
+const MT_PRAYER = [12*60, 12*60+40];   // 12:00-12:40 is prayer time: no one-to-one slots
 let meetings = [];
 let mtAdminOK = false, mtDraft = null, mtTab = "main", mtTimer = null, mtMsg = "";
 function mtEmail(s){ return String(s||"").trim().toLowerCase(); }
@@ -2583,7 +2584,12 @@ function mtSlots(ev){
   const out = [];
   (ev.blocks||[]).forEach(b=>{
     let t = tmin(b.from); const end = tmin(b.to), len = Number(ev.len)||15;
-    while(t + len <= end){ out.push({key:b.date+"|"+mt(t), date:b.date, start:mt(t), end:mt(t+len)}); t += len; }
+    while(t + len <= end){
+      const key = b.date+"|"+mt(t);
+      const inPrayer = t < MT_PRAYER[1] && t+len > MT_PRAYER[0];          // no slots during prayer time
+      if(!inPrayer || (ev.booked && ev.booked[key])) out.push({key, date:b.date, start:mt(t), end:mt(t+len)});   // an existing booking is never hidden
+      t += len;
+    }
   });
   return out.sort((a,b)=> a.key<b.key ? -1 : 1);
 }
