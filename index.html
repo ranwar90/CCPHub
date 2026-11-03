@@ -2624,7 +2624,7 @@ function mtAsk(o){
       if(finished) return; const email = inp.value.trim(); err.textContent = "";
       if(!email){ err.textContent = "Enter your email address."; return; }
       go.disabled = true; go.textContent = "Checking…";
-      try{ const msg = await o.verify(email); if(msg){ err.textContent = msg; go.disabled = false; go.textContent = o.confirm||"Confirm"; return; } }
+      try{ const msg = await o.verify(email); if(msg && typeof msg==="object"){ finished = true; wsCloseModal(true); resolve({popup:msg.popup}); return; } if(msg){ err.textContent = msg; go.disabled = false; go.textContent = o.confirm||"Confirm"; return; } }
       catch(e){ err.textContent = e.message || "Something went wrong."; go.disabled = false; go.textContent = o.confirm||"Confirm"; return; }
       finished = true; wsCloseModal(true); resolve(true);
     };
@@ -2632,6 +2632,11 @@ function mtAsk(o){
     const obs = new MutationObserver(()=>{ if(!document.body.contains(d)){ obs.disconnect(); if(!finished){ finished = true; resolve(false); } } });
     obs.observe(document.body,{childList:true,subtree:true});
   });
+}
+function mtAlert(title, text){
+  const d = wsOpenModal(true);
+  d.innerHTML = wsHead(esc(title), "") + `<p style="margin:6px 0 14px;font-size:15px;line-height:1.5;">${esc(text)}</p><div class="va-formrow"><button type="button" class="va-btn primary" data-close>OK, choose another slot</button></div>`;
+  wsBindClose(d); const b = d.querySelector("[data-close].primary"); if(b) b.focus();
 }
 function mtToast(t, bad){ mtMsg = t; const el = document.getElementById("mtNote"); if(el){ el.textContent = t; el.className = "mt-note"+(bad?" bad":" ok"); clearTimeout(mtToast._t); mtToast._t = setTimeout(()=>{ el.textContent = ""; el.className = "mt-note"; }, 7000); } }
 async function mtAdminGate(){
@@ -2651,17 +2656,18 @@ async function mtBook(evId, slot){
         ev.booked = ev.booked || {};
         const mine = Object.keys(ev.booked).find(k=>ev.booked[k].name===person.name);
         if(mine) return {error:"You already have the "+hhmm(mine.split("|")[1])+" slot on "+mtDateLabel(mine.split("|")[0])+". Click that slot to cancel it first."};
-        if(ev.booked[slot.key]) return {error:"Sorry, "+ev.booked[slot.key].ini+" just booked that slot. Please pick another."};
+        if(ev.booked[slot.key]) return {error:"Sorry, "+ev.booked[slot.key].ini+" just booked that slot. Please pick another.", popup:true};
         ev.booked[slot.key] = {name:person.name, ini:person.ini, at:Date.now()};
       });
-      if(res.error){ renderOneToOne(); return res.error; }
+      if(res.error){ renderOneToOne(); return res.popup ? {popup:res.error} : res.error; }
       return "";
     }});
   renderOneToOne();
+  if(done && done.popup){ mtAlert("This slot is already booked", done.popup); return; }
   if(done){
     mtToast("Booked: "+hhmm(slot.start)+"–"+hhmm(slot.end)+" for "+person.name+". Adding it to the calendar…");
     mtCalAdd(evId, slot, person, bookedEmail);
-    setTimeout(async ()=>{ try{ const l = await mtFetchLatest(); const ev = l.find(e=>e.id===evId); if(ev && ev.booked && ev.booked[slot.key] && ev.booked[slot.key].name!==person.name){ meetings = l; renderOneToOne(); mtToast("Another teacher booked that slot at the same moment. Please choose a different time.", true); } }catch(e){} }, 1800);
+    setTimeout(async ()=>{ try{ const l = await mtFetchLatest(); const ev = l.find(e=>e.id===evId); if(ev && ev.booked && ev.booked[slot.key] && ev.booked[slot.key].name!==person.name){ meetings = l; renderOneToOne(); mtAlert("This slot is already booked", "Another teacher booked "+hhmm(slot.start)+"\u2013"+hhmm(slot.end)+" at the same moment, so your booking was not kept. Please choose a different time."); } }catch(e){} }, 1800);
   }
 }
 async function mtCalPost(body){
@@ -2673,7 +2679,8 @@ async function mtCalAdd(evId, slot, person, email){
   try{
     const d = await mtCalPost({op:"create", title:ev.title+" – "+person.name, start:slot.date+"T"+slot.start+":00+03:00", end:slot.date+"T"+slot.end+":00+03:00", guestEmail:email,
       location: ev.where, description: (ev.mode==="meet" ? "Google Meet: " : "Face-to-face: ")+ev.where+"\nBooked by "+person.name+" through the CCP Department Hub."});
-    await mtCommit(list=>{ const e2 = list.find(e=>e.id===evId); const b = e2 && e2.booked && e2.booked[slot.key]; if(b && b.name===person.name) b.cal = d.eventId; else return {error:"gone"}; });
+    const rr = await mtCommit(list=>{ const e2 = list.find(e=>e.id===evId); const b = e2 && e2.booked && e2.booked[slot.key]; if(b && b.name===person.name) b.cal = d.eventId; else return {error:"gone"}; });
+    if(rr.error){ mtCalPost({op:"delete", eventId:d.eventId}).catch(()=>{}); return; }
     mtToast("Booked and added to the calendar. "+person.name+" gets an invite by email.");
   }catch(e){ mtToast("Slot booked, but it could not be added to the calendar ("+(e.message||"error")+"). Redeploy the updated Code.gs.", true); }
 }
@@ -2692,6 +2699,40 @@ async function mtCancel(evId, slot){
       return "";
     }});
   renderOneToOne(); if(done){ mtToast("Booking cancelled. The slot is free again."); if(b0.cal) mtCalPost({op:"delete", eventId:b0.cal}).catch(()=>{}); }
+}
+function mtNextDow(afterISO, dow){ const d = new Date(afterISO+"T00:00:00"); do{ d.setDate(d.getDate()+1); }while(d.getDay()!==dow); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,10); }
+function mtNextDay(iso){ const d = new Date(iso+"T00:00:00"); d.setDate(d.getDate()+1); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,10); }
+async function mtAddDays(evId){
+  if(!(await mtAdminGate())) return;
+  const ev = meetings.find(e=>e.id===evId); if(!ev) return;
+  const last = ev.blocks.slice().sort((a,b)=>a.date<b.date?-1:1)[ev.blocks.length-1], base = ev.blocks.map(b=>b.date).sort().pop();
+  let rows = [{date:mtNextDow(base,3), from:last.from, to:last.to},{date:mtNextDow(base,4), from:last.from, to:last.to}];
+  const d = wsOpenModal(false);
+  const draw = ()=>{
+    const n = mtSlots({len:ev.len, blocks:rows.filter(r=>r.date&&r.from&&r.to)}).length;
+    d.innerHTML = wsHead("Add days to this event", esc(ev.title)+" · "+ev.len+"-minute sessions. New slots are added; existing bookings stay as they are.")
+      + `<div id="mtAdBlocks">${rows.map((b,i)=>`<div class="mt-blk" data-i="${i}"><input type="date" data-k="date" value="${esc(b.date)}" aria-label="Date"><input type="time" data-k="from" value="${esc(b.from)}" aria-label="From"><span>to</span><input type="time" data-k="to" value="${esc(b.to)}" aria-label="To">${rows.length>1?`<button type="button" class="va-btn ghost" data-rm="${i}">Remove</button>`:""}</div>`).join("")}</div>`
+      + `<button type="button" class="va-btn" id="mtAdMore" style="margin-top:6px;">+ Add another day</button><div class="mt-count" id="mtAdCount">${n} new slot${n===1?"":"s"}</div><div class="va-msg err" id="mtAdErr" style="min-height:18px;"></div>`
+      + `<div class="va-formrow" style="margin-top:8px;"><button type="button" class="va-btn primary" id="mtAdSave">Add to event</button><button type="button" class="va-btn ghost" data-close>Cancel</button></div>`;
+    wsBindClose(d);
+    d.querySelectorAll(".mt-blk").forEach(r=>{ const i = +r.dataset.i; r.querySelectorAll("input").forEach(inp=> inp.onchange = ()=>{ rows[i][inp.dataset.k] = inp.value; draw(); }); });
+    d.querySelectorAll("[data-rm]").forEach(b=> b.onclick = ()=>{ rows.splice(+b.dataset.rm,1); draw(); });
+    d.querySelector("#mtAdMore").onclick = ()=>{ const l = rows[rows.length-1]; rows.push({date:mtNextDay(l.date), from:l.from, to:l.to}); draw(); };
+    d.querySelector("#mtAdSave").onclick = async ()=>{
+      const err = d.querySelector("#mtAdErr");
+      for(const b of rows){ if(!b.date||!b.from||!b.to){ err.textContent = "Fill in the date and times for every row."; return; } if(tmin(b.to)<=tmin(b.from)){ err.textContent = "Each block must end after it starts."; return; } }
+      const btn = d.querySelector("#mtAdSave"); btn.disabled = true; err.textContent = "";
+      const res = await mtCommit(list=>{
+        const e2 = list.find(e=>e.id===evId); if(!e2) return {error:"This event has been removed."};
+        const all = e2.blocks.concat(rows);
+        for(let i=0;i<all.length;i++) for(let j=i+1;j<all.length;j++){ const a=all[i], c=all[j]; if(a.date===c.date && tmin(a.from)<tmin(c.to) && tmin(c.from)<tmin(a.to)) return {error:"Times on "+a.date+" overlap with ones already in the event."}; }
+        rows.forEach(r=> e2.blocks.push({date:r.date, from:r.from, to:r.to}));
+      });
+      if(res.error){ err.textContent = res.error; btn.disabled = false; return; }
+      wsCloseModal(true); renderOneToOne(); mtToast("Days added. Teachers can book the new slots now.");
+    };
+  };
+  draw();
 }
 async function mtDeleteEvent(evId){
   if(!(await mtAdminGate())) return;
@@ -2754,7 +2795,7 @@ function mtWireForm(host){
 function mtEventHTML(ev){
   const slots = mtSlots(ev), booked = ev.booked||{}, nb = slots.filter(s=>booked[s.key]).length, dates = [...new Set(slots.map(s=>s.date))];
   const where = ev.mode==="meet" ? `<a class="va-btn primary" href="${esc(ev.where)}" target="_blank" rel="noopener noreferrer">Join Google Meet ↗</a>` : `<span class="mt-chip">Face-to-face: ${esc(ev.where)}</span>`;
-  return `<article class="panel mt-ev" data-ev="${esc(ev.id)}"><div class="mt-evhead"><div><h3>${esc(ev.title)}</h3><div class="sub" style="margin:2px 0 0;">${ev.len}-minute sessions · ${nb} of ${slots.length} booked</div></div><div class="mt-evact">${where}<button type="button" class="va-btn ghost" data-delev="${esc(ev.id)}">Delete</button></div></div>
+  return `<article class="panel mt-ev" data-ev="${esc(ev.id)}"><div class="mt-evhead"><div><h3>${esc(ev.title)}</h3><div class="sub" style="margin:2px 0 0;">${ev.len}-minute sessions · ${nb} of ${slots.length} booked</div></div><div class="mt-evact">${where}<button type="button" class="va-btn" data-addev="${esc(ev.id)}">+ Add days</button><button type="button" class="va-btn ghost" data-delev="${esc(ev.id)}">Delete</button></div></div>
    <div class="mt-book">Book your slot: tap a free time, then enter your email address to confirm. Tap your own slot to cancel it.</div>
    ${dates.map(dt=>`<div class="mt-day"><div class="mt-dh">${esc(mtDateLabel(dt))}</div><div class="mt-slots">${slots.filter(s=>s.date===dt).map(s=>{
       const b = booked[s.key], past = mtPast(s), p = b ? (mtPerson(staffEmailFor(b.name)) || {color:TEACHER_COLORS[b.name]||"#1B3A6B"}) : null;
@@ -2779,6 +2820,7 @@ function renderOneToOne(){
   host.querySelectorAll(".mt-ev").forEach(card=>{
     const id = card.dataset.ev, ev = meetings.find(e=>e.id===id); if(!ev) return; const slots = mtSlots(ev);
     card.querySelectorAll(".mt-slot").forEach(b=> b.onclick = ()=>{ const s = slots.find(x=>x.key===b.dataset.sk); if(!s) return; (ev.booked||{})[s.key] ? mtCancel(id, s) : mtBook(id, s); });
+    const adb = card.querySelector("[data-addev]"); if(adb) adb.onclick = ()=>mtAddDays(id);
     const del = card.querySelector("[data-delev]"); if(del) del.onclick = ()=>mtDeleteEvent(id);
   });
   if(mtMsg){ const el = host.querySelector("#mtNote"); if(el){ el.textContent = mtMsg; el.className = "mt-note ok"; } }
