@@ -329,6 +329,38 @@
   .va-empty{grid-column:1/-1;text-align:center;padding:44px 16px;color:var(--ink-soft);background:var(--surface);border:1px dashed var(--line);border-radius:var(--radius);}
   .va-empty b{display:block;font-family:"Space Grotesk",sans-serif;font-size:19px;color:var(--ink);margin-bottom:6px;}
   @media (max-width:640px){.va-form{grid-template-columns:1fr;}.va-addbtn{width:100%;justify-content:center;}}
+  /* ===== PD Archives ===== */
+  #view-pd [hidden]{display:none!important;}
+  .va-tag.t-yusuf{background:#FFF1CC;color:#7A5200;font-weight:800;box-shadow:inset 0 0 0 1.5px #DFA61B;}
+  .pd-tabs{display:flex;gap:6px;margin:0 0 14px;border-bottom:2px solid var(--line);}
+  .pd-tabs button{border:0;background:transparent;padding:10px 16px;font:inherit;font-weight:700;font-size:14px;color:var(--ink-soft);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;display:flex;align-items:center;gap:8px;}
+  .pd-tabs button.on{color:#1B3A6B;border-bottom-color:#1B3A6B;}
+  .pd-tabs .n{background:#E4E7EC;color:#394155;border-radius:99px;font-size:11.5px;padding:1px 8px;}
+  .pd-tabs button.on .n{background:#1B3A6B;color:#fff;}
+  .pd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:14px;}
+  .pd-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;min-width:0;}
+  .pd-cover{position:relative;display:block;width:100%;aspect-ratio:4/3;overflow:hidden;border:0;padding:0;cursor:pointer;color:#fff;text-decoration:none;}
+  .pd-cover.book{aspect-ratio:1/1;}
+  .pd-ini{position:absolute;inset:0;display:grid;place-items:center;font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:42px;letter-spacing:.02em;text-shadow:0 2px 10px rgba(0,0,0,.18);}
+  .pd-cover img{position:relative;width:100%;height:100%;object-fit:cover;object-position:top;display:block;}
+  .pd-cover img.book{object-fit:contain;background:#EEF0F4;padding:6px;}
+  .pd-kind{position:absolute;left:9px;top:9px;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:rgba(10,14,24,.72);color:#fff;border-radius:6px;padding:3px 7px;z-index:2;}
+  .pd-src{position:absolute;left:0;right:0;bottom:0;padding:18px 10px 8px;font-size:11.5px;font-weight:600;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.45));z-index:2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .pd-cover .va-play{z-index:2;}
+  .pd-cover iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:3;}
+  .pd-body{padding:12px;display:flex;flex-direction:column;gap:8px;flex:1;}
+  .pd-title{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:15px;line-height:1.2;margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  .pd-meta{font-size:12px;color:var(--ink-soft);}
+  .pd-note{font-size:12.5px;color:var(--ink-soft);line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  .pd-tags{display:flex;flex-wrap:wrap;gap:5px;}
+  .pd-tags .va-tag{font-size:11px;padding:2px 9px;}
+  .pd-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:4px;align-items:center;}
+  .pd-ico{display:inline-flex;align-items:center;gap:6px;border:1px solid #1B3A6B;background:#1B3A6B;color:#fff;border-radius:8px;padding:6px 10px;min-height:34px;font:inherit;font-size:12.5px;font-weight:700;text-decoration:none;cursor:pointer;}
+  .pd-ico.alt{background:#fff;color:#1B3A6B;}
+  .pd-ico:hover{filter:brightness(1.12);}
+  .pd-more .va-btn{padding:3px 8px;min-height:28px;font-size:12px;}
+  .pd-fallback{font-size:12px;color:var(--ink-soft);padding:6px 12px 0;}
+  .pd-fallback a{color:var(--teal);font-weight:700;}
   /* ===== Worksheet Generator ===== */
   #view-worksheets [hidden], .ws-overlay [hidden], .va-pop[hidden]{display:none!important;}
   .ws-grid{display:grid;grid-template-columns:repeat(auto-fill,172px);gap:14px;justify-content:start;}
@@ -751,6 +783,7 @@
     <button data-navmenu="attendance"><svg class="mi" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M17 11l2 2 4-4"/></svg><span>Attendance</span></button>
     <button data-navmenu="meeting"><svg class="mi" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Scheduling</span></button>
     <button data-navmenu="videos"><svg class="mi" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9.5v5l4.5-2.5z"/></svg><span>CCP Video Archives</span></button>
+    <button data-navmenu="pd"><svg class="mi" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5.5A1.5 1.5 0 0 1 3.5 4H10a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H3.5A1.5 1.5 0 0 1 2 16.5z"/><path d="M22 5.5A1.5 1.5 0 0 0 20.5 4H14a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg><span>PD Archives</span></button>
     <button data-navmenu="worksheets"><svg class="mi" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg><span>Worksheet Generator</span></button>
     <button data-navmenu="handbook"><svg class="mi" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 21.5A2.5 2.5 0 0 0 6.5 24H20"/></svg><span>Department Handbook</span></button>
     <button data-navmenu="weeklyplan"><svg class="mi" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg><span>Weekly Plan Generator</span></button>
@@ -1099,6 +1132,64 @@
     </div>
 
     <div class="va-grid" id="vaGrid"></div>
+  </div>
+
+  <div id="view-pd" style="display:none;">
+    <button class="backbtn" data-back>&larr; Back</button>
+    <div class="panel va-head">
+      <img class="va-logo" id="pdLogo" alt="CCP">
+      <div class="va-div"></div>
+      <div>
+        <h2>PD Archives</h2>
+        <div class="va-count" id="pdCount"></div>
+      </div>
+      <div class="va-grow"></div>
+      <button class="va-addbtn" id="pdToggleAdd" aria-expanded="false" aria-controls="pdAddPanel">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        <span id="pdAddLbl">Add book or blog</span>
+      </button>
+    </div>
+    <div class="pd-tabs" id="pdTabs"><button type="button" data-t="book" class="on">Books &amp; blogs <span class="n" id="pdNBook">0</span></button><button type="button" data-t="pod">Podcasts <span class="n" id="pdNPod">0</span></button></div>
+
+    <div class="panel" id="pdAddPanel" hidden>
+      <h2 id="pdAddTitle">Add a book or blog</h2>
+      <div class="sub" id="pdAddSub"></div>
+      <div class="ws-seg" id="pdMode" style="margin:6px 0 12px;"><button type="button" data-m="link" class="on">Add a link</button><button type="button" data-m="file" id="pdModeFile">Upload a PDF</button></div>
+      <div class="va-form">
+        <div class="va-field full" id="pdUrlField">
+          <label for="pdUrl" id="pdUrlLbl">Link</label>
+          <input class="va-inp" id="pdUrl" type="url" inputmode="url" placeholder="Paste a link" autocomplete="off">
+          <span class="hint" id="pdUrlHint"></span>
+        </div>
+        <div class="va-field full" id="pdFileField" hidden>
+          <label for="pdFile" id="pdFileLbl">File</label>
+          <input class="va-inp" id="pdFile" type="file">
+          <span class="hint" id="pdFileHint"></span>
+        </div>
+        <div class="va-field"><label for="pdTitle">Title</label><input class="va-inp" id="pdTitle" type="text" placeholder="Name of the book, blog or episode" autocomplete="off"></div>
+        <div class="va-field"><label for="pdSrc" id="pdSrcLbl">Author</label><input class="va-inp" id="pdSrc" type="text" placeholder="Optional" autocomplete="off"></div>
+        <div class="va-field full"><label for="pdNote">Short description <span style="font-weight:400;color:var(--ink-soft);">(optional)</span></label><input class="va-inp" id="pdNote" type="text" placeholder="Why is it worth reading or listening to?" autocomplete="off"></div>
+        <div class="va-field"><label for="pdBy">Added by</label><select class="va-inp" id="pdBy"></select></div>
+        <div class="va-field"><label for="pdCover">Cover image <span style="font-weight:400;color:var(--ink-soft);">(optional)</span></label><input class="va-inp" id="pdCover" type="file" accept="image/*"><span class="hint">Without one, you get a coloured tile with initials (PDFs use their first page).</span></div>
+        <div class="va-field full"><label>Tags</label><div id="pdAddPicker"></div></div>
+      </div>
+      <div id="pdProgWrap" hidden style="margin:8px 0 4px;"></div>
+      <div class="va-formrow">
+        <button class="va-btn primary" id="pdSave">Save to archive</button>
+        <button class="va-btn ghost" id="pdCancel">Cancel</button>
+        <span class="va-msg" id="pdMsg" role="status"></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="va-search">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#5B5F66" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="pdQ" type="search" placeholder="Search by title, author or tag, e.g. coaching" aria-label="Search the PD archive" autocomplete="off">
+      </div>
+      <div class="va-filters" id="pdFilters" aria-label="Filter by tag"></div>
+      <div class="va-status" id="pdStatus"></div>
+    </div>
+    <div class="pd-grid" id="pdGrid"></div>
   </div>
 
   <div id="view-worksheets" style="display:none;">
@@ -2219,7 +2310,7 @@ function getVal(key, fallback){
   if(raw==null || raw==="") return fallback;
   try{ return JSON.parse(raw); }catch(e){ return fallback; }
 }
-const DATA_KEYS = ["ccp_timetable_v3","ccp_absences","ccp_practices","ccp_minutes","ccp_backlog","ccp_custom_sprints","ccp_staff","ccp_schedule","ccp_videos","ccp_worksheets","ccp_meetings"];
+const DATA_KEYS = ["ccp_timetable_v3","ccp_absences","ccp_practices","ccp_minutes","ccp_backlog","ccp_custom_sprints","ccp_staff","ccp_schedule","ccp_videos","ccp_worksheets","ccp_meetings","ccp_pd"];
 function applyStore(){
   timetable     = getVal("ccp_timetable_v3", DEFAULT_TIMETABLE);
   absences      = getVal("ccp_absences", DEFAULT_ABSENCES);
@@ -2232,6 +2323,7 @@ function applyStore(){
   videos        = getVal("ccp_videos", DEFAULT_VIDEOS);
   worksheets    = getVal("ccp_worksheets", DEFAULT_WORKSHEETS);
   meetings      = getVal("ccp_meetings", []);
+  pdData        = getVal("ccp_pd", {items:[],over:{},hide:[]}); if(!pdData || typeof pdData!=="object" || Array.isArray(pdData)) pdData = {items:[],over:{},hide:[]}; pdData.items = pdData.items||[]; pdData.over = pdData.over||{}; pdData.hide = pdData.hide||[];
   rebuildPeriodTimes();
 }
 async function fetchAllFromSheet(){
@@ -3832,7 +3924,7 @@ function vaEmbed(p){
 }
 function vaTime(s){ const m=Math.floor(s/60), r=s%60; return m+":"+(r<10?"0":"")+r; }
 function vaHue(str){ let h=0; for(let i=0;i<str.length;i++) h=(h*31+str.charCodeAt(i))%360; return h; }
-function vaTagCls(t){ const k=t.toLowerCase(); return k==="mute"?"t-mute":k==="girls"?"t-girls":k==="boys"?"t-boys":""; }
+function vaTagCls(t){ const k=t.toLowerCase(); return k==="mr yusuf's selection"?"t-yusuf":k==="mute"?"t-mute":k==="girls"?"t-girls":k==="boys"?"t-boys":""; }
 function vaTagHTML(t){ return `<span class="va-tag ${vaTagCls(t)}">${esc(t)}</span>`; }
 function vaAllTags(){
   const seen = new Set(), out = [];
@@ -4107,6 +4199,243 @@ function vaWire(){
     }
   };
   document.getElementById("vaQ").addEventListener("input", function(){ vaState.q = this.value; renderVideos(); });
+}
+
+/* ===================== PD Archives ===================== */
+const PD_SEED = [{"id":"pd00","type":"book","title":"Free to Learn","src":"Peter Gray","url":"https://www.taumata.school.nz/school/content/Free_to_learn_by_Peter_Gray.pdf","tags":["Book","Play & learning","Free PDF"],"note":"Why unleashing the instinct to play will make our children happier, more self-reliant and better students for life.","meta":"Book · PDF","dl":"https://www.taumata.school.nz/school/content/Free_to_learn_by_Peter_Gray.pdf","cover":"https://covers.openlibrary.org/b/isbn/9780465084999-L.jpg?default=false","added":1790000000000},{"id":"pd01","type":"book","title":"Peter Gray's blog","src":"Peter Gray","url":"https://www.petergray.org/blog","tags":["Blog","Play & learning"],"note":"Peter Gray writes about play, self-directed education and how children learn.","meta":"Blog","added":1789999999000},{"id":"pd02","type":"book","title":"The Learning Game","src":"Ana Lorena Fábrega (Harriman House)","url":"https://www.jarir.com/sa-en/harriman-house-ltd-english-books-626985.html?srsltid=AYCX9vLHNN48zBpE9V1q-gl6XxBHUlDTWecqa_wboP63wFxghm_2l0Io","tags":["Book","Growth mindset","Teaching & learning"],"note":"Teaching kids to think for themselves, embrace challenge and love learning. Buy it from Jarir.","meta":"Book · Jarir","cover":"https://covers.openlibrary.org/b/isbn/9781804090091-L.jpg?default=false","added":1789999998000},{"id":"pd03","type":"book","title":"When the Adults Change, Everything Changes","src":"Paul Dix","url":"https://www.whentheadultschange.com/","tags":["Book","Behaviour & culture","Leadership"],"note":"Seismic shifts in school behaviour: the adults change first, then behaviour follows.","meta":"Book","cover":"https://covers.openlibrary.org/b/isbn/9781781352731-L.jpg?default=false","added":1789999997000},{"id":"pd04","type":"pod","title":"Making project-based learning accessible","src":"Cult of Pedagogy","url":"https://www.cultofpedagogy.com/accessible-pbl/","tags":["Project-based learning","Teaching & learning"],"note":"How to make project-based learning work for every student.","meta":"Podcast","added":1789999996000},{"id":"pd05","type":"pod","title":"EduScrum","src":"YouTube","url":"https://www.youtube.com/watch?v=aVnshvavcGU","tags":["Project-based learning","Video","Teamwork"],"note":"Agile, scrum-style teamwork in the classroom.","meta":"Video","added":1789999995000},{"id":"pd06","type":"pod","title":"NuVu: changing the world","src":"YouTube","url":"https://www.youtube.com/watch?v=uhiRv3UMaHE","tags":["Project-based learning","Video","Innovation"],"note":"The NuVu studio model of learning by making.","meta":"Video","added":1789999994000},{"id":"pd07","type":"pod","title":"#17: Saba Ghole — On Growth Mindset","src":"Apple Podcasts","url":"https://podcasts.apple.com/gb/podcast/17-saba-ghole-on-growth-mindset/id1319158020?i=1000433886392","tags":["Growth mindset"],"note":"Saba Ghole on growth mindset in learning.","meta":"Podcast","added":1789999993000},{"id":"pd08","type":"book","title":"Is Your Professional Learning Community a Farce?","src":"Cult of Pedagogy","url":"https://www.cultofpedagogy.com/plc-problems/","tags":["Mr Yusuf's Selection","PLC & collaboration","Professional development"],"note":"Why PLC hours become compliance paperwork, and how teams reclaim time for peer inquiry.","meta":"Article","added":1789999992000},{"id":"pd09","type":"pod","title":"EduTip 29: Build relationships with a spreadsheet","src":"Cult of Pedagogy","url":"https://cultofpedagogy.libsyn.com/webpage/edutip-29-build-relationships-with-a-spreadsheet","tags":["Mr Yusuf's Selection","Behaviour & culture"],"note":"Turn the start-of-year student questionnaire into a tool you use all year. A quick win.","meta":"Podcast · about 4 min","added":1789999991000},{"id":"pd10","type":"pod","title":"Ep 268: What is a Warm Demander?","src":"Cult of Pedagogy","url":"https://cultofpedagogy.libsyn.com/webpage/268-what-is-a-warm-demander","tags":["Mr Yusuf's Selection","Behaviour & culture"],"note":"High expectations and warmth at the same time, rather than choosing between control and flexibility.","meta":"Podcast · Mar 2026","added":1789999990000},{"id":"pd11","type":"pod","title":"Ep 272: The Replacement Skills Approach: Teaching Behavior Instead of Managing It","src":"Cult of Pedagogy","url":"https://cultofpedagogy.libsyn.com/webpage/272-the-replacement-skills-approach-teaching-behavior-instead-of-managing-it","tags":["Mr Yusuf's Selection","Behaviour & culture"],"note":"Treat misbehaviour as a skill gap and teach the replacement skill instead of relying on reprimands.","meta":"Podcast · Apr 2026","added":1789999989000},{"id":"pd12","type":"pod","title":"Ep 48: Implementing a Classroom Management Plan That Works","src":"Cult of Pedagogy","url":"https://cultofpedagogy.libsyn.com/48-implementing-a-classroom-management-plan-that-works","tags":["Mr Yusuf's Selection","Behaviour & culture"],"note":"Older, but Michael Linsin's advice on designing a behaviour plan is still practical, especially for new teachers.","meta":"Podcast · 2016","added":1789999988000},{"id":"pd13","type":"pod","title":"Ep 273: The Art of Classroom Timing: 10 Ways to Fit it All In","src":"Cult of Pedagogy","url":"https://cultofpedagogy.libsyn.com/webpage/273-the-art-of-classroom-timing-10-ways-to-fit-it-all-in","tags":["Mr Yusuf's Selection","Teaching & learning"],"note":"Pacing when some students finish in five minutes and others need thirty.","meta":"Podcast · Apr 2026","added":1789999987000}];
+const PD_YUSUF = "Mr Yusuf's Selection";
+const PD_PRESET = [PD_YUSUF,"Book","Blog","Free PDF","Video","Research (open access)","School improvement","Leadership","Coaching","Professional development","PLC & collaboration","Behaviour & culture","Teaching & learning","Planning","Assessment","Retrieval practice","Project-based learning","Growth mindset","Play & learning","Innovation","Teamwork","Multilingual learners","Early years","AI & EdTech","Wellbeing"];
+const PD_COLORS = ["#1B3A6B","#B0623D","#4E7D6B","#7A4FA0","#2F7F8F","#A5472F","#3F5BA9","#8A6D1D","#C8372D","#5B7C99"];
+const PD_STOP = new Set(["the","a","an","of","to","is","and","how","what","why","for","in","on","with","your","you","our","can","i","do"]);
+let pdData = {items:[], over:{}, hide:[]};
+const pdState = {tab:"book", q:"", tags:[], editing:null, confirmDel:null, playing:{}};
+let pdQueued = null, pdWired = false, pdPicker = null, pdMode = "link", pdBusy = false, pdCancelUp = false, pdTitleTouched = false, pdSeq = 0;
+const PD_MAX_BYTES = 500*1024*1024, PD_SMALL = 8*1024*1024, PD_CHUNK = 8*1024*1024;
+function pdSave(){ clearTimeout(pdQueued); pdQueued = setTimeout(()=>{ saveJSON("ccp_pd", pdData); }, 300); }
+function pdAll(){
+  const hide = new Set(pdData.hide||[]), over = pdData.over||{};
+  return PD_SEED.filter(s=>!hide.has(s.id)).map(s=>Object.assign({}, s, over[s.id]||{})).concat(pdData.items||[]);
+}
+function pdOfTab(tab){ return pdAll().filter(i=>i.type===tab); }
+function pdAllTags(){
+  const seen = new Set(), out = [];
+  PD_PRESET.forEach(t=>{ seen.add(t.toLowerCase()); out.push(t); });
+  pdAll().forEach(v=>(v.tags||[]).forEach(t=>{ if(!seen.has(t.toLowerCase())){ seen.add(t.toLowerCase()); out.push(t); } }));
+  return out;
+}
+function pdInitials(title){
+  let t = String(title||"").replace(/^\s*(Ep(isode)?\s*\d+|EduTip\s*\d+|S\d+E\d+|#\d+)\s*[:\-–—]?\s*/i,"").replace(/^[^A-Za-z0-9]+/,"");
+  const w = t.split(/[\s\-–—:,/]+/).filter(x=>/[A-Za-z0-9]/.test(x) && !PD_STOP.has(x.toLowerCase()));
+  const ws = w.length ? w : t.split(/\s+/).filter(Boolean);
+  const a = (ws[0]||"?").replace(/[^A-Za-z0-9]/g,"").charAt(0), b = (ws[1]||"").replace(/[^A-Za-z0-9]/g,"").charAt(0);
+  return (a+b).toUpperCase() || "?";
+}
+const pdColor = s=> PD_COLORS[vaHue(String(s))%PD_COLORS.length];
+function pdMatches(it){
+  if(it.type!==pdState.tab) return false;
+  const tags = it.tags||[];
+  if(pdState.tags.length && !pdState.tags.every(t=>tags.some(x=>x.toLowerCase()===t.toLowerCase()))) return false;
+  const q = pdState.q.trim().toLowerCase(); if(!q) return true;
+  const hay = [it.title,it.src,it.note,it.meta,it.by,tags.join(" ")].join(" ").toLowerCase();
+  return q.split(/\s+/).every(w=>hay.indexOf(w)>=0);
+}
+function pdRenderFilters(){
+  const items = pdOfTab(pdState.tab), cnt = {};
+  items.forEach(i=>(i.tags||[]).forEach(t=>{ const k=t.toLowerCase(); cnt[k]=(cnt[k]||0)+1; }));
+  const tags = pdAllTags().map(t=>({t, n:cnt[t.toLowerCase()]||0})).filter(o=>o.n>0 || pdState.tags.some(x=>x.toLowerCase()===o.t.toLowerCase())).sort((a,b)=> (b.t===PD_YUSUF)-(a.t===PD_YUSUF) || b.n-a.n);
+  let html = '<span class="va-lbl">Tags</span>';
+  tags.forEach(o=>{ const on = pdState.tags.some(x=>x.toLowerCase()===o.t.toLowerCase()); html += `<button type="button" class="va-tag ${vaTagCls(o.t)}${on?" on":""}" data-t="${esc(o.t)}" aria-pressed="${on}">${esc(o.t)} <span class="n">${o.n}</span></button>`; });
+  const f = document.getElementById("pdFilters"); f.innerHTML = html;
+  f.querySelectorAll("button").forEach(b=> b.onclick = ()=>{ const t=b.dataset.t, i=pdState.tags.findIndex(x=>x.toLowerCase()===t.toLowerCase()); if(i>=0) pdState.tags.splice(i,1); else pdState.tags.push(t); renderPD(); });
+}
+const PD_ICON_LINK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>';
+const PD_ICON_DL = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg>';
+function pdCardHTML(it){
+  const col = pdColor(it.id||it.title), p = vaParse(it.url) || {src:"link", host:""}, isPod = it.type==="pod";
+  const emb = isPod ? vaEmbed(p) : "";
+  let thumb = it.cover || (isPod ? vaThumb(p) : "");
+  const ini = `<span class="pd-ini" aria-hidden="true">${esc(pdInitials(it.title))}</span>`;
+  const kind = `<span class="pd-kind">${esc(isPod ? (/video/i.test(it.meta||"")||p.src==="youtube"||p.src==="vimeo" ? "Video" : "Podcast") : (/blog/i.test(it.meta||"") || (it.tags||[]).includes("Blog") ? "Blog" : /pdf/i.test(it.meta||"") ? "PDF" : "Book"))}</span>`;
+  let cover;
+  if(pdState.playing[it.id] && emb){
+    cover = `<div class="pd-cover" style="cursor:default;background:#0b0e15"><iframe src="${esc(emb)}" title="${esc(it.title)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><div class="pd-fallback">Not playing? <a href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">Open it on ${esc(p.host||"the site")}</a></div>`;
+  } else {
+    const img = thumb ? `<img class="${isPod?"":"book"}" src="${esc(thumb)}" alt="" loading="lazy" onerror="this.remove()">` : "";
+    const inner = `${ini}${img}${kind}<span class="pd-src">${esc(it.src||p.host||"")}</span>${emb?'<span class="va-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M7 4.5v15l13-7.5z"/></svg></span>':""}`;
+    cover = emb ? `<button type="button" class="pd-cover ${isPod?"":"book"}" style="background:${col}" data-play="${esc(it.id)}" aria-label="Play ${esc(it.title)}">${inner}</button>`
+                : `<a class="pd-cover ${isPod?"":"book"}" style="background:${col}" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${esc(it.title)}">${inner}</a>`;
+  }
+  const visitLbl = it.kind==="upload" ? "Open" : isPod ? (emb ? "Watch" : "Listen") : "Visit site";
+  const meta = [it.meta, it.by ? "added by "+it.by : ""].filter(Boolean).join(" · ");
+  const tags = it.tags||[];
+  return `<article class="pd-card" data-id="${esc(it.id)}">${cover}<div class="pd-body">
+    <h3 class="pd-title" title="${esc(it.title)}">${esc(it.title)}</h3>
+    ${meta?`<div class="pd-meta">${esc(meta)}</div>`:""}
+    ${it.note?`<div class="pd-note" title="${esc(it.note)}">${esc(it.note)}</div>`:""}
+    <div class="pd-tags">${tags.length ? tags.map(t=>`<button type="button" class="va-tag ${vaTagCls(t)}" data-ft="${esc(t)}" title="Show items tagged ${esc(t)}">${esc(t)}</button>`).join("") : '<span class="va-msg">No tags</span>'}</div>
+    <div class="pd-actions"><a class="pd-ico" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer" title="${esc(visitLbl)}">${PD_ICON_LINK}<span>${esc(visitLbl)}</span></a>${it.dl?`<a class="pd-ico alt" href="${esc(it.dl)}" target="_blank" rel="noopener noreferrer" title="Download" download>${PD_ICON_DL}<span>Download</span></a>`:""}</div>
+    <div class="pd-actions pd-more"><button type="button" class="va-btn" data-edit="${esc(it.id)}">${pdState.editing===it.id?"Close":"Edit tags"}</button><button type="button" class="va-btn ghost" data-del="${esc(it.id)}">${pdState.confirmDel===it.id?"Tap again to delete":"Delete"}</button></div>
+    ${pdState.editing===it.id?`<div class="va-edit" data-editbox="${esc(it.id)}"></div>`:""}
+  </div></article>`;
+}
+function pdSetTags(id, tags){
+  const mine = (pdData.items||[]).find(x=>x.id===id);
+  if(mine) mine.tags = tags; else { pdData.over = pdData.over||{}; pdData.over[id] = Object.assign({}, pdData.over[id]||{}, {tags}); }
+  pdSave();
+}
+function renderPD(){
+  pdWire();
+  const all = pdAll(), nb = all.filter(i=>i.type==="book").length, np = all.length-nb;
+  document.getElementById("pdNBook").textContent = nb; document.getElementById("pdNPod").textContent = np;
+  document.getElementById("pdCount").textContent = nb+" book"+(nb===1?"":"s")+" and blog"+(nb===1?"":"s")+" · "+np+" podcast"+(np===1?"":"s");
+  document.querySelectorAll("#pdTabs button").forEach(b=>b.classList.toggle("on", b.dataset.t===pdState.tab));
+  pdApplyTabLabels();
+  pdRenderFilters();
+  const list = pdOfTab(pdState.tab).filter(pdMatches).sort((a,b)=>(b.added||0)-(a.added||0));
+  const total = pdOfTab(pdState.tab).length, st = document.getElementById("pdStatus"), active = pdState.q.trim() || pdState.tags.length;
+  st.innerHTML = active ? `<span>Showing <b>${list.length}</b> of ${total}</span><button type="button" class="va-btn ghost" id="pdClear">Clear search and tags</button>` : "<span>Tip: tick several tags to narrow down. Click a tag on any card to filter by it.</span>";
+  if(active) document.getElementById("pdClear").onclick = ()=>{ pdState.q=""; pdState.tags=[]; document.getElementById("pdQ").value=""; renderPD(); };
+  const g = document.getElementById("pdGrid");
+  if(!list.length){ g.innerHTML = `<div class="va-empty"><b>Nothing matches</b>${total?"Try fewer tags or a different word.":"Add the first one with the red button at the top."}</div>`; return; }
+  g.innerHTML = list.map(pdCardHTML).join("");
+  g.querySelectorAll("[data-play]").forEach(b=> b.onclick = ()=>{ pdState.playing[b.dataset.play]=1; renderPD(); });
+  g.querySelectorAll("[data-ft]").forEach(b=> b.onclick = ()=>{ const t=b.dataset.ft; if(!pdState.tags.some(x=>x.toLowerCase()===t.toLowerCase())) pdState.tags.push(t); window.scrollTo({top:0,behavior:"smooth"}); renderPD(); });
+  g.querySelectorAll("[data-edit]").forEach(b=> b.onclick = ()=>{ pdState.editing = pdState.editing===b.dataset.edit ? null : b.dataset.edit; renderPD(); });
+  g.querySelectorAll("[data-del]").forEach(b=> b.onclick = ()=>{
+    const id = b.dataset.del;
+    if(pdState.confirmDel===id){
+      const mine = (pdData.items||[]).find(x=>x.id===id);
+      if(mine){ if(mine.fileId) wsDeleteDriveFile(mine.fileId); if(mine.coverId) wsDeleteDriveFile(mine.coverId); pdData.items = pdData.items.filter(x=>x.id!==id); }
+      else { pdData.hide = (pdData.hide||[]).concat([id]); }
+      pdState.confirmDel = null; pdSave(); renderPD();
+    } else { pdState.confirmDel = id; renderPD(); setTimeout(()=>{ if(pdState.confirmDel===id){ pdState.confirmDel=null; renderPD(); } },3500); }
+  });
+  const eb = g.querySelector("[data-editbox]");
+  if(eb){
+    const it = pdAll().find(x=>x.id===eb.dataset.editbox), host = document.createElement("div"); eb.appendChild(host);
+    vaMakePicker(host, it.tags||[], t=>{
+      pdSetTags(it.id, t);
+      const card = eb.closest(".pd-card"); card.querySelector(".pd-tags").innerHTML = t.map(vaTagHTML).join("") || '<span class="va-msg">No tags</span>';
+      pdRenderFilters();
+    }, pdAllTags);
+  }
+}
+function pdApplyTabLabels(){
+  const pod = pdState.tab==="pod";
+  document.getElementById("pdAddLbl").textContent = pod ? "Add podcast or video" : "Add book or blog";
+  document.getElementById("pdAddTitle").textContent = pod ? "Add a podcast or video" : "Add a book or blog";
+  document.getElementById("pdAddSub").textContent = pod ? "Paste a link (YouTube, Spotify, Apple Podcasts, a website) or upload an audio or video file (up to 500 MB). Name it and tick the tags that fit." : "Paste a link to a website or a PDF, or upload a PDF (up to 500 MB). Name it and tick the tags that fit. Everyone sees it straight away.";
+  document.getElementById("pdModeFile").textContent = pod ? "Upload audio or video" : "Upload a PDF";
+  document.getElementById("pdUrlLbl").textContent = pod ? "Link to the podcast or video" : "Link to the book, blog or PDF";
+  document.getElementById("pdUrl").placeholder = pod ? "https://www.youtube.com/…  or  https://open.spotify.com/…" : "https://…";
+  document.getElementById("pdUrlHint").textContent = pod ? "YouTube, Vimeo and Google Drive links play here. Spotify, Apple Podcasts and other links open in a new tab." : "A website to read or buy from, or a direct link to a PDF. Direct PDF links also get a Download button.";
+  document.getElementById("pdFileLbl").textContent = pod ? "Audio or video file" : "PDF file";
+  document.getElementById("pdFile").accept = pod ? "audio/*,video/*,.mp3,.m4a,.wav,.mp4,.mov,.m4v,.webm" : "application/pdf,.pdf";
+  document.getElementById("pdFileHint").textContent = pod ? "MP3, M4A, MP4, MOV or WebM, up to 500 MB. It is stored in the school Google Drive. Large files take a few minutes: keep this tab open until the bar reaches 100%." : "PDF, up to 500 MB. It is stored in the school Google Drive and gets a Download button. Its first page becomes the cover.";
+  document.getElementById("pdSrcLbl").textContent = pod ? "Show or channel" : "Author";
+}
+function pdImageB64(file, maxW){
+  return new Promise((res,rej)=>{
+    const url = URL.createObjectURL(file), im = new Image();
+    im.onload = ()=>{ const s = Math.min(1, maxW/im.width), c = document.createElement("canvas"); c.width = Math.round(im.width*s); c.height = Math.round(im.height*s);
+      const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0,0,c.width,c.height); x.drawImage(im,0,0,c.width,c.height); URL.revokeObjectURL(url); res(c.toDataURL("image/jpeg",0.82).split(",")[1]); };
+    im.onerror = ()=>{ URL.revokeObjectURL(url); rej(new Error("Could not read that image.")); };
+    im.src = url;
+  });
+}
+async function pdPost(body){
+  const r = await fetch(APPS_SCRIPT_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(Object.assign({token:APP_TOKEN}, body))});
+  const d = await r.json();
+  if(d.error){
+    if(/Missing 'key'/.test(d.error)) throw new Error("The Google Apps Script has not been updated for uploads yet. Paste the new Code.gs, save it, then deploy a New version.");
+    if(/Only video/.test(d.error)) throw new Error("The Google Apps Script needs the newest Code.gs to accept this file type or size. Paste it in, save, then deploy a New version.");
+    throw new Error(d.error);
+  }
+  return d;
+}
+async function pdUploadFile(file, P){
+  const ext = (/\.([A-Za-z0-9]+)$/.exec(file.name)||[])[1]||"";
+  const mime = file.type || ({pdf:"application/pdf",mp3:"audio/mpeg",m4a:"audio/mp4",wav:"audio/wav",mp4:"video/mp4",mov:"video/quicktime",m4v:"video/mp4",webm:"video/webm"})[ext.toLowerCase()] || "application/octet-stream";
+  if(file.size <= PD_SMALL){
+    P.to(8, "Uploading…"); const d = await pdPost({action:"upload", name:file.name, mime, data:await wsToB64(file)}); P.to(100, "Upload complete");
+    return {id:d.id, view:d.view, download:d.download};
+  }
+  P.to(1, "Starting the upload…");
+  const s = await pdPost({action:"videostart", name:file.name, mime, size:file.size});
+  let pos = 0, res = null;
+  while(pos < file.size){
+    if(pdCancelUp) throw new Error("Upload cancelled.");
+    const end = Math.min(pos + PD_CHUNK, file.size), b64 = await wsToB64(file.slice(pos, end)); let lastErr = null;
+    for(let k=0;k<3;k++){ try{ res = await pdPost({action:"videochunk", session:s.session, start:pos, total:file.size, data:b64}); lastErr = null; break; }catch(e){ lastErr = e; if(/Apps Script/.test(e.message)) throw e; await new Promise(r=>setTimeout(r,1500*(k+1))); } }
+    if(lastErr) throw lastErr;
+    pos = end; P.to(2 + 96*pos/file.size, "Uploading… "+wsFmtSize(pos)+" of "+wsFmtSize(file.size));
+  }
+  if(!res || !res.done) throw new Error("The upload did not finish. Please try again.");
+  P.to(100, "Upload complete"); return {id:res.id, view:res.view, download:"https://drive.google.com/uc?export=download&id="+res.id};
+}
+function pdWire(){
+  if(pdWired) return; pdWired = true;
+  const logoSrc = document.querySelector('.brandrow img[alt="Cross Curricular Programme logo"]') || document.querySelector('.sidenav-logogrid img[alt="CCP"]'); if(logoSrc) document.getElementById("pdLogo").src = logoSrc.src;
+  pdPicker = vaMakePicker(document.getElementById("pdAddPicker"), [], null, pdAllTags);
+  const $ = id=>document.getElementById(id), msg = $("pdMsg");
+  const setMsg = (t,bad)=>{ msg.className = "va-msg"+(bad?" err":""); msg.textContent = t||""; };
+  $("pdTitle").addEventListener("input", ()=>{ pdTitleTouched = true; });
+  document.querySelectorAll("#pdTabs button").forEach(b=> b.onclick = ()=>{ pdState.tab = b.dataset.t; pdState.tags = []; pdState.editing = null; try{ sessionStorage.setItem("ccp_pd_tab", pdState.tab); }catch(e){} renderPD(); });
+  const setMode = m=>{ pdMode = m; document.querySelectorAll("#pdMode button").forEach(b=>b.classList.toggle("on", b.dataset.m===m)); $("pdUrlField").hidden = m!=="link"; $("pdFileField").hidden = m!=="file"; $("pdSave").textContent = m==="file" ? "Upload and save" : "Save to archive"; setMsg(""); };
+  document.querySelectorAll("#pdMode button").forEach(b=> b.onclick = ()=>{ if(!pdBusy) setMode(b.dataset.m); });
+  $("pdToggleAdd").onclick = function(){ const p = $("pdAddPanel"); p.hidden = !p.hidden; this.setAttribute("aria-expanded", String(!p.hidden)); if(!p.hidden){ wsFillBy($("pdBy")); $("pdUrl").focus(); } };
+  const reset = ()=>{ ["pdUrl","pdTitle","pdSrc","pdNote","pdFile","pdCover"].forEach(i=>$(i).value=""); setMode("link"); $("pdProgWrap").hidden = true; setMsg(""); pdTitleTouched = false; pdPicker.set([]); };
+  $("pdCancel").onclick = ()=>{ if(pdBusy){ pdCancelUp = true; return; } reset(); $("pdAddPanel").hidden = true; $("pdToggleAdd").setAttribute("aria-expanded","false"); };
+  $("pdFile").addEventListener("change", e=>{
+    const f = e.target.files[0]; if(!f) return;
+    if(f.size > PD_MAX_BYTES){ setMsg(f.name+" is "+wsFmtSize(f.size)+". The limit is 500 MB.", true); e.target.value = ""; return; }
+    setMsg(f.name+" ("+wsFmtSize(f.size)+")"); if(!pdTitleTouched) $("pdTitle").value = f.name.replace(/\.[^.]+$/,"").replace(/[_]+/g," ").trim();
+  });
+  const lookup = async ()=>{
+    const p = vaParse($("pdUrl").value); if(!p || p.src!=="youtube") return;
+    const seq = ++pdSeq; setMsg("Looking up the name…"); let d = null;
+    try{ const r = await fetch("https://www.youtube.com/oembed?format=json&url="+encodeURIComponent(p.url)); d = await r.json(); }catch(e){}
+    if(seq!==pdSeq) return;
+    if(d && d.title){ if(!pdTitleTouched) $("pdTitle").value = d.title; if(!$("pdSrc").value) $("pdSrc").value = d.author_name||""; setMsg("Name found. Check it, then choose tags."); } else setMsg("Could not read the name. Type one in.");
+  };
+  $("pdUrl").addEventListener("change", lookup); $("pdUrl").addEventListener("paste", ()=>setTimeout(lookup,50));
+  $("pdSave").onclick = async ()=>{
+    if(pdBusy) return;
+    const bad = (t,el)=>{ setMsg(t,true); if(el) $(el).focus(); };
+    const title = $("pdTitle").value.trim(), by = $("pdBy").value, tags = pdPicker.get(), tab = pdState.tab, pod = tab==="pod";
+    let url = $("pdUrl").value.trim(), file = $("pdFile").files[0];
+    if(pdMode==="link"){ if(!url) return bad("Paste a link first.","pdUrl"); if(!/^https?:\/\//i.test(url)) url = "https://"+url; try{ new URL(url); }catch(e){ return bad("That link does not look right.","pdUrl"); } }
+    else { if(!file) return bad("Choose a file first.","pdFile"); if(file.size > PD_MAX_BYTES) return bad(file.name+" is "+wsFmtSize(file.size)+". The limit is 500 MB.","pdFile"); }
+    if(!title) return bad("Give it a title.","pdTitle");
+    if(!by) return bad("Choose who is adding this.","pdBy");
+    if(!tags.length) return bad("Choose at least one tag so others can find it.");
+    try{ localStorage.setItem("ccp_va_last_by", by); }catch(e){}
+    const item = {id:"pu"+Date.now().toString(36), type:tab, title, src:$("pdSrc").value.trim(), note:$("pdNote").value.trim(), by, tags, added:Date.now()};
+    const coverFile = $("pdCover").files[0];
+    if(pdMode==="link"){
+      item.url = url; item.meta = pod ? (vaParse(url).src==="youtube"||vaParse(url).src==="vimeo" ? "Video" : "Podcast") : (/\.pdf($|\?)/i.test(url) ? "PDF" : "Link");
+      if(/\.pdf($|\?)/i.test(url)) item.dl = url;
+    }
+    const wrap = $("pdProgWrap"), sv = $("pdSave"), cn = $("pdCancel");
+    const needBar = pdMode==="file" || coverFile;
+    let P = null; if(needBar){ wrap.hidden = false; wrap.innerHTML = WS_PROG_HTML; P = wsProgress(wrap.querySelector(".ws-prog i"), wrap.querySelector(".pct"), wrap.querySelector(".lbl")); }
+    pdBusy = true; pdCancelUp = false; sv.disabled = true; cn.textContent = needBar ? "Stop upload" : "Cancel"; setMsg(needBar ? "Keep this tab open until the upload finishes." : "");
+    try{
+      if(pdMode==="file"){
+        const up = await pdUploadFile(file, P);
+        item.url = up.view; item.dl = up.download; item.fileId = up.id; item.kind = "upload"; item.meta = (pod ? (/^video/.test(file.type)||/\.(mp4|mov|m4v|webm)$/i.test(file.name) ? "Video" : "Audio") : "PDF")+" · "+wsFmtSize(file.size);
+        if(!coverFile && !pod && /pdf/i.test(file.type+file.name)){ try{ P.to(100,"Making the cover…"); const t = await pdPost({action:"upload", name:"cover_"+up.id+".jpg", mime:"image/jpeg", data:await wsPdfThumbB64(file)}); item.coverId = t.id; item.cover = wsDriveThumb(t.id); }catch(e){} }
+        if(pod && !coverFile){ item.cover = "https://drive.google.com/thumbnail?id="+up.id+"&sz=w640"; }
+      }
+      if(coverFile){ P.to(Math.max(2,0),"Uploading the cover…"); const c = await pdPost({action:"upload", name:"cover_"+Date.now()+".jpg", mime:"image/jpeg", data:await pdImageB64(coverFile, 420)}); item.coverId = c.id; item.cover = wsDriveThumb(c.id); }
+      pdData.items = (pdData.items||[]).concat([item]); pdSave();
+      pdBusy = false; cn.textContent = "Cancel"; sv.disabled = false; if(P) P.stop(); reset(); renderPD();
+      setMsg("Saved to the archive."); setTimeout(()=>{ if(msg.textContent==="Saved to the archive.") setMsg(""); },2500);
+    }catch(e){
+      pdBusy = false; cn.textContent = "Cancel"; sv.disabled = false; if(P) P.stop(); wrap.hidden = true; setMsg(e.message || "The upload failed. Please try again.", true);
+    }
+  };
+  $("pdQ").addEventListener("input", function(){ pdState.q = this.value; renderPD(); });
 }
 
 /* ===================== Worksheet Generator ===================== */
@@ -5066,10 +5395,11 @@ function renderView(name){
   if(name==="settings") renderSettings();
   if(name==="videos") renderVideos();
   if(name==="worksheets") renderWorksheets();
+  if(name==="pd"){ try{ pdState.tab = sessionStorage.getItem("ccp_pd_tab")||pdState.tab; }catch(e){} renderPD(); }
 }
 function showView(name){
   currentViewName = name;
-  ["home","attendance","practice","backlog","minutes","meeting","handbook","weeklyplan","safeguarding","calendar","settings","videos","worksheets"].forEach(v=>{
+  ["home","attendance","practice","backlog","minutes","meeting","handbook","weeklyplan","safeguarding","calendar","settings","videos","worksheets","pd"].forEach(v=>{
     document.getElementById("view-"+v).style.display = (v===name)?"block":"none";
   });
   if(name!=="home") renderView(name);
@@ -5517,7 +5847,7 @@ document.getElementById("confirmBatchBtn").onclick = async ()=>{
     if(currentViewName!=="home") renderView(currentViewName);
   }
   const wantView = new URLSearchParams(location.search).get("view");
-  if(wantView && ["worksheets","videos","meeting"].includes(wantView)){ showView(wantView); if(wantView==="meeting" && new URLSearchParams(location.search).get("tab")==="one") mtSetTab("one"); }
+  if(wantView && ["worksheets","videos","meeting","pd"].includes(wantView)){ const tq = new URLSearchParams(location.search).get("tab"); if(wantView==="pd" && (tq==="pod"||tq==="book")){ try{ sessionStorage.setItem("ccp_pd_tab", tq); }catch(e){} } showView(wantView); if(wantView==="meeting" && new URLSearchParams(location.search).get("tab")==="one") mtSetTab("one"); }
 })();
 </script>
 </body>
