@@ -330,6 +330,32 @@
   .va-empty b{display:block;font-family:"Space Grotesk",sans-serif;font-size:19px;color:var(--ink);margin-bottom:6px;}
   @media (max-width:640px){.va-form{grid-template-columns:1fr;}.va-addbtn{width:100%;justify-content:center;}}
   /* ===== PD Archives ===== */
+  .pd-stars{display:inline-block;letter-spacing:1px;font-size:14px;line-height:1;background:linear-gradient(90deg,#E8A317 var(--p,0%),#CDD2DA var(--p,0%));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;}
+  .pd-soc{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-soft);cursor:pointer;padding:2px 0;}
+  .pd-soc b{color:var(--ink);} .pd-soc .heart{color:#D3261B;}
+  .pd-card{cursor:pointer;}
+  .pdm-top{display:flex;gap:16px;flex-wrap:wrap;margin:6px 0 14px;}
+  .pdm-cover{position:relative;width:150px;aspect-ratio:1/1;border-radius:12px;overflow:hidden;color:#fff;flex:none;}
+  .pdm-cover img{position:relative;width:100%;height:100%;object-fit:cover;object-position:top;display:block;}
+  .pdm-info{flex:1;min-width:220px;display:flex;flex-direction:column;gap:8px;}
+  .pdm-note{font-size:14px;line-height:1.45;color:var(--ink-soft);}
+  .pdm-rate{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px;}
+  .pdm-big{text-align:center;} .pdm-big .num{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:42px;line-height:1;color:#1B3A6B;} .pdm-big .pd-stars{font-size:17px;margin-top:4px;} .pdm-big .cnt{font-size:12px;color:var(--ink-soft);margin-top:3px;}
+  .pdm-bars{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink-soft);}
+  .pdm-bar{display:grid;grid-template-columns:12px 1fr 22px;gap:8px;align-items:center;} .pdm-bar i{display:block;height:8px;border-radius:99px;background:#E4E7EC;position:relative;overflow:hidden;} .pdm-bar i::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--w,0%);background:#E8A317;border-radius:99px;}
+  .pdm-mine{grid-column:1/-1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px dashed var(--line);padding-top:10px;font-size:13px;}
+  .pdm-pick button{border:0;background:transparent;font-size:28px;line-height:1;padding:0 2px;color:#CDD2DA;cursor:pointer;} .pdm-pick button.on{color:#E8A317;} .pdm-pick button:hover{transform:scale(1.15);}
+  .pdm-like{display:inline-flex;align-items:center;gap:7px;border:1.5px solid #D3261B;background:#fff;color:#D3261B;border-radius:99px;padding:6px 14px;font:inherit;font-weight:700;font-size:13.5px;cursor:pointer;} .pdm-like.on{background:#D3261B;color:#fff;}
+  .pdm-cmts{max-height:42vh;overflow:auto;display:flex;flex-direction:column;gap:12px;margin:10px 0 12px;padding-right:4px;}
+  .pdm-c{display:flex;gap:10px;} .pdm-av{flex:none;width:34px;height:34px;border-radius:50%;color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px;}
+  .pdm-cb{flex:1;min-width:0;} .pdm-ch{font-size:12.5px;color:var(--ink-soft);} .pdm-ch b{color:var(--ink);font-size:13.5px;margin-right:6px;}
+  .pdm-ct{font-size:14px;line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:2px;}
+  .pdm-del{border:0;background:transparent;color:var(--ink-soft);font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin-left:8px;}
+  .pdm-form textarea{width:100%;min-height:70px;resize:vertical;}
+  .pdm-who{font-size:12.5px;color:var(--ink-soft);margin:0 0 6px;} .pdm-who button{border:0;background:transparent;color:var(--teal);font:inherit;font-size:12.5px;text-decoration:underline;cursor:pointer;}
+  .pdm-note2{font-size:12.5px;min-height:18px;margin-top:6px;} .pdm-note2.err{color:#C8372D;font-weight:600;}
+  @media (max-width:560px){.pdm-rate{grid-template-columns:1fr;} .pdm-cover{width:100%;aspect-ratio:16/9;}}
+
   #view-pd [hidden]{display:none!important;}
   .va-tag.t-yusuf{background:#FFF1CC;color:#7A5200;font-weight:800;box-shadow:inset 0 0 0 1.5px #DFA61B;}
   .pd-tabs{display:flex;gap:6px;margin:0 0 14px;border-bottom:2px solid var(--line);}
@@ -2310,7 +2336,7 @@ function getVal(key, fallback){
   if(raw==null || raw==="") return fallback;
   try{ return JSON.parse(raw); }catch(e){ return fallback; }
 }
-const DATA_KEYS = ["ccp_timetable_v3","ccp_absences","ccp_practices","ccp_minutes","ccp_backlog","ccp_custom_sprints","ccp_staff","ccp_schedule","ccp_videos","ccp_worksheets","ccp_meetings","ccp_pd"];
+const DATA_KEYS = ["ccp_timetable_v3","ccp_absences","ccp_practices","ccp_minutes","ccp_backlog","ccp_custom_sprints","ccp_staff","ccp_schedule","ccp_videos","ccp_worksheets","ccp_meetings","ccp_pd","ccp_pd_social"];
 function applyStore(){
   timetable     = getVal("ccp_timetable_v3", DEFAULT_TIMETABLE);
   absences      = getVal("ccp_absences", DEFAULT_ABSENCES);
@@ -2323,6 +2349,7 @@ function applyStore(){
   videos        = getVal("ccp_videos", DEFAULT_VIDEOS);
   worksheets    = getVal("ccp_worksheets", DEFAULT_WORKSHEETS);
   meetings      = getVal("ccp_meetings", []);
+  pdSoc         = getVal("ccp_pd_social", {}); if(!pdSoc || typeof pdSoc!=="object" || Array.isArray(pdSoc)) pdSoc = {};
   pdData        = getVal("ccp_pd", {items:[],over:{},hide:[]}); if(!pdData || typeof pdData!=="object" || Array.isArray(pdData)) pdData = {items:[],over:{},hide:[]}; pdData.items = pdData.items||[]; pdData.over = pdData.over||{}; pdData.hide = pdData.hide||[];
   rebuildPeriodTimes();
 }
@@ -4202,7 +4229,7 @@ function vaWire(){
 }
 
 /* ===================== PD Archives ===================== */
-const PD_SEED = [{"id":"pd00","type":"book","title":"Free to Learn","src":"Peter Gray","url":"https://www.taumata.school.nz/school/content/Free_to_learn_by_Peter_Gray.pdf","tags":["Book","Play & learning","Free PDF"],"note":"Why unleashing the instinct to play will make our children happier, more self-reliant and better students for life.","meta":"Book · PDF","dl":"https://www.taumata.school.nz/school/content/Free_to_learn_by_Peter_Gray.pdf","cover":"https://covers.openlibrary.org/b/isbn/9780465084999-L.jpg?default=false","added":1790000000000},{"id":"pd01","type":"book","title":"Peter Gray's blog","src":"Peter Gray","url":"https://www.petergray.org/blog","tags":["Blog","Play & learning"],"note":"Peter Gray writes about play, self-directed education and how children learn.","meta":"Blog","added":1789999999000},{"id":"pd02","type":"book","title":"The Learning Game","src":"Ana Lorena Fábrega (Harriman House)","url":"https://www.jarir.com/sa-en/harriman-house-ltd-english-books-626985.html?srsltid=AYCX9vLHNN48zBpE9V1q-gl6XxBHUlDTWecqa_wboP63wFxghm_2l0Io","tags":["Book","Growth mindset","Teaching & learning"],"note":"Teaching kids to think for themselves, embrace challenge and love learning. Buy it from Jarir.","meta":"Book · Jarir","cover":"https://covers.openlibrary.org/b/isbn/9781804090091-L.jpg?default=false","added":1789999998000},{"id":"pd03","type":"book","title":"When the Adults Change, Everything Changes","src":"Paul Dix","url":"https://www.whentheadultschange.com/","tags":["Book","Behaviour & culture","Leadership"],"note":"Seismic shifts in school behaviour: the adults change first, then behaviour follows.","meta":"Book","cover":"https://covers.openlibrary.org/b/isbn/9781781352731-L.jpg?default=false","added":1789999997000},{"id":"pd04","type":"pod","title":"Making project-based learning accessible","src":"Cult of Pedagogy","url":"https://www.cultofpedagogy.com/accessible-pbl/","tags":["Project-based learning","Teaching & learning"],"note":"How to make project-based learning work for every student.","meta":"Podcast","added":1789999996000},{"id":"pd05","type":"pod","title":"EduScrum","src":"YouTube","url":"https://www.youtube.com/watch?v=aVnshvavcGU","tags":["Project-based learning","Video","Teamwork"],"note":"Agile, scrum-style teamwork in the classroom.","meta":"Video","added":1789999995000},{"id":"pd06","type":"pod","title":"NuVu: changing the world","src":"YouTube","url":"https://www.youtube.com/watch?v=uhiRv3UMaHE","tags":["Project-based learning","Video","Innovation"],"note":"The NuVu studio model of learning by making.","meta":"Video","added":1789999994000},{"id":"pd07","type":"pod","title":"#17: Saba Ghole — On Growth Mindset","src":"Apple Podcasts","url":"https://podcasts.apple.com/gb/podcast/17-saba-ghole-on-growth-mindset/id1319158020?i=1000433886392","tags":["Growth mindset"],"note":"Saba Ghole on growth mindset in learning.","meta":"Podcast","added":1789999993000},{"id":"pd08","type":"book","title":"Is Your Professional Learning Community a Farce?","src":"Cult of Pedagogy","url":"https://www.cultofpedagogy.com/plc-problems/","tags":["Mr Yusuf's Selection","PLC & collaboration","Professional development"],"note":"Why PLC hours become compliance paperwork, and how teams reclaim time for peer inquiry.","meta":"Article","added":1789999992000},{"id":"pd09","type":"pod","title":"EduTip 29: Build relationships with a spreadsheet","src":"Cult of Pedagogy","url":"https://cultofpedagogy.libsyn.com/webpage/edutip-29-build-relationships-with-a-spreadsheet","tags":["Mr Yusuf's Selection","Behaviour & culture"],"note":"Turn the start-of-year student questionnaire into a tool you use all year. A quick win.","meta":"Podcast · about 4 min","added":1789999991000},{"id":"pd10","type":"pod","title":"Ep 268: What is a Warm Demander?","src":"Cult of Pedagogy","url":"https://cultofpedagogy.libsyn.com/webpage/268-what-is-a-warm-demander","tags":["Mr Yusuf's Selection","Behaviour & culture"],"note":"High expectations and warmth at the same time, rather than choosing between control and flexibility.","meta":"Podcast · Mar 2026","added":1789999990000},{"id":"pd11","type":"pod","title":"Ep 272: The Replacement Skills Approach: Teaching Behavior Instead of Managing It","src":"Cult of Pedagogy","url":"https://cultofpedagogy.libsyn.com/webpage/272-the-replacement-skills-approach-teaching-behavior-instead-of-managing-it","tags":["Mr Yusuf's Selection","Behaviour & culture"],"note":"Treat misbehaviour as a skill gap and teach the replacement skill instead of relying on reprimands.","meta":"Podcast · Apr 2026","added":1789999989000},{"id":"pd12","type":"pod","title":"Ep 48: Implementing a Classroom Management Plan That Works","src":"Cult of Pedagogy","url":"https://cultofpedagogy.libsyn.com/48-implementing-a-classroom-management-plan-that-works","tags":["Mr Yusuf's Selection","Behaviour & culture"],"note":"Older, but Michael Linsin's advice on designing a behaviour plan is still practical, especially for new teachers.","meta":"Podcast · 2016","added":1789999988000},{"id":"pd13","type":"pod","title":"Ep 273: The Art of Classroom Timing: 10 Ways to Fit it All In","src":"Cult of Pedagogy","url":"https://cultofpedagogy.libsyn.com/webpage/273-the-art-of-classroom-timing-10-ways-to-fit-it-all-in","tags":["Mr Yusuf's Selection","Teaching & learning"],"note":"Pacing when some students finish in five minutes and others need thirty.","meta":"Podcast · Apr 2026","added":1789999987000}];
+const PD_SEED = [{"id":"pd00","type":"book","title":"Free to Learn","src":"Peter Gray","url":"https://www.taumata.school.nz/school/content/Free_to_learn_by_Peter_Gray.pdf","tags":["Book","Play & learning","Free PDF"],"note":"Why unleashing the instinct to play will make our children happier, more self-reliant and better students for life.","meta":"Book · PDF","dl":"https://www.taumata.school.nz/school/content/Free_to_learn_by_Peter_Gray.pdf","cover":"https://covers.openlibrary.org/b/isbn/9780465084999-L.jpg?default=false","added":1790000000000},{"id":"pd01","type":"book","title":"Peter Gray's blog","src":"Peter Gray","url":"https://www.petergray.org/blog","tags":["Blog","Play & learning"],"note":"Peter Gray writes about play, self-directed education and how children learn.","meta":"Blog","added":1789999999000},{"id":"pd02","type":"book","title":"The Learning Game","src":"Ana Lorena Fábrega (Harriman House)","url":"https://www.jarir.com/sa-en/harriman-house-ltd-english-books-626985.html?srsltid=AYCX9vLHNN48zBpE9V1q-gl6XxBHUlDTWecqa_wboP63wFxghm_2l0Io","tags":["Book","Growth mindset","Teaching & learning"],"note":"Teaching kids to think for themselves, embrace challenge and love learning. Buy it from Jarir.","meta":"Book · Jarir","cover":"https://covers.openlibrary.org/b/isbn/9781804090091-L.jpg?default=false","added":1789999998000},{"id":"pd03","type":"book","title":"When the Adults Change, Everything Changes","src":"Paul Dix","url":"https://cdn.bookey.app/files/pdf/book/en/when-the-adults-change--everything-changes.pdf","tags":["Book","Behaviour & culture","Leadership","Free PDF"],"note":"Seismic shifts in school behaviour: the adults change first, then behaviour follows.","meta":"Book · PDF","cover":"https://covers.openlibrary.org/b/isbn/9781781352731-L.jpg?default=false","added":1789999997000,"dl":"https://cdn.bookey.app/files/pdf/book/en/when-the-adults-change--everything-changes.pdf"},{"id":"pd04","type":"pod","title":"Making project-based learning accessible","src":"Cult of Pedagogy","url":"https://www.cultofpedagogy.com/accessible-pbl/","tags":["Project-based learning","Teaching & learning"],"note":"How to make project-based learning work for every student.","meta":"Podcast","added":1789999996000},{"id":"pd05","type":"pod","title":"EduScrum","src":"YouTube","url":"https://www.youtube.com/watch?v=aVnshvavcGU","tags":["Project-based learning","Video","Teamwork"],"note":"Agile, scrum-style teamwork in the classroom.","meta":"Video","added":1789999995000},{"id":"pd06","type":"pod","title":"NuVu: changing the world","src":"YouTube","url":"https://www.youtube.com/watch?v=uhiRv3UMaHE","tags":["Project-based learning","Video","Innovation"],"note":"The NuVu studio model of learning by making.","meta":"Video","added":1789999994000},{"id":"pd07","type":"pod","title":"#17: Saba Ghole — On Growth Mindset","src":"Apple Podcasts","url":"https://podcasts.apple.com/gb/podcast/17-saba-ghole-on-growth-mindset/id1319158020?i=1000433886392","tags":["Growth mindset"],"note":"Saba Ghole on growth mindset in learning.","meta":"Podcast","added":1789999993000},{"id":"pd08","type":"book","title":"Is Your Professional Learning Community a Farce?","src":"Cult of Pedagogy","url":"https://www.cultofpedagogy.com/plc-problems/","tags":["Mr Yusuf's Selection","PLC & collaboration","Professional development"],"note":"Why PLC hours become compliance paperwork, and how teams reclaim time for peer inquiry.","meta":"Article","added":1789999992000},{"id":"pd09","type":"pod","title":"EduTip 29: Build relationships with a spreadsheet","src":"Cult of Pedagogy","url":"https://cultofpedagogy.libsyn.com/webpage/edutip-29-build-relationships-with-a-spreadsheet","tags":["Mr Yusuf's Selection","Behaviour & culture"],"note":"Turn the start-of-year student questionnaire into a tool you use all year. A quick win.","meta":"Podcast · about 4 min","added":1789999991000},{"id":"pd10","type":"pod","title":"Ep 268: What is a Warm Demander?","src":"Cult of Pedagogy","url":"https://cultofpedagogy.libsyn.com/webpage/268-what-is-a-warm-demander","tags":["Mr Yusuf's Selection","Behaviour & culture"],"note":"High expectations and warmth at the same time, rather than choosing between control and flexibility.","meta":"Podcast · Mar 2026","added":1789999990000},{"id":"pd11","type":"pod","title":"Ep 272: The Replacement Skills Approach: Teaching Behavior Instead of Managing It","src":"Cult of Pedagogy","url":"https://cultofpedagogy.libsyn.com/webpage/272-the-replacement-skills-approach-teaching-behavior-instead-of-managing-it","tags":["Mr Yusuf's Selection","Behaviour & culture"],"note":"Treat misbehaviour as a skill gap and teach the replacement skill instead of relying on reprimands.","meta":"Podcast · Apr 2026","added":1789999989000},{"id":"pd12","type":"pod","title":"Ep 48: Implementing a Classroom Management Plan That Works","src":"Cult of Pedagogy","url":"https://cultofpedagogy.libsyn.com/48-implementing-a-classroom-management-plan-that-works","tags":["Mr Yusuf's Selection","Behaviour & culture"],"note":"Older, but Michael Linsin's advice on designing a behaviour plan is still practical, especially for new teachers.","meta":"Podcast · 2016","added":1789999988000},{"id":"pd13","type":"pod","title":"Ep 273: The Art of Classroom Timing: 10 Ways to Fit it All In","src":"Cult of Pedagogy","url":"https://cultofpedagogy.libsyn.com/webpage/273-the-art-of-classroom-timing-10-ways-to-fit-it-all-in","tags":["Mr Yusuf's Selection","Teaching & learning"],"note":"Pacing when some students finish in five minutes and others need thirty.","meta":"Podcast · Apr 2026","added":1789999987000},{"id":"pd14","type":"book","title":"Paul Dix Website - When the Adults Change","src":"Paul Dix","url":"https://www.whentheadultschange.com/","tags":["Blog","Behaviour & culture","Leadership"],"note":"Paul Dix's official site for When the Adults Change, Everything Changes: resources, training and ideas for school behaviour.","meta":"Website","added":1789999996500}];
 const PD_YUSUF = "Mr Yusuf's Selection";
 const PD_PRESET = [PD_YUSUF,"Book","Blog","Free PDF","Video","Research (open access)","School improvement","Leadership","Coaching","Professional development","PLC & collaboration","Behaviour & culture","Teaching & learning","Planning","Assessment","Retrieval practice","Project-based learning","Growth mindset","Play & learning","Innovation","Teamwork","Multilingual learners","Early years","AI & EdTech","Wellbeing"];
 const PD_COLORS = ["#1B3A6B","#B0623D","#4E7D6B","#7A4FA0","#2F7F8F","#A5472F","#3F5BA9","#8A6D1D","#C8372D","#5B7C99"];
@@ -4272,6 +4299,7 @@ function pdCardHTML(it){
     <h3 class="pd-title" title="${esc(it.title)}">${esc(it.title)}</h3>
     ${meta?`<div class="pd-meta">${esc(meta)}</div>`:""}
     ${it.note?`<div class="pd-note" title="${esc(it.note)}">${esc(it.note)}</div>`:""}
+    ${pdSocLine(it.id)}
     <div class="pd-tags">${tags.length ? tags.map(t=>`<button type="button" class="va-tag ${vaTagCls(t)}" data-ft="${esc(t)}" title="Show items tagged ${esc(t)}">${esc(t)}</button>`).join("") : '<span class="va-msg">No tags</span>'}</div>
     <div class="pd-actions"><a class="pd-ico" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer" title="${esc(visitLbl)}">${PD_ICON_LINK}<span>${esc(visitLbl)}</span></a>${it.dl?`<a class="pd-ico alt" href="${esc(it.dl)}" target="_blank" rel="noopener noreferrer" title="Download" download>${PD_ICON_DL}<span>Download</span></a>`:""}</div>
     <div class="pd-actions pd-more"><button type="button" class="va-btn" data-edit="${esc(it.id)}">${pdState.editing===it.id?"Close":"Edit tags"}</button><button type="button" class="va-btn ghost" data-del="${esc(it.id)}">${pdState.confirmDel===it.id?"Tap again to delete":"Delete"}</button></div>
@@ -4298,6 +4326,7 @@ function renderPD(){
   const g = document.getElementById("pdGrid");
   if(!list.length){ g.innerHTML = `<div class="va-empty"><b>Nothing matches</b>${total?"Try fewer tags or a different word.":"Add the first one with the red button at the top."}</div>`; return; }
   g.innerHTML = list.map(pdCardHTML).join("");
+  g.querySelectorAll(".pd-card").forEach(c=> c.onclick = e=>{ if(e.target.closest("a,button,iframe,input,select,textarea,.va-edit,.va-pop")) return; pdOpenItem(c.dataset.id); });
   g.querySelectorAll("[data-play]").forEach(b=> b.onclick = ()=>{ pdState.playing[b.dataset.play]=1; renderPD(); });
   g.querySelectorAll("[data-ft]").forEach(b=> b.onclick = ()=>{ const t=b.dataset.ft; if(!pdState.tags.some(x=>x.toLowerCase()===t.toLowerCase())) pdState.tags.push(t); window.scrollTo({top:0,behavior:"smooth"}); renderPD(); });
   g.querySelectorAll("[data-edit]").forEach(b=> b.onclick = ()=>{ pdState.editing = pdState.editing===b.dataset.edit ? null : b.dataset.edit; renderPD(); });
@@ -4372,6 +4401,90 @@ async function pdUploadFile(file, P){
   }
   if(!res || !res.done) throw new Error("The upload did not finish. Please try again.");
   P.to(100, "Upload complete"); return {id:res.id, view:res.view, download:"https://drive.google.com/uc?export=download&id="+res.id};
+}
+/* ---- PD Archives: ratings, likes and comments ---- */
+let pdSoc = {}, pdMe = null;
+try{ pdMe = JSON.parse(localStorage.getItem("ccp_pd_me")||"null"); }catch(e){ pdMe = null; }
+const PD_MAX_COMMENT = 600;
+function pdSocOf(id){ const s = (pdSoc && pdSoc[id]) || {}; return {ratings:s.ratings||{}, likes:s.likes||[], comments:s.comments||[]}; }
+function pdAvg(s){ const v = Object.values(s.ratings).map(Number).filter(n=>n>=1&&n<=5); return {n:v.length, avg:v.length ? v.reduce((a,b)=>a+b,0)/v.length : 0, dist:[1,2,3,4,5].map(k=>v.filter(x=>x===k).length)}; }
+const pdStarsHTML = avg => `<span class="pd-stars" style="--p:${(avg/5*100).toFixed(0)}%" aria-hidden="true">★★★★★</span>`;
+function pdSocLine(id){
+  const s = pdSocOf(id), r = pdAvg(s);
+  return `<div class="pd-soc" data-open="${esc(id)}" title="Open to rate, like and comment">${pdStarsHTML(r.avg)} <span><b>${r.n?r.avg.toFixed(1):"–"}</b> (${r.n})</span><span class="heart">♥ <b>${s.likes.length}</b></span><span>💬 <b>${s.comments.length}</b></span></div>`;
+}
+async function pdFetchSoc(){
+  const r = await fetch(APPS_SCRIPT_URL+"?key=ccp_pd_social&token="+encodeURIComponent(APP_TOKEN)); const d = await r.json();
+  if(d && d.error) throw new Error(d.error);
+  if(d && d.value!=null){ const v = typeof d.value==="string" ? JSON.parse(d.value) : d.value; if(v && typeof v==="object" && !Array.isArray(v)) return v; }
+  return {};
+}
+async function pdSocCommit(mut){          // read latest, change, save: so two teachers acting at once don't overwrite each other
+  let latest; try{ latest = await pdFetchSoc(); }catch(e){ return {error:"Could not reach the shared sheet. Check your connection and try again."}; }
+  const res = mut(latest) || {}; if(res.error) return res;
+  const ok = await saveJSON("ccp_pd_social", latest);
+  if(!ok) return {error:"Could not save. Check your connection and try again (very long comment threads can also fill the sheet cell)."};
+  pdSoc = latest; return res;
+}
+async function pdEnsureMe(){
+  if(pdMe) return true;
+  let who = null;
+  const ok = await mtAsk({title:"Who are you?", sub:"Enter your staff email so your name shows on your rating, like and comments. This browser will remember you.", confirm:"Continue",
+    verify: async email=>{
+      const p = mtPerson(email), admin = MT_ADMINS.includes(mtEmail(email));
+      if(!p && !admin) return "That email is not in the staff list. Ask Raiyan to add it in Settings.";
+      who = {name: p ? p.name : VA_ME, ini: p ? p.ini : "RA", color: p ? p.color : "#1B3A6B", admin}; return "";
+    }});
+  if(ok && who){ pdMe = who; try{ localStorage.setItem("ccp_pd_me", JSON.stringify(who)); }catch(e){} }
+  return !!(ok && who);
+}
+const pdAgo = t=>{ const m = Math.round((Date.now()-t)/60000); if(m<1) return "just now"; if(m<60) return m+" min ago"; const h = Math.round(m/60); if(h<24) return h+" h ago"; const d = Math.round(h/24); if(d<30) return d+" day"+(d>1?"s":"")+" ago"; return new Date(t).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"}); };
+let pdOpenId = null;
+async function pdOpenItem(id, keepScroll){
+  const it = pdAll().find(x=>x.id===id); if(!it) return; pdOpenId = id;
+  const d = wsOpenModal(false);
+  const draw = ()=>{
+    const sc = d.querySelector(".pdm-cmts") ? d.querySelector(".pdm-cmts").scrollTop : 0;
+    const s = pdSocOf(id), r = pdAvg(s), mine = pdMe ? s.ratings[pdMe.name] : 0, liked = pdMe && s.likes.includes(pdMe.name), isPod = it.type==="pod";
+    const p = vaParse(it.url) || {src:"link"}, thumb = it.cover || (isPod ? vaThumb(p) : ""), col = pdColor(it.id||it.title);
+    const cm = s.comments.slice().sort((a,b)=>b.at-a.at);
+    d.innerHTML = wsHead(esc(it.title), esc([it.src, it.meta].filter(Boolean).join(" · ")))
+      + `<div class="pdm-top"><div class="pdm-cover" style="background:${col}"><span class="pd-ini" aria-hidden="true">${esc(pdInitials(it.title))}</span>${thumb?`<img src="${esc(thumb)}" alt="" onerror="this.remove()">`:""}</div>
+         <div class="pdm-info">${it.note?`<div class="pdm-note">${esc(it.note)}</div>`:""}<div class="pd-tags">${(it.tags||[]).map(vaTagHTML).join("")}</div>
+         <div class="pd-actions"><a class="pd-ico" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">${PD_ICON_LINK}<span>${it.kind==="upload"?"Open":isPod?(vaEmbed(p)?"Watch":"Listen"):"Visit site"}</span></a>${it.dl?`<a class="pd-ico alt" href="${esc(it.dl)}" target="_blank" rel="noopener noreferrer" download>${PD_ICON_DL}<span>Download</span></a>`:""}
+         <button type="button" class="pdm-like${liked?" on":""}" id="pdmLike" aria-pressed="${!!liked}">♥ <span>${liked?"Liked":"Like"}</span> · ${s.likes.length}</button></div></div></div>
+       <div class="pdm-rate"><div class="pdm-big"><div class="num">${r.n?r.avg.toFixed(1):"–"}</div>${pdStarsHTML(r.avg)}<div class="cnt">${r.n} rating${r.n===1?"":"s"}</div></div>
+         <div class="pdm-bars">${[5,4,3,2,1].map(k=>`<div class="pdm-bar"><span>${k}</span><i style="--w:${r.n?Math.round(r.dist[k-1]/r.n*100):0}%"></i><span>${r.dist[k-1]}</span></div>`).join("")}</div>
+         <div class="pdm-mine"><span><b>Your rating</b></span><span class="pdm-pick" role="radiogroup" aria-label="Your rating out of 5">${[1,2,3,4,5].map(k=>`<button type="button" data-star="${k}" class="${k<=mine?"on":""}" aria-label="${k} star${k>1?"s":""}">★</button>`).join("")}</span>${mine?`<button type="button" class="pdm-del" id="pdmUnrate" style="margin:0;">Remove my rating</button>`:'<span style="color:var(--ink-soft)">Tap a star to rate it out of 5</span>'}</div></div>
+       <h3 style="margin:0;font-size:16px;">Comments (${s.comments.length})</h3>
+       <div class="pdm-cmts" id="pdmCmts">${cm.length ? cm.map(c=>`<div class="pdm-c"><div class="pdm-av" style="background:${esc(c.color||"#1B3A6B")}">${esc(c.ini||"?")}</div><div class="pdm-cb"><div class="pdm-ch"><b>${esc(c.name)}</b>${esc(pdAgo(c.at))}${pdMe && (pdMe.name===c.name || pdMe.admin) ? `<button type="button" class="pdm-del" data-delc="${esc(c.id)}">Delete</button>`:""}</div><div class="pdm-ct">${esc(c.text)}</div></div></div>`).join("") : '<div class="va-msg">No comments yet. Be the first to share what you thought.</div>'}</div>
+       <div class="pdm-form">${pdMe?`<p class="pdm-who">Commenting as <b>${esc(pdMe.name)}</b> · <button type="button" id="pdmSignout">Not you?</button></p>`:""}<textarea class="va-inp" id="pdmText" maxlength="${PD_MAX_COMMENT}" placeholder="Share a thought or how you used it…"></textarea>
+         <div class="va-formrow" style="margin-top:8px;"><button type="button" class="va-btn primary" id="pdmPost">Post comment</button><button type="button" class="va-btn ghost" data-close>Close</button></div><div class="pdm-note2" id="pdmNote" role="status"></div></div>`;
+    wsBindClose(d);
+    const cmts = d.querySelector("#pdmCmts"); if(cmts) cmts.scrollTop = keepScroll ? sc : 0;
+    const note = (t,bad)=>{ const n = d.querySelector("#pdmNote"); if(n){ n.textContent = t||""; n.className = "pdm-note2"+(bad?" err":""); } };
+    const act = async (mut, okMsg, after)=>{
+      if(!(await pdEnsureMe())){ pdOpenItem(id,true); return; }
+      pdOpenItem(id, true); const res = await pdSocCommit(s2=>mut(s2)); renderPD();
+      const dd = document.querySelector(".ws-dlg"); if(res.error){ if(dd){ const n = dd.querySelector("#pdmNote"); if(n){ n.textContent = res.error; n.className = "pdm-note2 err"; } } } else { await pdOpenItem(id, true); if(after) after(); }
+    };
+    const slot = (s2)=>{ s2[id] = s2[id]||{}; const o = s2[id]; o.ratings = o.ratings||{}; o.likes = o.likes||[]; o.comments = o.comments||[]; return o; };
+    d.querySelectorAll("[data-star]").forEach(b=> b.onclick = ()=>{ const k = +b.dataset.star; act(s2=>{ slot(s2).ratings[pdMe.name] = k; }); });
+    const un = d.querySelector("#pdmUnrate"); if(un) un.onclick = ()=>act(s2=>{ delete slot(s2).ratings[pdMe.name]; });
+    d.querySelector("#pdmLike").onclick = ()=>act(s2=>{ const o = slot(s2), i = o.likes.indexOf(pdMe.name); if(i>=0) o.likes.splice(i,1); else o.likes.push(pdMe.name); });
+    d.querySelectorAll("[data-delc]").forEach(b=> b.onclick = ()=>act(s2=>{ const o = slot(s2); o.comments = o.comments.filter(c=>!(c.id===b.dataset.delc && (c.name===pdMe.name || pdMe.admin))); }));
+    const so = d.querySelector("#pdmSignout"); if(so) so.onclick = ()=>{ pdMe = null; try{ localStorage.removeItem("ccp_pd_me"); }catch(e){} draw(); };
+    d.querySelector("#pdmPost").onclick = async ()=>{
+      const txt = d.querySelector("#pdmText").value.trim(); if(!txt){ note("Write a comment first.", true); return; }
+      if(!(await pdEnsureMe())){ pdOpenItem(id,true); return; }
+      const c = {id:"c"+Date.now().toString(36)+Math.random().toString(36).slice(2,5), name:pdMe.name, ini:pdMe.ini, color:pdMe.color, text:txt.slice(0,PD_MAX_COMMENT), at:Date.now()};
+      await pdOpenItem(id, false); const dd = document.querySelector(".ws-dlg"); if(dd) dd.querySelector("#pdmText").value = txt;
+      const res = await pdSocCommit(s2=>{ slot(s2).comments.push(c); }); renderPD();
+      if(res.error){ const n = document.querySelector("#pdmNote"); if(n){ n.textContent = res.error; n.className = "pdm-note2 err"; } } else await pdOpenItem(id, false);
+    };
+  };
+  draw();
+  try{ const latest = await pdFetchSoc(); const tx = d.querySelector("#pdmText"); if(JSON.stringify(latest)!==JSON.stringify(pdSoc) && pdOpenId===id && document.body.contains(d) && tx && !tx.value){ pdSoc = latest; draw(); } }catch(e){}
 }
 function pdWire(){
   if(pdWired) return; pdWired = true;
